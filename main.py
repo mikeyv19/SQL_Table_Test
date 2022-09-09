@@ -1,6 +1,6 @@
 from pickle import NONE
 from unicodedata import name
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -25,11 +25,21 @@ class Ingredient(db.Model):
 class Aisle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
-    ingredient = db.relationship("Ingredient")
+    ingredients = db.relationship("Ingredient", backref="aisle")
 
     def __repr__(self):
         return "<Aisle %r>" % self.name
 
+
+class Foods:
+    first_ingredient = Ingredient.query.get(1)
+    first_ingredient_aisle = Ingredient.query.get(1)
+    print(first_ingredient)
+    print(first_ingredient_aisle.aisle.name)
+
+
+# my_ingredient.aisle.name
+# my_aisle.ingredients
 
 # from main import db
 # db.create_all()
