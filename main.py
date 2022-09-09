@@ -3,7 +3,6 @@ from unicodedata import name
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
-
 app = Flask(__name__)
 
 
@@ -31,11 +30,24 @@ class Aisle(db.Model):
         return "<Aisle %r>" % self.name
 
 
-class Foods:
-    first_ingredient = Ingredient.query.get(1)
-    first_ingredient_aisle = Ingredient.query.get(1)
-    print(first_ingredient)
-    print(first_ingredient_aisle.aisle.name)
+@app.route("/")
+def index():
+    first_ingredient = Ingredient.query.get(2)
+    first_ingredient_aisle = Ingredient.query.get(2)
+    first_ingredient = first_ingredient.name
+    first_ingredient_aisle = first_ingredient_aisle.aisle.name
+    return render_template(
+        "index.html",
+        first_ingredient=first_ingredient,
+        first_ingredient_aisle=first_ingredient_aisle,
+    )
+
+
+# class Foods:
+#     first_ingredient = Ingredient.query.get(1)
+#     first_ingredient_aisle = Ingredient.query.get(1)
+#     print(first_ingredient)
+#     print(first_ingredient_aisle.aisle.name)
 
 
 # my_ingredient.aisle.name
