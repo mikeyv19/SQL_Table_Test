@@ -3,20 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-shopping_list = db.Table(
-    "shopping_list",
-    db.Column("ingredient_id", db.Integer, db.ForeignKey("ingredient.id")),
-    db.Column("aisle_id", db.Integer, db.ForeignKey("aisle.id")),
-)
-
-
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    aisle = db.Column(db.String(50))
+    ingredient_name = db.Column(db.String(120))
+    aisle_name = db.Column(db.String(30))
+    aisle_id = db.Column(db.Integer)
 
     def __repr__(self):
-        return "<Shopping %r>" % self.name
+        return "<Shopping %r>" % self.ingredient_name
 
 
 class Ingredient(db.Model):
@@ -44,7 +38,7 @@ def connect_db(app):
 
 
 # from main import Ingredient
-# ingredient = Ingredient.post.query.all()
+# ingredient = Ingredient.query.all()
 # for ingredient in ingredients:
 #     print(ingredient.name)
 #     print(ingredient.aisle.name)
