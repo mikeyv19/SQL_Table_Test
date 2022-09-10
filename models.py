@@ -22,6 +22,13 @@ class Aisle(db.Model):
     def __repr__(self):
         return "<Aisle %r>" % self.name
 
+# class Shopping(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.relationship("Ingredient", backref="")
+
+#     def __repr__(self):
+#         return "<Shopping %r>" % self.name
+
 def connect_db(app):
     db.app = app
     db.init_app(app)

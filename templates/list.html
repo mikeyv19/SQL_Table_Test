@@ -14,8 +14,13 @@
   <body>
     <div class="container">
       <h1>Shopping List</h1>
-      <br />
-      <a href="{{ url_for('list') }}">Click here to view shopping list</a>
+      <table class="table table-hover table-bordered table-striped">
+        {% for shopping_list in our_list %}
+        <tr>
+          <td>{{ shopping_list.name }} - {{ shopping_list.aisle.name}}</td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
