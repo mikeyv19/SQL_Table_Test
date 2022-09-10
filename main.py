@@ -1,34 +1,14 @@
 from pickle import NONE
 from unicodedata import name
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
+from models import Ingredient, Aisle, connect_db, db
 
 app = Flask(__name__)
 
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///food.db"
 
-db = SQLAlchemy(app)
-
-
-class Ingredient(db.Model):
-    __tablename__ = "ingredient"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable=False)
-    aisle_id = db.Column(db.Integer, db.ForeignKey("aisle.id"))
-
-    def __repr__(self):
-        return "<Ingredient %r>" % self.name
-
-
-class Aisle(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30))
-    ingredients = db.relationship("Ingredient", backref="aisle")
-
-    def __repr__(self):
-        return "<Aisle %r>" % self.name
-
+connect_db(app)
 
 @app.route("/")
 def index():
