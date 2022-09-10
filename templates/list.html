@@ -14,10 +14,18 @@
   <body>
     <div class="container">
       <h1>Shopping List</h1>
+      <div class="shadow p-3 mb-5 bg-body rounded">
+        <form method="POST">
+          {{ form.hidden_tag() }} {{ form.item.label(class="form-label") }} {{
+          form.item(class="form-control") }}
+          <br />
+          {{ form.submit(class="btn btn-secondary") }}
+        </form>
+      </div>
       <table class="table table-hover table-bordered table-striped">
-        {% for shopping_list in our_list %}
+        {% for shopping_list in our_add %}
         <tr>
-          <td>{{ shopping_list.name }} - {{ shopping_list.aisle.name}}</td>
+          <td>{{ shopping_list.item }} - {{ shopping_list.aisle}}</td>
         </tr>
         {% endfor %}
       </table>

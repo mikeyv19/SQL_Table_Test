@@ -1,6 +1,9 @@
 from models import Ingredient, Aisle, Shopping, connect_db, db
 from main import app
 
+db.drop_all()
+db.create_all()
+
 aisle1 = Aisle(id=1, name="Produce")
 aisle2 = Aisle(id=2, name="Seafood")
 aisle3 = Aisle(id=3, name="7")
@@ -17,3 +20,7 @@ db.session.add_all([aisle1, aisle2, aisle3, aisle4, aisle5])
 db.session.add_all([ingredient1, ingredient2, ingredient3, ingredient4, ingredient5])
 
 db.session.commit()
+
+
+# Shopping Test
+# shopping1 = Shopping
