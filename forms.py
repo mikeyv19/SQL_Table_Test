@@ -1,9 +1,16 @@
 from tokenize import String
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import SelectField, SubmitField, validators
 
 
 class ShoppingForm(FlaskForm):
-    item = StringField("Item", validators=[DataRequired()])
-    submit = SubmitField("Submit")
+    name = SelectField(
+        "Enter a Name",
+        validators=[validators.InputRequired()],
+    )
+    SubmitField("Submit")
+
+
+# class ShoppingForm(FlaskForm):
+#     item = StringField("Item", validators=[DataRequired()])
+#     submit = SubmitField("Submit")
