@@ -25,7 +25,9 @@
       <table class="table table-hover table-bordered table-striped">
         {% for shopping_list in our_add %}
         <tr>
-          <td>{{ shopping_list.item }} - {{ shopping_list.aisle}}</td>
+          <td>
+            {{ shopping_list.ingredient_name }} - {{ shopping_list.aisle_name}}
+          </td>
         </tr>
         {% endfor %}
       </table>

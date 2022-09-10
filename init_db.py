@@ -21,18 +21,16 @@ db.session.add_all([ingredient1, ingredient2, ingredient3, ingredient4, ingredie
 
 db.session.commit()
 
-s1 = Ingredient.query.filter_by(name="Apple").first()
-print(s1.name)
-print(s1.aisle.name)
-print(s1.aisle_id)
+# s1 = Ingredient.query.filter_by(name="Apple").first()
 
-shopping1 = Shopping(id=1, ingredient_name=s1.name, aisle_name=s1.aisle.name, aisle_id = s1.aisle_id)
+
+# shopping1 = Shopping(id=1, ingredient_name=s1.name, aisle_name=s1.aisle.name, aisle_id = s1.aisle_id)
 
 # db.session.add_all([aisle1, aisle2, aisle3, aisle4, aisle5])
 # db.session.add_all([ingredient1, ingredient2, ingredient3, ingredient4, ingredient5])
-db.session.add(shopping1)
+# db.session.add(shopping1)
 
-db.session.commit()
+# db.session.commit()
 
 
 # Shopping Test

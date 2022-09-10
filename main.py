@@ -20,19 +20,26 @@ def index():
 @app.route("/list", methods=["GET", "POST"])
 def list():
     item = None
-    aisle = None
     form = ShoppingForm()
     if form.validate_on_submit():
-        update = Shopping(
-            item=form.item.data, aisle=Ingredient.query.filter_by(name=item).first()
-        )
-        db.session.add(update)
-        db.session.commit()
-    our_add = Shopping.query.order_by(Shopping.aisle)
-    return render_template(
-        "list.html", item=item, aisle=aisle, form=form, our_add=our_add
-    )
-
+        try:
+            u1=Ingredient.query.filter_by(name=form.item.data).first()
+            update = Shopping(
+                ingredient_name=u1.name, aisle_name=u1.aisle.name, aisle_id = u1.aisle_id
+            )
+            db.session.add(update)
+            db.session.commit()
+            our_add = Shopping.query.order_by(Shopping.aisle_id)
+            return render_template("list.html", item=item, form=form, our_add=our_add)
+        except:
+            update = Shopping(ingredient_name=form.item.data, aisle_name="No Aisle", aisle_id=0)
+            our_add = Shopping.query.order_by(Shopping.aisle_id)
+            db.session.add(update)
+            db.session.commit()
+            return render_template(
+                "list.html", item=item, form=form, our_add=our_add)
+    else:
+        return render_template("list.html", item=item, form=form)
 
 #    our_list = Ingredient.query.order_by(Ingredient.aisle_id)
 
