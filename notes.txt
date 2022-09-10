@@ -1,0 +1,24 @@
+#############################################
+Command Line Prompts for adding items to .db
+#############################################
+
+Go into Python Terminal
+
+from main import db
+db.create_all()
+
+from main import Aisle  //or whatever table you are updating
+
+# first = Aisle(id=1, name="Produce")
+# second = Aisle(id=2, name="Seafood")
+# third = Aisle(id=3, name="1")
+
+# firstfood = Ingredient(id=1, name="Apple", aisle_id=1
+
+# db.session.add(first)  //pass variable name in the ()
+# db.session.commit()
+
+
+To query:
+# Ingredient.query.all()
+# Aisle.query.all()
