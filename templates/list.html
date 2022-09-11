@@ -41,14 +41,16 @@
         });
       </script>
       <br />
-      {{ form2.hidden_tag() }}
-      <div>
-        {{ form2.item.label(class="form-label") }}
+      <form method="POST">
+        {{ form2.hidden_tag() }}
+        <div>
+          {{ form2.item.label(class="form-label") }}
+          <br />
+          {{ form2.item(class="form-control") }}
+        </div>
         <br />
-        {{ form2.item(class="form-control") }}
-      </div>
-      <br />
-      {{ form2.submit1(class="btn btn-secondary") }}
+        {{ form2.submit1(class="btn btn-secondary") }}
+      </form>
     </div>
     <br /><br />
     <div class="container">

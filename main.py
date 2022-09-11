@@ -36,6 +36,15 @@ def list():
         return render_template(
             "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
         )
+    if form2.validate_on_submit():
+        update = Shopping(
+            ingredient_name=form2.item.data, aisle_name="unknown", aisle_id=0
+        )
+        db.session.add(update)
+        db.session.commit()
+        return render_template(
+            "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
+        )
     else:
         return render_template(
             "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
