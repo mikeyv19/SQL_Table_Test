@@ -26,20 +26,29 @@
     <div class="container">
       <form method="POST">
         {{ form.hidden_tag() }}
-        <div>{{ (form.name) }}</div>
+        <div>{{ form.name }}</div>
         <br />
-        <button class="button button1">Submit</button>
+        {{ form.submit(class="btn btn-secondary") }}
       </form>
       <script>
         $(document).ready(function () {
           $("#name").select2({
             // init Select2 on form's name field
-            placeholder: "{{ (form.name.label.text|e) }}",
+            placeholder: "{{ form.name.label.text }}",
             allowClear: true,
             width: "300px",
           });
         });
       </script>
+      <br />
+      {{ form2.hidden_tag() }}
+      <div>
+        {{ form2.item.label(class="form-label") }}
+        <br />
+        {{ form2.item(class="form-control") }}
+      </div>
+      <br />
+      {{ form2.submit1(class="btn btn-secondary") }}
     </div>
     <br /><br />
     <div class="container">

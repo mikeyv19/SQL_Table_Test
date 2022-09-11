@@ -2,7 +2,7 @@ from pickle import NONE
 from unicodedata import name
 from flask import Flask, render_template
 from models import Ingredient, Aisle, Shopping, connect_db, db
-from forms import ShoppingForm
+from forms import ManualShoppingForm, ShoppingForm
 
 app = Flask(__name__)
 
@@ -24,24 +24,22 @@ def list():
     names = [i[0] for i in names]
     form = ShoppingForm()
     form.name.choices = [("")] + [(name) for name in names]
+    item = None
+    form2 = ManualShoppingForm()
     if form.validate_on_submit():
-        try:
-            u1 = Ingredient.query.filter_by(name=form.name.data).first()
-            update = Shopping(
-                ingredient_name=u1.name, aisle_name=u1.aisle.name, aisle_id=u1.aisle_id
-            )
-            db.session.add(update)
-            db.session.commit()
-            return render_template("list.html", form=form, name=name, our_add=our_add)
-        except:
-            update = Shopping(
-                ingredient_name=form.name.data, aisle_name="Unknown", aisle_id=0
-            )
-            db.session.add(update)
-            db.session.commit()
-            return render_template("list.html", form=form, name=name, our_add=our_add)
+        u1 = Ingredient.query.filter_by(name=form.name.data).first()
+        update = Shopping(
+            ingredient_name=u1.name, aisle_name=u1.aisle.name, aisle_id=u1.aisle_id
+        )
+        db.session.add(update)
+        db.session.commit()
+        return render_template(
+            "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
+        )
     else:
-        return render_template("list.html", form=form, name=name, our_add=our_add)
+        return render_template(
+            "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
+        )
 
 
 # @app.route("/list", methods=["GET", "POST"])
