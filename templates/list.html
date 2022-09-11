@@ -21,21 +21,20 @@
       crossorigin="anonymous"
     />
   </head>
-
   <body>
     <br />
     <div class="container">
       <form method="POST">
         {{ form.hidden_tag() }}
-        <div>{{ form.name }}</div>
+        <div>{{ (form.name) }}</div>
         <br />
-        <button>Submit</button>
+        <button class="button button1">Submit</button>
       </form>
       <script>
         $(document).ready(function () {
           $("#name").select2({
             // init Select2 on form's name field
-            placeholder: "{{ form.name.label.text }}",
+            placeholder: "{{ (form.name.label.text|e) }}",
             allowClear: true,
             width: "300px",
           });

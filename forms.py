@@ -5,8 +5,7 @@ from wtforms import SelectField, SubmitField, validators
 
 class ShoppingForm(FlaskForm):
     name = SelectField(
-        "Enter a Name",
-        validators=[validators.InputRequired()],
+        "Select Item", validators=[validators.InputRequired()], validate_choice=False
     )
     SubmitField("Submit")
 

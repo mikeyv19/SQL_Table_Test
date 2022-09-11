@@ -20,7 +20,7 @@ class Ingredient(db.Model):
     name = db.Column(db.String(120), nullable=False)
     aisle_id = db.Column(db.Integer, db.ForeignKey("aisle.id"))
 
-    def __repr__(self):
+    def __str__(self):
         return "<Ingredient %r>" % self.name
 
 

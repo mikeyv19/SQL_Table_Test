@@ -19,11 +19,11 @@ def index():
 
 @app.route("/list", methods=["GET", "POST"])
 def list():
-    item = None
-    name = db.session.query(Ingredient.name).order_by(Ingredient.name)
-    name = [i[0] for i in name]
+    our_add = Shopping.query.order_by(Shopping.aisle_id)
+    names = db.session.query(Ingredient.name).order_by(Ingredient.name)
+    names = [i[0] for i in names]
     form = ShoppingForm()
-    form.name.choices = name
+    form.name.choices = [("")] + [(name) for name in names]
     if form.validate_on_submit():
         try:
             u1 = Ingredient.query.filter_by(name=form.name.data).first()
@@ -32,22 +32,16 @@ def list():
             )
             db.session.add(update)
             db.session.commit()
-            our_add = Shopping.query.order_by(Shopping.aisle_id)
-            return render_template(
-                "list.html", form=form, item=item, name=name, our_add=our_add
-            )
+            return render_template("list.html", form=form, name=name, our_add=our_add)
         except:
             update = Shopping(
-                ingredient_name=form.item.data, aisle_name="Unknown", aisle_id=0
+                ingredient_name=form.name.data, aisle_name="Unknown", aisle_id=0
             )
-            our_add = Shopping.query.order_by(Shopping.aisle_id)
             db.session.add(update)
             db.session.commit()
-            return render_template(
-                "list.html", form=form, item=item, name=name, our_add=our_add
-            )
+            return render_template("list.html", form=form, name=name, our_add=our_add)
     else:
-        return render_template("list.html", form=form, item=item, name=name)
+        return render_template("list.html", form=form, name=name, our_add=our_add)
 
 
 # @app.route("/list", methods=["GET", "POST"])
