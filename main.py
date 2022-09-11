@@ -29,7 +29,10 @@ def list():
     if form.validate_on_submit():
         u1 = Ingredient.query.filter_by(name=form.name.data).first()
         update = Shopping(
-            ingredient_name=u1.name, aisle_name=u1.aisle.name, aisle_id=u1.aisle_id
+            ingredient_name=u1.name,
+            qty=form.aqty.data,
+            aisle_name=u1.aisle.name,
+            aisle_id=u1.aisle_id,
         )
         db.session.add(update)
         db.session.commit()
@@ -38,7 +41,10 @@ def list():
         )
     if form2.validate_on_submit():
         update = Shopping(
-            ingredient_name=form2.item.data, aisle_name="Unknown", aisle_id=0
+            ingredient_name=form2.item.data,
+            qty=form2.bqty.data,
+            aisle_name="Unknown",
+            aisle_id=0,
         )
         db.session.add(update)
         db.session.commit()

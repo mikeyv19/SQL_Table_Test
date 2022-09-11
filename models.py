@@ -6,6 +6,7 @@ db = SQLAlchemy()
 
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    qty = db.Column(db.Float)
     ingredient_name = db.Column(db.String(120))
     aisle_name = db.Column(db.String(30))
     aisle_id = db.Column(db.Integer)

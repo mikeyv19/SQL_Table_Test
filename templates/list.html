@@ -24,9 +24,13 @@
   <body>
     <br />
     <div class="container">
+      <h2>Add Items:</h2>
       <form method="POST">
-        {{ form.hidden_tag() }}
-        <div>{{ form.name }}</div>
+        {{ form.hidden_tag() }} {{ form.name }}
+        <br />
+        <br />
+        {{ form.hidden_tag() }} {{ form.aqty.label(class="form-label") }} {{
+        form.aqty(class="form-control w-25") }}
         <br />
         {{ form.submit(class="btn btn-secondary") }}
       </form>
@@ -41,24 +45,28 @@
         });
       </script>
       <br />
+      <!--------------------->
+      <!-- MANUAL ADD FORM -->
+      <!--------------------->
       <form method="POST">
-        {{ form2.hidden_tag() }}
-        <div>
-          {{ form2.item.label(class="form-label") }}
-          <br />
-          {{ form2.item(class="form-control w-25") }}
-        </div>
+        {{ form2.hidden_tag() }} {{ form2.item.label(class="form-label") }}
+        <br />
+        {{ form2.item(class="form-control w-25") }} {{ form2.hidden_tag()}} {{
+        form2.bqty.label(class="form-label") }} {{
+        form2.bqty(class="form-control w-25") }}
         <br />
         {{ form2.submit1(class="btn btn-secondary") }}
       </form>
     </div>
     <br /><br />
     <div class="container">
+      <h1>Shopping List</h1>
       <table class="table table-hover table-bordered table-striped">
         {% for shopping_list in our_add %}
         <tr>
           <td>
-            {{ shopping_list.ingredient_name }} - {{ shopping_list.aisle_name}}
+            {{'%0.1f'|format(shopping_list.qty|float) }}x {{
+            shopping_list.ingredient_name }} - ({{ shopping_list.aisle_name }})
           </td>
         </tr>
         {% endfor %}
