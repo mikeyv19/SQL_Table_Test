@@ -19,13 +19,15 @@
   </head>
   <body>
     <br />
-    <h1>Add Ingredient:</h1>
+    <h1>Edit Ingredient:</h1>
+    <h3>Currently Editing:</h3>
+    {{editing_item.name}} - {{editing_item.unit.label}} -
+    {{editing_item.aisle.name}}
     <form method="POST">
       {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br />{{
       form.name(class="form-control w-25") }} <br />
       {{ form.hidden_tag() }} {{ form.unit.label(class="form-label") }} <br />
       {{ form.unit(class="form-control w-25") }}
-        </td>
       <br />
       {{ form.hidden_tag() }} {{ form.aisle.label(class="form-label") }} <br />
       {{ form.aisle(class="form-control w-25") }}
@@ -60,10 +62,7 @@
       <table class="table table-hover table-bordered table-striped">
         {% for ingredient_table in ingredient_list %}
         <tr>
-          <td>
-            {{ingredient_table.id}} {{ingredient_table.name}}
-            {{ingredient_table.unit.label}} <a href="{{url_for('ingredient_edit', id=ingredient_table.id)}}">Edit</a>
-          </td>
+          <td>{{ingredient_table.id}} {{ingredient_table.name}}</td>
         </tr>
         {% endfor %}
       </table>

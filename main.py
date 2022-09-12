@@ -1,6 +1,6 @@
 from pickle import NONE
 from unicodedata import name
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from models import (
     Ingredient,
     Aisle,
@@ -93,6 +93,9 @@ def list():
         )
 
 
+####################
+# INGREDIENTS LIST #
+####################
 @app.route("/ingredients", methods=["GET", "POST"])
 def ingredient_page():
     ingredient_list = Ingredient.query.order_by(Ingredient.name)
@@ -118,13 +121,27 @@ def ingredient_page():
     )
 
 
-#    our_list = Ingredient.query.order_by(Ingredient.aisle_id)
-
-# food = Ingredient.query.get(1)
-# food = ingredient
-
-# class Foods:
-#     first_ingredient = Ingredient.query.get(1)
-#     first_ingredient_aisle = Ingredient.query.get(1)
-#     print(first_ingredient)
-#     print(first_ingredient_aisle.aisle.name)
+@app.route("/ingredients/<int:id>", methods=["GET", "POST"])
+def ingredient_edit(id):
+    editing_item = Ingredient.query.get(id)
+    form = CreateIngredient()
+    x = db.session.query(Unit.label).order_by(Unit.label)
+    x = [i[0] for i in x]
+    form.unit.choices = [("")] + [(y) for y in x]
+    a = db.session.query(Aisle.name).order_by(Aisle.name)
+    a = [i[0] for i in a]
+    form.aisle.choices = [("")] + [(b) for b in a]
+    ingredient_to_update = Ingredient.query.get_or_404(id)
+    if form.validate_on_submit():
+        uid = Unit.query.filter_by(label=form.unit.data).first()
+        aid = Aisle.query.filter_by(name=form.aisle.data).first()
+        ingredient_to_update.name = form.name.data
+        ingredient_to_update.unit_id = uid.id
+        ingredient_to_update.aisle_id = aid.id
+        db.session.commit()
+    return render_template(
+        "ingredient_update.html",
+        ingredient_to_update=ingredient_to_update,
+        form=form,
+        editing_item=editing_item,
+    )
