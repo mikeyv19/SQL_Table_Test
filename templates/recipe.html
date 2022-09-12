@@ -18,15 +18,19 @@
     {% extends 'base.html' %} {% block content %}
   </head>
   <body>
-    <!------------------------->
-    <!-- SHOPPING LIST TABLE -->
-    <!------------------------->
+    <!------------>
+    <!-- RECIPE -->
+    <!------------>
     <div class="container">
       <h1>{{title}}</h1>
       <table class="table table-hover table-bordered table-striped">
         {% for i in iquery %}
         <tr>
-          <td>{{i.qty}}-{{i.ingredient.unit.label}} {{i.ingredient.name}}</td>
+          <td>
+            <b>{{i.qty}}</b>-{{i.ingredient.unit.label}}
+            <b>{{i.ingredient.name}}</b>
+            {{i.unit_suffix}}
+          </td>
         </tr>
         {% endfor %}
       </table>

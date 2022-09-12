@@ -38,12 +38,17 @@ db.session.add_all([ingredient1, ingredient2, ingredient3, ingredient4, ingredie
 db.session.commit()
 
 r1 = Recipe(id=1, name="Salty Salmon")
+r2 = Recipe(id=2, name="Eggs and Toast with Fruit")
 
-db.session.add_all([r1])
+db.session.add_all([r1, r2])
 db.session.commit()
 
-ri1 = RecipeIngredient(id=1, rid=1, iid=1, qty=2.5)
-ri2 = RecipeIngredient(id=2, rid=1, iid=4, qty=48, unit_suffix="Cut in half")
+ri1 = RecipeIngredient(id=1, rid=1, iid=1, qty=2.5, unit_suffix="")
+ri3 = RecipeIngredient(id=2, rid=2, iid=2, qty=1, unit_suffix="")
+ri2 = RecipeIngredient(id=3, rid=1, iid=4, qty=48, unit_suffix="Cut in half")
+ri4 = RecipeIngredient(id=4, rid=2, iid=3, qty=2, unit_suffix="")
+ri5 = RecipeIngredient(id=5, rid=2, iid=5, qty=2, unit_suffix="Toasted")
+ri6 = RecipeIngredient(id=6, rid=2, iid=5, qty=1, unit_suffix="Toasted")
 
-db.session.add_all([ri1, ri2])
+db.session.add_all([ri1, ri2, ri3, ri4, ri5, ri6])
 db.session.commit()

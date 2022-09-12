@@ -17,3 +17,18 @@ class ManualShoppingForm(FlaskForm):
     bqty = DecimalField("Qty:", validators=[validators.InputRequired()])
     item = StringField("Manually Add Item:", validators=[validators.DataRequired()])
     submit1 = SubmitField("Submit Manual Item")
+
+
+class CreateIngredient(FlaskForm):
+    name = StringField("Name:", validators=[validators.InputRequired()])
+    unit = SelectField(
+        "Unit:",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    aisle = SelectField(
+        "Shopping Aisle:",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    submit = SubmitField("Submit")

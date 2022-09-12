@@ -1,8 +1,17 @@
 from pickle import NONE
 from unicodedata import name
 from flask import Flask, render_template
-from models import Ingredient, Aisle, Shopping, Recipe, RecipeIngredient, connect_db, db
-from forms import ManualShoppingForm, ShoppingForm
+from models import (
+    Ingredient,
+    Aisle,
+    Shopping,
+    Recipe,
+    RecipeIngredient,
+    Unit,
+    connect_db,
+    db,
+)
+from forms import ManualShoppingForm, ShoppingForm, CreateIngredient
 
 app = Flask(__name__)
 
@@ -84,30 +93,29 @@ def list():
         )
 
 
-# @app.route("/list", methods=["GET", "POST"])
-# def list():
-#     item = None
-#     form = ShoppingForm()
-#     if form.validate_on_submit():
-#         try:
-#             u1 = Ingredient.query.filter_by(name=form.item.data).first()
-#             update = Shopping(
-#                 ingredient_name=u1.name, aisle_name=u1.aisle.name, aisle_id=u1.aisle_id
-#             )
-#             db.session.add(update)
-#             db.session.commit()
-#             our_add = Shopping.query.order_by(Shopping.aisle_id)
-#             return render_template("list.html", item=item, form=form, our_add=our_add)
-#         except:
-#             update = Shopping(
-#                 ingredient_name=form.item.data, aisle_name="Unknown", aisle_id=0
-#             )
-#             our_add = Shopping.query.order_by(Shopping.aisle_id)
-#             db.session.add(update)
-#             db.session.commit()
-#             return render_template("list.html", item=item, form=form, our_add=our_add)
-#     else:
-#         return render_template("list.html", item=item, form=form)
+@app.route("/ingredients", methods=["GET", "POST"])
+def ingredient_page():
+    ingredient_list = Ingredient.query.order_by(Ingredient.name)
+    x = db.session.query(Unit.label).order_by(Unit.label)
+    x = [i[0] for i in x]
+    form = CreateIngredient()
+    form.unit.choices = [("")] + [(y) for y in x]
+    a = db.session.query(Aisle.name).order_by(Aisle.name)
+    a = [i[0] for i in a]
+    form.aisle.choices = [("")] + [(b) for b in a]
+    if form.validate_on_submit():
+        uid = Unit.query.filter_by(label=form.unit.data).first()
+        aid = Aisle.query.filter_by(name=form.aisle.data).first()
+        update = Ingredient(name=form.name.data, unit_id=uid.id, aisle_id=aid.id)
+        db.session.add(update)
+        db.session.commit()
+    return render_template(
+        "ingredients.html",
+        x=x,
+        a=a,
+        form=form,
+        ingredient_list=ingredient_list,
+    )
 
 
 #    our_list = Ingredient.query.order_by(Ingredient.aisle_id)
