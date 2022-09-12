@@ -73,13 +73,13 @@
     <!-- SHOPPING LIST TABLE -->
     <!------------------------->
     <div class="container">
-      <h1>Shopping List</h1>
+      <h1>Shopping List:</h1>
       <table class="table table-hover table-bordered table-striped">
         {% for shopping_list in our_add %}
         <tr>
           <td>
-            {{'%0.1f'|format(shopping_list.qty|float) }}x {{
-            shopping_list.ingredient_name }} - ({{ shopping_list.aisle_name }})
+            <b>{{'%0.0f'|format(shopping_list.qty|float) }}</b> {{shopping_list.unit_name }} - <b>{{
+            shopping_list.ingredient_name }}</b> - ({{ shopping_list.aisle_name }})
           </td>
         </tr>
         {% endfor %}

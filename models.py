@@ -7,6 +7,7 @@ db = SQLAlchemy()
 class Shopping(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     qty = db.Column(db.Float)
+    unit_name = db.Column(db.String(30))
     ingredient_name = db.Column(db.String(120))
     aisle_name = db.Column(db.String(30))
     aisle_id = db.Column(db.Integer)
@@ -19,6 +20,7 @@ class Ingredient(db.Model):
     __tablename__ = "ingredient"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
+    unit_id = db.Column(db.Integer, db.ForeignKey("unit.id"))
     aisle_id = db.Column(db.Integer, db.ForeignKey("aisle.id"))
 
     def __str__(self):
@@ -29,6 +31,15 @@ class Aisle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
     ingredients = db.relationship("Ingredient", backref="aisle")
+
+    def __repr__(self):
+        return "<Aisle %r>" % self.name
+
+
+class Unit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.String(30))
+    ingredients = db.relationship("Ingredient", backref="unit")
 
     def __repr__(self):
         return "<Aisle %r>" % self.name

@@ -31,6 +31,7 @@ def list():
         update = Shopping(
             ingredient_name=u1.name,
             qty=form.aqty.data,
+            unit_name=u1.unit.label,
             aisle_name=u1.aisle.name,
             aisle_id=u1.aisle_id,
         )
@@ -43,6 +44,7 @@ def list():
         update = Shopping(
             ingredient_name=form2.item.data,
             qty=form2.bqty.data,
+            unit_name="",
             aisle_name="Unknown",
             aisle_id=0,
         )
