@@ -1,4 +1,13 @@
-from models import Ingredient, Aisle, Shopping, Unit, connect_db, db
+from models import (
+    Ingredient,
+    Aisle,
+    Shopping,
+    Unit,
+    Recipe,
+    RecipeIngredient,
+    connect_db,
+    db,
+)
 from main import app
 
 db.drop_all()
@@ -28,17 +37,13 @@ db.session.add_all([ingredient1, ingredient2, ingredient3, ingredient4, ingredie
 
 db.session.commit()
 
-# s1 = Ingredient.query.filter_by(name="Apple").first()
+r1 = Recipe(id=1, name="Salty Salmon")
 
+db.session.add_all([r1])
+db.session.commit()
 
-# shopping1 = Shopping(id=1, ingredient_name=s1.name, aisle_name=s1.aisle.name, aisle_id = s1.aisle_id)
+ri1 = RecipeIngredient(id=1, rid=1, iid=1, qty=2.5)
+ri2 = RecipeIngredient(id=2, rid=1, iid=4, qty=48, unit_suffix="Cut in half")
 
-# db.session.add_all([aisle1, aisle2, aisle3, aisle4, aisle5])
-# db.session.add_all([ingredient1, ingredient2, ingredient3, ingredient4, ingredient5])
-# db.session.add(shopping1)
-
-# db.session.commit()
-
-
-# Shopping Test
-# shopping1 = Shopping
+db.session.add_all([ri1, ri2])
+db.session.commit()

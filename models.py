@@ -22,6 +22,7 @@ class Ingredient(db.Model):
     name = db.Column(db.String(120), nullable=False)
     unit_id = db.Column(db.Integer, db.ForeignKey("unit.id"))
     aisle_id = db.Column(db.Integer, db.ForeignKey("aisle.id"))
+    ingredients = db.relationship("RecipeIngredient", backref="ingredient")
 
     def __str__(self):
         return "<Ingredient %r>" % self.name
@@ -43,6 +44,28 @@ class Unit(db.Model):
 
     def __repr__(self):
         return "<Aisle %r>" % self.name
+
+
+class Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+
+    ##Add tags - Dinner/App/Dessert? Chicken/Shrimp? Oven Only?
+    ##Will also need Tag ID table
+
+    def __repr__(self):
+        return "<Recipe %r>" % self.name
+
+
+class RecipeIngredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rid = db.Column(db.Integer, db.ForeignKey("recipe.id"))
+    iid = db.Column(db.Integer, db.ForeignKey("ingredient.id"))
+    qty = db.Column(db.Float)
+    unit_suffix = db.Column(db.String(50))
+
+    def __repr__(self):
+        return "<RecipeIngredient %r>" % self.rid
 
 
 def connect_db(app):

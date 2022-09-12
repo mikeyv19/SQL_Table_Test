@@ -1,7 +1,7 @@
 from pickle import NONE
 from unicodedata import name
 from flask import Flask, render_template
-from models import Ingredient, Aisle, Shopping, connect_db, db
+from models import Ingredient, Aisle, Shopping, Recipe, RecipeIngredient, connect_db, db
 from forms import ManualShoppingForm, ShoppingForm
 
 app = Flask(__name__)
@@ -17,6 +17,30 @@ def index():
     return render_template("index.html")
 
 
+#################
+## RECIPE LIST ##
+#################
+@app.route("/recipe_list")
+def recipe_list():
+    recipe_list = Recipe.query.order_by(Recipe.name)
+    return render_template("recipe_list.html", recipe_list=recipe_list)
+
+
+#################
+## RECIPE PAGE ##
+#################
+@app.route("/recipe/<int:id>")
+def recipe(id):
+    r = Recipe.query.get_or_404(id)
+    title = r.name
+    x = 1
+    iquery = RecipeIngredient.query.filter_by(rid=id).all()
+    return render_template("recipe.html", r=r, title=title, x=x, iquery=iquery)
+
+
+#################
+# SHOPPING LIST #
+#################
 @app.route("/list", methods=["GET", "POST"])
 def list():
     our_add = Shopping.query.order_by(Shopping.aisle_id)
