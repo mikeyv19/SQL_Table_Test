@@ -11,7 +11,7 @@ from models import (
     connect_db,
     db,
 )
-from forms import ManualShoppingForm, ShoppingForm, CreateIngredient
+from forms import ManualShoppingForm, ShoppingForm, CreateIngredient, SelectRecipe
 
 app = Flask(__name__)
 
@@ -24,6 +24,52 @@ connect_db(app)
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+#################
+## Weekly PLan ##
+#################
+@app.route("/weekly_plan")
+def weekly_plan():
+    monday_form = SelectRecipe()
+    a = db.session.query(Recipe.name).order_by(Recipe.name)
+    a = [i[0] for i in a]
+    monday_form.name.choices = [("")] + [(x) for x in a]
+    tuesday_form = SelectRecipe()
+    tuesday_form.name.choices = [("")] + [(x) for x in a]
+    wednesday_form = SelectRecipe()
+    wednesday_form.name.choices = [("")] + [(x) for x in a]
+    thursday_form = SelectRecipe()
+    thursday_form.name.choices = [("")] + [(x) for x in a]
+    friday_form = SelectRecipe()
+    friday_form.name.choices = [("")] + [(x) for x in a]
+    saturday_form = SelectRecipe()
+    saturday_form.name.choices = [("")] + [(x) for x in a]
+    sunday_form = SelectRecipe()
+    sunday_form.name.choices = [("")] + [(x) for x in a]
+    if monday_form.validate_on_submit():
+        return render_template(
+            "weekly_planner.html",
+            monday_form=monday_form,
+            tuesday_form=tuesday_form,
+            wednesday_form=wednesday_form,
+            thursday_form=thursday_form,
+            friday_form=friday_form,
+            saturday_form=saturday_form,
+            sunday_form=sunday_form,
+            a=a,
+        )
+    return render_template(
+        "weekly_planner.html",
+        monday_form=monday_form,
+        tuesday_form=tuesday_form,
+        wednesday_form=wednesday_form,
+        thursday_form=thursday_form,
+        friday_form=friday_form,
+        saturday_form=saturday_form,
+        sunday_form=sunday_form,
+        a=a,
+    )
 
 
 #################
@@ -96,6 +142,9 @@ def list():
 ####################
 # INGREDIENTS LIST #
 ####################
+"""Add Ingredient"""
+
+
 @app.route("/ingredients", methods=["GET", "POST"])
 def ingredient_page():
     ingredient_list = Ingredient.query.order_by(Ingredient.name)
@@ -119,6 +168,9 @@ def ingredient_page():
         form=form,
         ingredient_list=ingredient_list,
     )
+
+
+"""Update Ingredient"""
 
 
 @app.route("/ingredients/<int:id>", methods=["GET", "POST"])

@@ -32,3 +32,13 @@ class CreateIngredient(FlaskForm):
         validate_choice=False,
     )
     submit = SubmitField("Submit")
+
+
+class SelectRecipe(FlaskForm):
+    rqty = DecimalField("Multiplyer", validators=[validators.InputRequired()])
+    name = SelectField(
+        "Recipe",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    submit = SubmitField("Submit")

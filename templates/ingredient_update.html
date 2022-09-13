@@ -4,16 +4,6 @@
     <meta charset="UTF-8" />
     <title>Shopping List</title>
 
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="{{ url_for('static', filename='css/select2.css') }}"
-      rel="stylesheet"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
 
     {% extends 'base.html' %} {% block content %}
   </head>
@@ -52,21 +42,6 @@
         });
       });
     </script>
-    <!------------------------->
-    <!-- SHOPPING LIST TABLE -->
-    <!------------------------->
-    <div class="container">
-      <br />
-      <br />
-      <h1>Ingredients:</h1>
-      <table class="table table-hover table-bordered table-striped">
-        {% for ingredient_table in ingredient_list %}
-        <tr>
-          <td>{{ingredient_table.id}} {{ingredient_table.name}}</td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
   </body>
   {% endblock %}
 </html>

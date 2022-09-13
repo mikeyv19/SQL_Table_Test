@@ -11,6 +11,7 @@ class Shopping(db.Model):
     ingredient_name = db.Column(db.String(120))
     aisle_name = db.Column(db.String(30))
     aisle_id = db.Column(db.Integer)
+    day_label = db.Column(db.String(10))
 
     def __repr__(self):
         return "<Shopping %r>" % self.ingredient_name
