@@ -9,7 +9,6 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
-  <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
   <link href="{{ url_for('static', filename='css/weekly_style_new.css') }}" rel="stylesheet" />
 </head>
 <body>
@@ -18,80 +17,66 @@
   <div class="container-table">
     <div class="row">
       <div class="column">
-        <b>Monday</b>
+        <h3>Monday</h3>
         <form method="POST">
-          {{ monday_form.hidden_tag() }} {{
-          monday_form.rqty.label(class="form-label") }}{{
-          monday_form.rqty(class="weekly-form w-50") }} <br />
-          {{ monday_form.hidden_tag() }} {{
-          monday_form.name.label(class="form-label") }}{{
-          monday_form.name(class="weekly-form", id="monday") }}
+          {{ monday_form.hidden_tag() }}{{
+          monday_form.rqty(class="half-box-form") }}
+          {{ monday_form.hidden_tag() }}{{
+          monday_form.name(class="full-box-form", id="monday") }}
         </form>
       </div>
       <div class="column">
-        <b>Tuesday</b>
+        <h3>Tuesday</h3>
         <form method="POST">
-          {{ tuesday_form.hidden_tag() }} {{
-          tuesday_form.rqty.label(class="form-label") }}{{
-          tuesday_form.rqty(class="weekly-form w-50") }} <br />
-          {{ tuesday_form.hidden_tag() }} {{
-          tuesday_form.name.label(class="form-label") }} {{
-          tuesday_form.name(class="weekly-form", id="tuesday") }}
+          {{ tuesday_form.hidden_tag() }}{{
+          tuesday_form.rqty(class="half-box-form") }}
+          {{ tuesday_form.hidden_tag() }}{{
+          tuesday_form.name(class="full-box-form", id="tuesday") }}
         </form>
       </div>
       <div class="column">
-        <b>Wednesday</b>
+        <h3>Wednesday</h3>
         <form method="POST">
+          {{ wednesday_form.hidden_tag() }}{{
+          wednesday_form.rqty(class="half-box-form") }}
           {{ wednesday_form.hidden_tag() }} {{
-          wednesday_form.rqty.label(class="form-label") }}{{
-          wednesday_form.rqty(class="weekly-form w-50") }} <br />
-          {{ wednesday_form.hidden_tag() }} {{
-          wednesday_form.name.label(class="form-label") }} {{
-          wednesday_form.name(class="weekly-form", id="wednesday") }}
+          wednesday_form.name(class="full-box-form", id="wednesday") }}
         </form>
       </div>
       <div class="column">
-        <b>Thursday</b>
+        <h3>Thursday</h3>
         <form method="POST">
+          {{ thursday_form.hidden_tag() }}{{
+          thursday_form.rqty(class="half-box-form") }}
           {{ thursday_form.hidden_tag() }} {{
-          thursday_form.rqty.label(class="form-label") }}{{
-          thursday_form.rqty(class="weekly-form w-50") }} <br />
-          {{ thursday_form.hidden_tag() }} {{
-          thursday_form.name.label(class="form-label") }} {{
-          thursday_form.name(class="weekly-form", id="thursday") }}
+          thursday_form.name(class="full-box-form", id="thursday") }}
         </form>
       </div>
       <div class="column">
-        <b>Friday</b>
+        <h3>Friday</h3>
         <form method="POST">
-          {{ friday_form.hidden_tag() }} {{
-          friday_form.rqty.label(class="form-label") }}{{
-          friday_form.rqty(class="weekly-form w-50") }} <br />
-          {{ friday_form.hidden_tag() }} {{
-          friday_form.name.label(class="form-label") }} {{
-          friday_form.name(class="weekly-form", id="friday") }}
+          {{ friday_form.hidden_tag() }}{{
+          friday_form.rqty(class="half-box-form") }}
+          {{ friday_form.hidden_tag() }}  {{
+          friday_form.name(class="full-box-form", id="friday") }}
         </form>
       </div>
       <div class="column">
-        <b>Saturday</b>
+        <h3>Saturday</h3>
         <form method="POST">
           {{ saturday_form.hidden_tag() }} {{
-          saturday_form.rqty.label(class="form-label") }}{{
-          saturday_form.rqty(class="weekly-form w-50") }} <br />
-          {{ saturday_form.hidden_tag() }} {{
-          saturday_form.name.label(class="form-label") }} {{
-          saturday_form.name(class="weekly-form", id="saturday") }}
+          saturday_form.rqty(class="half-box-form") }}
+          {{ saturday_form.hidden_tag() }}  {{
+          saturday_form.name(class="full-box-form", id="saturday") }}
         </form>
       </div>
       <div class="column">
-        <b>Sunday</b>
+        <h3>Sunday</h3>
         <form method="POST">
+          {{ sunday_form.hidden_tag() }}{{
+          sunday_form.rqty(class="half-box-form") }}
           {{ sunday_form.hidden_tag() }} {{
-          sunday_form.rqty.label(class="form-label") }}{{
-          sunday_form.rqty(class="weekly-form w-50") }} <br />
-          {{ sunday_form.hidden_tag() }} {{
-          sunday_form.name.label(class="form-label") }} {{
-          sunday_form.name(class="weekly-form", id="sunday") }}
+          sunday_form.name(class="full-box-form", id="sunday") }}
         </form>
       </div>
       </table>
