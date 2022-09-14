@@ -1,0 +1,22 @@
+body {
+  max-width: 3000px;
+  overflow-x: scroll;
+}
+
+.column {
+  float: left;
+  width: 320px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.container-table {
+  width: 2400px;
+  height: 700px;
+  padding-left: 80px;
+}

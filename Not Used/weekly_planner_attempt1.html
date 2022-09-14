@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta viewport="width=2000, initial-scale=1.0" />
+    <title>Weekly Plan</title>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="{{ url_for('static', filename='css/weekly-style.css') }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='css/select2.css') }}"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+    
+  </head>
+  <body>
+    {% include 'navbar-no-response.html' %}
+    <br>
+  <div class="container">
+    <div class="scrolling-wrapper row flex-row flex-nowrap mt-4 pb-5 pt-2">
+        <table class="table">
+         <div class="row">
+            <div class="col">
+                <b>Monday</b>
+                <br />
+                <form method="POST">
+                {{ monday_form.hidden_tag() }} {{
+                monday_form.rqty.label(class="form-label") }}{{
+                monday_form.rqty(class="weekly-form w-50") }} <br />
+                {{ monday_form.hidden_tag() }} {{
+                monday_form.name.label(class="form-label") }}{{
+                monday_form.name(class="weekly-form", id="monday") }}
+                </form>
+        <br />
+      </div>
+            <div class="col">
+                <b>Tuesday</b>
+                <br />
+                <form method="POST">
+                {{ tuesday_form.hidden_tag() }} {{
+                tuesday_form.rqty.label(class="form-label") }}{{
+                tuesday_form.rqty(class="weekly-form w-50") }} <br />
+                {{ tuesday_form.hidden_tag() }} {{
+                tuesday_form.name.label(class="form-label") }} {{
+                tuesday_form.name(class="weekly-form", id="tuesday") }}
+                </form>
+        <br />
+      </div>
+            <div class="col">
+                <b>Wednesday</b>
+                <br />
+                <form method="POST">
+                {{ wednesday_form.hidden_tag() }} {{
+                wednesday_form.rqty.label(class="form-label") }}{{
+                wednesday_form.rqty(class="weekly-form w-50") }} <br />
+                {{ wednesday_form.hidden_tag() }} {{
+                wednesday_form.name.label(class="form-label") }} {{
+                wednesday_form.name(class="weekly-form", id="wednesday") }}
+                </form>
+        <br />
+      </div>
+             <div class="col">
+              <b>Thursday</b>
+                <br />
+                <form method="POST">
+                {{ thursday_form.hidden_tag() }} {{
+                thursday_form.rqty.label(class="form-label") }}{{
+                thursday_form.rqty(class="weekly-form w-50") }} <br />
+                {{ thursday_form.hidden_tag() }} {{
+                thursday_form.name.label(class="form-label") }} {{
+                thursday_form.name(class="weekly-form", id="thursday") }}
+        </form>
+        <br />
+      </div>
+            <div class="col">
+                <b>Friday</b>
+                <br />
+                <form method="POST">
+                {{ friday_form.hidden_tag() }} {{
+                friday_form.rqty.label(class="form-label") }}{{
+                friday_form.rqty(class="weekly-form w-50") }} <br />
+                {{ friday_form.hidden_tag() }} {{
+                friday_form.name.label(class="form-label") }} {{
+                friday_form.name(class="weekly-form", id="friday") }}
+                </form>
+        <br />
+      </div>
+            <div class="col">
+                <b>Saturday</b>
+                <br />
+                <form method="POST">
+                {{ saturday_form.hidden_tag() }} {{
+                saturday_form.rqty.label(class="form-label") }}{{
+                saturday_form.rqty(class="weekly-form w-50") }} <br />
+                {{ saturday_form.hidden_tag() }} {{
+                saturday_form.name.label(class="form-label") }} {{
+                saturday_form.name(class="weekly-form", id="saturday") }}
+                </form>
+        <br />
+      </div>
+             <div class="col">
+                <b>Sunday</b>
+                <br />
+                <form method="POST">
+                {{ sunday_form.hidden_tag() }} {{
+                sunday_form.rqty.label(class="form-label") }}{{
+                sunday_form.rqty(class="weekly-form w-50") }} <br />
+                {{ sunday_form.hidden_tag() }} {{
+                sunday_form.name.label(class="form-label") }} {{
+                sunday_form.name(class="weekly-form", id="sunday") }}
+                </form>
+        <br />
+        </table>
+        <br>
+      </div>
+    </div>
+  </div>
+    <script>
+      $(document).ready(function () {
+        $("#monday").select2({
+          placeholder: "{{ monday_form.name.label.text }}",
+          allowClear: true,
+          width: "150px",
+        });
+        $("#tuesday").select2({
+          placeholder: "{{ tuesday_form.name.label.text }}",
+          allowClear: true,
+          width: "150px",
+        });
+        $("#wednesday").select2({
+          placeholder: "{{ wednesday_form.name.label.text }}",
+          allowClear: true,
+          width: "150px",
+        });
+        $("#thursday").select2({
+          placeholder: "{{ thursday_form.name.label.text }}",
+          allowClear: true,
+          width: "150px",
+        });
+        $("#friday").select2({
+          placeholder: "{{ friday_form.name.label.text }}",
+          allowClear: true,
+          width: "150px",
+        });
+        $("#saturday").select2({
+          placeholder: "{{ saturday_form.name.label.text }}",
+          allowClear: true,
+          width: "150px",
+        });
+        $("#sunday").select2({
+          placeholder: "{{ sunday_form.name.label.text }}",
+          allowClear: true,
+          width: "150px",
+        });
+      });
+    </script>
+  </body>
+</html>
