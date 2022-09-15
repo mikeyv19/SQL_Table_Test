@@ -83,7 +83,9 @@
       </table>
     </div>
     <div class="container">
-      <h1>Previously Deleted:</h1>
+      <h2>Previously Deleted:</h2>
+      <a href="{{url_for('delete_all_checked_items') }}">
+        Delete ALL Crossed Off Items (Cannot Undo!)</a>
       <table class="table table-hover table-bordered table-striped" style="text-decoration: line-through">
         {% for dshopping_list in deleted_items %}
         <tr>

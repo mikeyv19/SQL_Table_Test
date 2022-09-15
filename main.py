@@ -102,7 +102,6 @@ def recipe(id):
 #################
 @app.route("/list", methods=["GET", "POST"])
 def list():
-    # our_add = Shopping.query.order_by(Shopping.aisle_id)
     deleted_items = (
         Dshopping.query.with_entities(
             Dshopping.ingredient_name,
@@ -113,7 +112,8 @@ def list():
             func.sum(Dshopping.qty).label("dtotal"),
         )
         .group_by(Dshopping.ingredient_name)
-        .order_by(Dshopping.ingredient_name)
+        .order_by(Dshopping.id.desc())
+        .limit(100)
         .all()
     )
     our_add = (
@@ -169,7 +169,8 @@ def list():
                 func.sum(Dshopping.qty).label("dtotal"),
             )
             .group_by(Dshopping.ingredient_name)
-            .order_by(Dshopping.ingredient_name)
+            .order_by(Dshopping.id.desc())
+            .limit(100)
             .all()
         )
         return render_template(
@@ -214,7 +215,8 @@ def list():
                 func.sum(Dshopping.qty).label("dtotal"),
             )
             .group_by(Dshopping.ingredient_name)
-            .order_by(Dshopping.ingredient_name)
+            .order_by(Dshopping.id.desc())
+            .limit(100)
             .all()
         )
         form2.item.data = ""
@@ -265,7 +267,8 @@ def delete_shopping_item(ingredient_name):
             func.sum(Dshopping.qty).label("dtotal"),
         )
         .group_by(Dshopping.ingredient_name)
-        .order_by(Dshopping.ingredient_name)
+        .order_by(Dshopping.id.desc())
+        .limit(100)
         .all()
     )
     try:
@@ -304,7 +307,80 @@ def delete_shopping_item(ingredient_name):
                     func.sum(Dshopping.qty).label("dtotal"),
                 )
                 .group_by(Dshopping.ingredient_name)
-                .order_by(Dshopping.ingredient_name)
+                .order_by(Dshopping.id.desc())
+                .limit(100)
+                .all()
+            )
+        else:
+            return render_template(
+                "list_delete.html", our_add=our_add, deleted_items=deleted_items
+            )
+    except:
+        return render_template(
+            "list_delete.html", our_add=our_add, deleted_items=deleted_items
+        )
+
+
+@app.route("/list/delete_all")
+def delete_all_checked_items():
+    our_add = (
+        Shopping.query.with_entities(
+            Shopping.ingredient_name,
+            Shopping.qty,
+            Shopping.unit_name,
+            Shopping.aisle_name,
+            Shopping.aisle_id,
+            func.sum(Shopping.qty).label("total"),
+        )
+        .group_by(Shopping.ingredient_name)
+        .order_by(Shopping.ingredient_name)
+        .all()
+    )
+    deleted_items = (
+        Dshopping.query.with_entities(
+            Dshopping.ingredient_name,
+            Dshopping.qty,
+            Dshopping.unit_name,
+            Dshopping.aisle_name,
+            Dshopping.aisle_id,
+            func.sum(Dshopping.qty).label("dtotal"),
+        )
+        .group_by(Dshopping.ingredient_name)
+        .order_by(Dshopping.id.desc())
+        .limit(100)
+        .all()
+    )
+    delete_all = Dshopping.query.first()
+    try:
+        while delete_all.id > 0:
+            db.session.delete(delete_all)
+            db.session.commit()
+            delete_all = Dshopping.query.first()
+            our_add = (
+                Shopping.query.with_entities(
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.ingredient_name)
+                .all()
+            )
+            deleted_items = (
+                Dshopping.query.with_entities(
+                    Dshopping.ingredient_name,
+                    Dshopping.qty,
+                    Dshopping.unit_name,
+                    Dshopping.aisle_name,
+                    Dshopping.aisle_id,
+                    func.sum(Dshopping.qty).label("dtotal"),
+                )
+                .group_by(Dshopping.ingredient_name)
+                .order_by(Dshopping.id.desc())
+                .limit(100)
                 .all()
             )
         else:
