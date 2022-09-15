@@ -74,7 +74,7 @@
         {% for shopping_list in our_add %}
         <tr>
           <td>
-            <b>{{'%0.0f'|format(shopping_list.qty|float) }}</b> {{shopping_list.unit_name }} - <b>{{
+            <b>{{'%0.0f'|format(shopping_list.total|float) }}</b> {{shopping_list.unit_name }} - <b>{{
             shopping_list.ingredient_name }}</b> - ({{ shopping_list.aisle_name }})
           </td>
         </tr>

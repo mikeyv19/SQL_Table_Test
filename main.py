@@ -1,3 +1,4 @@
+from itertools import groupby
 from pickle import NONE
 from unicodedata import name
 from flask import Flask, render_template, request
@@ -12,6 +13,8 @@ from models import (
     db,
 )
 from forms import ManualShoppingForm, ShoppingForm, CreateIngredient, SelectRecipe
+from sqlalchemy import func
+
 
 app = Flask(__name__)
 
@@ -98,7 +101,21 @@ def recipe(id):
 #################
 @app.route("/list", methods=["GET", "POST"])
 def list():
-    our_add = Shopping.query.order_by(Shopping.aisle_id)
+    # our_add = Shopping.query.order_by(Shopping.aisle_id)
+
+    our_add = (
+        Shopping.query.with_entities(
+            Shopping.ingredient_name,
+            Shopping.qty,
+            Shopping.unit_name,
+            Shopping.aisle_name,
+            Shopping.aisle_id,
+            func.sum(Shopping.qty).label("total"),
+        )
+        .group_by(Shopping.ingredient_name)
+        .order_by(Shopping.ingredient_name)
+        .all()
+    )
     names = db.session.query(Ingredient.name).order_by(Ingredient.name)
     names = [i[0] for i in names]
     form = ShoppingForm()
@@ -116,6 +133,19 @@ def list():
         )
         db.session.add(update)
         db.session.commit()
+        our_add = (
+            Shopping.query.with_entities(
+                Shopping.ingredient_name,
+                Shopping.qty,
+                Shopping.unit_name,
+                Shopping.aisle_name,
+                Shopping.aisle_id,
+                func.sum(Shopping.qty).label("total"),
+            )
+            .group_by(Shopping.ingredient_name)
+            .order_by(Shopping.ingredient_name)
+            .all()
+        )
         return render_template(
             "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
         )
@@ -129,6 +159,19 @@ def list():
         )
         db.session.add(update)
         db.session.commit()
+        our_add = (
+            Shopping.query.with_entities(
+                Shopping.ingredient_name,
+                Shopping.qty,
+                Shopping.unit_name,
+                Shopping.aisle_name,
+                Shopping.aisle_id,
+                func.sum(Shopping.qty).label("total"),
+            )
+            .group_by(Shopping.ingredient_name)
+            .order_by(Shopping.ingredient_name)
+            .all()
+        )
         form2.item.data = ""
         return render_template(
             "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
