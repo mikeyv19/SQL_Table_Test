@@ -2,8 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Shopping List</title>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="{{ url_for('static', filename='css/select2.css') }}"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
 
+    <title>Shopping List</title>
 
     {% extends 'base.html' %} {% block content %}
   </head>
@@ -11,11 +21,10 @@
     <br />
     <h1>Edit Ingredient:</h1>
     <h3>Currently Editing:</h3>
-    {{editing_item.name}} - {{editing_item.unit.label}} -
-    {{editing_item.aisle.name}}
     <form method="POST">
-      {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br />{{
-      form.name(class="form-control w-25") }} <br />
+      {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br />
+      {{ form.name(class="form-control w-25", placeholder=editing_item.name) }}
+      <br />
       {{ form.hidden_tag() }} {{ form.unit.label(class="form-label") }} <br />
       {{ form.unit(class="form-control w-25") }}
       <br />
@@ -28,7 +37,7 @@
       $(document).ready(function () {
         $("#unit").select2({
           // init Select2 on form's name field
-          placeholder: "{{ form.unit.label.text }}",
+          placeholder: "{{ editing_item.unit.label }}",
           allowClear: true,
           width: "10%",
         });
@@ -36,7 +45,7 @@
       $(document).ready(function () {
         $("#aisle").select2({
           // init Select2 on form's name field
-          placeholder: "{{ form.aisle.label.text }}",
+          placeholder: "{{ editing_item.aisle.name}}",
           allowClear: true,
           width: "10%",
         });

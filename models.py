@@ -17,6 +17,19 @@ class Shopping(db.Model):
         return "<Shopping %r>" % self.ingredient_name
 
 
+class Dshopping(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    qty = db.Column(db.Float)
+    unit_name = db.Column(db.String(30))
+    ingredient_name = db.Column(db.String(120))
+    aisle_name = db.Column(db.String(30))
+    aisle_id = db.Column(db.Integer)
+    day_label = db.Column(db.String(10))
+
+    def __repr__(self):
+        return "<Dshopping %r>" % self.ingredient_name
+
+
 class Ingredient(db.Model):
     __tablename__ = "ingredient"
     id = db.Column(db.Integer, primary_key=True)

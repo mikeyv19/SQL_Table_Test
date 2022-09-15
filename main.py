@@ -6,6 +6,7 @@ from models import (
     Ingredient,
     Aisle,
     Shopping,
+    Dshopping,
     Recipe,
     RecipeIngredient,
     Unit,
@@ -102,7 +103,19 @@ def recipe(id):
 @app.route("/list", methods=["GET", "POST"])
 def list():
     # our_add = Shopping.query.order_by(Shopping.aisle_id)
-
+    deleted_items = (
+        Dshopping.query.with_entities(
+            Dshopping.ingredient_name,
+            Dshopping.qty,
+            Dshopping.unit_name,
+            Dshopping.aisle_name,
+            Dshopping.aisle_id,
+            func.sum(Dshopping.qty).label("dtotal"),
+        )
+        .group_by(Dshopping.ingredient_name)
+        .order_by(Dshopping.ingredient_name)
+        .all()
+    )
     our_add = (
         Shopping.query.with_entities(
             Shopping.ingredient_name,
@@ -146,8 +159,27 @@ def list():
             .order_by(Shopping.ingredient_name)
             .all()
         )
+        deleted_items = (
+            Dshopping.query.with_entities(
+                Dshopping.ingredient_name,
+                Dshopping.qty,
+                Dshopping.unit_name,
+                Dshopping.aisle_name,
+                Dshopping.aisle_id,
+                func.sum(Dshopping.qty).label("dtotal"),
+            )
+            .group_by(Dshopping.ingredient_name)
+            .order_by(Dshopping.ingredient_name)
+            .all()
+        )
         return render_template(
-            "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
+            "list.html",
+            form=form,
+            form2=form2,
+            item=item,
+            name=name,
+            our_add=our_add,
+            deleted_items=deleted_items,
         )
     if form2.validate_on_submit():
         update = Shopping(
@@ -172,13 +204,116 @@ def list():
             .order_by(Shopping.ingredient_name)
             .all()
         )
+        deleted_items = (
+            Dshopping.query.with_entities(
+                Dshopping.ingredient_name,
+                Dshopping.qty,
+                Dshopping.unit_name,
+                Dshopping.aisle_name,
+                Dshopping.aisle_id,
+                func.sum(Dshopping.qty).label("dtotal"),
+            )
+            .group_by(Dshopping.ingredient_name)
+            .order_by(Dshopping.ingredient_name)
+            .all()
+        )
         form2.item.data = ""
         return render_template(
-            "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
+            "list.html",
+            form=form,
+            form2=form2,
+            item=item,
+            name=name,
+            our_add=our_add,
+            deleted_items=deleted_items,
         )
     else:
         return render_template(
-            "list.html", form=form, form2=form2, item=item, name=name, our_add=our_add
+            "list.html",
+            form=form,
+            form2=form2,
+            item=item,
+            name=name,
+            our_add=our_add,
+            deleted_items=deleted_items,
+        )
+
+
+@app.route("/list/delete/<ingredient_name>")
+def delete_shopping_item(ingredient_name):
+    q = Shopping.query.filter_by(ingredient_name=ingredient_name).first()
+    our_add = (
+        Shopping.query.with_entities(
+            Shopping.ingredient_name,
+            Shopping.qty,
+            Shopping.unit_name,
+            Shopping.aisle_name,
+            Shopping.aisle_id,
+            func.sum(Shopping.qty).label("total"),
+        )
+        .group_by(Shopping.ingredient_name)
+        .order_by(Shopping.ingredient_name)
+        .all()
+    )
+    deleted_items = (
+        Dshopping.query.with_entities(
+            Dshopping.ingredient_name,
+            Dshopping.qty,
+            Dshopping.unit_name,
+            Dshopping.aisle_name,
+            Dshopping.aisle_id,
+            func.sum(Dshopping.qty).label("dtotal"),
+        )
+        .group_by(Dshopping.ingredient_name)
+        .order_by(Dshopping.ingredient_name)
+        .all()
+    )
+    try:
+        while q.id > 0:
+            update = Dshopping(
+                ingredient_name=q.ingredient_name,
+                qty=q.qty,
+                unit_name=q.unit_name,
+                aisle_name=q.aisle_name,
+                aisle_id=q.aisle_id,
+            )
+            db.session.add(update)
+            db.session.delete(q)
+            db.session.commit()
+            q = Shopping.query.filter_by(ingredient_name=ingredient_name).first()
+            our_add = (
+                Shopping.query.with_entities(
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.ingredient_name)
+                .all()
+            )
+            deleted_items = (
+                Dshopping.query.with_entities(
+                    Dshopping.ingredient_name,
+                    Dshopping.qty,
+                    Dshopping.unit_name,
+                    Dshopping.aisle_name,
+                    Dshopping.aisle_id,
+                    func.sum(Dshopping.qty).label("dtotal"),
+                )
+                .group_by(Dshopping.ingredient_name)
+                .order_by(Dshopping.ingredient_name)
+                .all()
+            )
+        else:
+            return render_template(
+                "list_delete.html", our_add=our_add, deleted_items=deleted_items
+            )
+    except:
+        return render_template(
+            "list_delete.html", our_add=our_add, deleted_items=deleted_items
         )
 
 
