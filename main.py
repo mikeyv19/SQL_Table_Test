@@ -1,5 +1,6 @@
 from itertools import groupby
 from pickle import NONE
+from tkinter.tix import Select
 from unicodedata import name
 from flask import Flask, render_template, request
 from models import (
@@ -33,7 +34,7 @@ def index():
 #################
 ## Weekly PLan ##
 #################
-@app.route("/weekly_plan")
+@app.route("/weekly_plan", methods=["GET", "POST"])
 def weekly_plan():
     monday_form = SelectRecipe()
     a = db.session.query(Recipe.name).order_by(Recipe.name)
@@ -52,6 +53,19 @@ def weekly_plan():
     sunday_form = SelectRecipe()
     sunday_form.name.choices = [("")] + [(x) for x in a]
     if monday_form.validate_on_submit():
+        u_mon1 = Recipe.query.filter_by(name=monday_form.name.data).first()
+        u_mon2 = RecipeIngredient.query.filter_by(id=u_mon1.id).first()
+        xqty = monday_form.rqty.data
+        u_mon4 = Shopping(
+            ingredient_name=u_mon2.ingredient.name,
+            qty=xqty,
+            unit_name=u_mon2.ingredient.unit.label,
+            aisle_name=u_mon2.ingredient.aisle.name,
+            aisle_id=u_mon2.ingredient.aisle_id,
+            day_label = "monday"
+        )
+        db.session.add(u_mon4)
+        db.session.commit()
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
