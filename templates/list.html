@@ -30,8 +30,8 @@
             {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br>{{ form.name }}
             <br />
             <br />
-            {{ form.hidden_tag() }} {{ form.aqty.label(class="form-label") }} {{
-            form.aqty(class="form-control w-25") }}
+            {{ form.hidden_tag() }}{{ form.aqty.label(class="form-label") }} {{
+            form.aqty(class="form-control w-25", value=1) }}
             <br />
             {{ form.submit(class="btn btn-secondary") }}
         </form>
@@ -56,7 +56,7 @@
             <br />
             {{ form2.item(class="form-control w-50") }} <br> {{ form2.hidden_tag()}}
             {{ form2.bqty.label(class="form-label") }} {{
-            form2.bqty(class="form-control w-25") }}
+            form2.bqty(class="form-control w-25", value=1) }}
             <br />
             {{ form2.submit1(class="btn btn-secondary") }}
           </form>

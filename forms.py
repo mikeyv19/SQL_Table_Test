@@ -42,3 +42,63 @@ class SelectRecipe(FlaskForm):
         validate_choice=False,
     )
     submit = SubmitField("Submit")
+
+
+class SelectRecipe2(FlaskForm):
+    rqty2 = DecimalField("Multiplyer", validators=[validators.InputRequired()])
+    name2 = SelectField(
+        "Recipe",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    submit2 = SubmitField("Submit")
+
+
+class SelectRecipe3(FlaskForm):
+    rqty3 = DecimalField("Multiplyer", validators=[validators.InputRequired()])
+    name3 = SelectField(
+        "Recipe",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    submit3 = SubmitField("Submit")
+
+
+class SelectRecipe4(FlaskForm):
+    rqty4 = DecimalField("Multiplyer", validators=[validators.InputRequired()])
+    name4 = SelectField(
+        "Recipe",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    submit4 = SubmitField("Submit")
+
+
+class SelectRecipe5(FlaskForm):
+    rqty5 = DecimalField("Multiplyer", validators=[validators.InputRequired()])
+    name5 = SelectField(
+        "Recipe",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    submit5 = SubmitField("Submit")
+
+
+class SelectRecipe6(FlaskForm):
+    rqty6 = DecimalField("Multiplyer", validators=[validators.InputRequired()])
+    name6 = SelectField(
+        "Recipe",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    submit6 = SubmitField("Submit")
+
+
+class SelectRecipe7(FlaskForm):
+    rqty7 = DecimalField("Multiplyer", validators=[validators.InputRequired()])
+    name7 = SelectField(
+        "Recipe",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    submit7 = SubmitField("Submit")

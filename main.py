@@ -2,7 +2,7 @@ from itertools import groupby
 from pickle import NONE
 from tkinter.tix import Select
 from unicodedata import name
-from flask import Flask, render_template, request
+from flask import Flask, flash, render_template, request
 from models import (
     Ingredient,
     Aisle,
@@ -11,10 +11,22 @@ from models import (
     Recipe,
     RecipeIngredient,
     Unit,
+    Weekly_Recipe,
     connect_db,
     db,
 )
-from forms import ManualShoppingForm, ShoppingForm, CreateIngredient, SelectRecipe
+from forms import (
+    ManualShoppingForm,
+    ShoppingForm,
+    CreateIngredient,
+    SelectRecipe,
+    SelectRecipe2,
+    SelectRecipe3,
+    SelectRecipe4,
+    SelectRecipe5,
+    SelectRecipe6,
+    SelectRecipe7,
+)
 from sqlalchemy import func
 from decimal import Decimal
 
@@ -38,22 +50,29 @@ def index():
 @app.route("/weekly_plan", methods=["GET", "POST"])
 def weekly_plan():
     monday_form = SelectRecipe()
+    monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
     a = db.session.query(Recipe.name).order_by(Recipe.name)
     a = [i[0] for i in a]
     monday_form.name.choices = [("")] + [(x) for x in a]
-    tuesday_form = SelectRecipe()
-    tuesday_form.name.choices = [("")] + [(x) for x in a]
-    wednesday_form = SelectRecipe()
-    wednesday_form.name.choices = [("")] + [(x) for x in a]
-    thursday_form = SelectRecipe()
-    thursday_form.name.choices = [("")] + [(x) for x in a]
-    friday_form = SelectRecipe()
-    friday_form.name.choices = [("")] + [(x) for x in a]
-    saturday_form = SelectRecipe()
-    saturday_form.name.choices = [("")] + [(x) for x in a]
-    sunday_form = SelectRecipe()
-    sunday_form.name.choices = [("")] + [(x) for x in a]
-    if monday_form.validate_on_submit():
+    tuesday_form = SelectRecipe2()
+    tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
+    tuesday_form.name2.choices = [("")] + [(x) for x in a]
+    wednesday_form = SelectRecipe3()
+    wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
+    wednesday_form.name3.choices = [("")] + [(x) for x in a]
+    thursday_form = SelectRecipe4()
+    thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
+    thursday_form.name4.choices = [("")] + [(x) for x in a]
+    friday_form = SelectRecipe5()
+    friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
+    friday_form.name5.choices = [("")] + [(x) for x in a]
+    saturday_form = SelectRecipe6()
+    saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
+    saturday_form.name6.choices = [("")] + [(x) for x in a]
+    sunday_form = SelectRecipe7()
+    sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
+    sunday_form.name7.choices = [("")] + [(x) for x in a]
+    if monday_form.submit.data and monday_form.validate_on_submit():
         u_mon1 = Recipe.query.filter_by(name=monday_form.name.data).first()
         u_mon2 = (
             RecipeIngredient.query.filter_by(rid=u_mon1.id)
@@ -71,6 +90,17 @@ def weekly_plan():
             )
             db.session.add(u_mon4)
             db.session.commit()
+        else:
+            weekly = Weekly_Recipe.query.get_or_404(1)
+            weekly.rname = monday_form.name.data
+            db.session.commit()
+            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
+            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
+            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
+            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
+            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
+            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
+            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
@@ -83,6 +113,253 @@ def weekly_plan():
             a=a,
             x=x,
         )
+    if tuesday_form.submit2.data and tuesday_form.validate_on_submit():
+        u_tue1 = Recipe.query.filter_by(name=tuesday_form.name2.data).first()
+        u_tue2 = (
+            RecipeIngredient.query.filter_by(rid=u_tue1.id)
+            .order_by(RecipeIngredient.rid)
+            .all()
+        )
+        for x in u_tue2:
+            u_tue4 = Shopping(
+                ingredient_name=x.ingredient.name,
+                qty=tuesday_form.rqty2.data * Decimal(x.qty),
+                unit_name=x.ingredient.unit.label,
+                aisle_name=x.ingredient.aisle.name,
+                aisle_id=x.ingredient.aisle_id,
+                day_label="tuesday",
+            )
+            db.session.add(u_tue4)
+            db.session.commit()
+        else:
+            weekly = Weekly_Recipe.query.get_or_404(2)
+            weekly.rname = tuesday_form.name2.data
+            db.session.commit()
+            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
+            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
+            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
+            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
+            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
+            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
+            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
+        return render_template(
+            "weekly_planner.html",
+            monday_form=monday_form,
+            tuesday_form=tuesday_form,
+            wednesday_form=wednesday_form,
+            thursday_form=thursday_form,
+            friday_form=friday_form,
+            saturday_form=saturday_form,
+            sunday_form=sunday_form,
+            a=a,
+            x=x,
+        )
+    if wednesday_form.submit3.data and wednesday_form.validate_on_submit():
+        u_wed1 = Recipe.query.filter_by(name=wednesday_form.name3.data).first()
+        u_wed2 = (
+            RecipeIngredient.query.filter_by(rid=u_wed1.id)
+            .order_by(RecipeIngredient.rid)
+            .all()
+        )
+        for x in u_wed2:
+            u_wed4 = Shopping(
+                ingredient_name=x.ingredient.name,
+                qty=wednesday_form.rqty3.data * Decimal(x.qty),
+                unit_name=x.ingredient.unit.label,
+                aisle_name=x.ingredient.aisle.name,
+                aisle_id=x.ingredient.aisle_id,
+                day_label="wednesday",
+            )
+            db.session.add(u_wed4)
+            db.session.commit()
+        else:
+            weekly = Weekly_Recipe.query.get_or_404(3)
+            weekly.rname = wednesday_form.name3.data
+            db.session.commit()
+            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
+            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
+            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
+            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
+            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
+            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
+            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
+        return render_template(
+            "weekly_planner.html",
+            monday_form=monday_form,
+            tuesday_form=tuesday_form,
+            wednesday_form=wednesday_form,
+            thursday_form=thursday_form,
+            friday_form=friday_form,
+            saturday_form=saturday_form,
+            sunday_form=sunday_form,
+            a=a,
+            x=x,
+        )
+    if thursday_form.submit4.data and thursday_form.validate_on_submit():
+        u_thur1 = Recipe.query.filter_by(name=thursday_form.name4.data).first()
+        u_thur2 = (
+            RecipeIngredient.query.filter_by(rid=u_thur1.id)
+            .order_by(RecipeIngredient.rid)
+            .all()
+        )
+        for x in u_thur2:
+            u_thur4 = Shopping(
+                ingredient_name=x.ingredient.name,
+                qty=thursday_form.rqty4.data * Decimal(x.qty),
+                unit_name=x.ingredient.unit.label,
+                aisle_name=x.ingredient.aisle.name,
+                aisle_id=x.ingredient.aisle_id,
+                day_label="thursday",
+            )
+            db.session.add(u_thur4)
+            db.session.commit()
+        else:
+            weekly = Weekly_Recipe.query.get_or_404(4)
+            weekly.rname = thursday_form.name4.data
+            db.session.commit()
+            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
+            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
+            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
+            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
+            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
+            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
+            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
+        return render_template(
+            "weekly_planner.html",
+            monday_form=monday_form,
+            tuesday_form=tuesday_form,
+            wednesday_form=wednesday_form,
+            thursday_form=thursday_form,
+            friday_form=friday_form,
+            saturday_form=saturday_form,
+            sunday_form=sunday_form,
+            a=a,
+            x=x,
+        )
+    if friday_form.submit5.data and friday_form.validate_on_submit():
+        u_fri1 = Recipe.query.filter_by(name=friday_form.name5.data).first()
+        u_fri2 = (
+            RecipeIngredient.query.filter_by(rid=u_fri1.id)
+            .order_by(RecipeIngredient.rid)
+            .all()
+        )
+        for x in u_fri2:
+            u_fri4 = Shopping(
+                ingredient_name=x.ingredient.name,
+                qty=friday_form.rqty5.data * Decimal(x.qty),
+                unit_name=x.ingredient.unit.label,
+                aisle_name=x.ingredient.aisle.name,
+                aisle_id=x.ingredient.aisle_id,
+                day_label="friday",
+            )
+            db.session.add(u_fri4)
+            db.session.commit()
+        else:
+            weekly = Weekly_Recipe.query.get_or_404(5)
+            weekly.rname = friday_form.name5.data
+            db.session.commit()
+            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
+            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
+            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
+            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
+            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
+            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
+            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
+        return render_template(
+            "weekly_planner.html",
+            monday_form=monday_form,
+            tuesday_form=tuesday_form,
+            wednesday_form=wednesday_form,
+            thursday_form=thursday_form,
+            friday_form=friday_form,
+            saturday_form=saturday_form,
+            sunday_form=sunday_form,
+            a=a,
+            x=x,
+        )
+    if saturday_form.submit6.data and saturday_form.validate_on_submit():
+        u_sat1 = Recipe.query.filter_by(name=saturday_form.name6.data).first()
+        u_sat2 = (
+            RecipeIngredient.query.filter_by(rid=u_sat1.id)
+            .order_by(RecipeIngredient.rid)
+            .all()
+        )
+        for x in u_sat2:
+            u_sat4 = Shopping(
+                ingredient_name=x.ingredient.name,
+                qty=saturday_form.rqty6.data * Decimal(x.qty),
+                unit_name=x.ingredient.unit.label,
+                aisle_name=x.ingredient.aisle.name,
+                aisle_id=x.ingredient.aisle_id,
+                day_label="saturday",
+            )
+            db.session.add(u_sat4)
+            db.session.commit()
+        else:
+            weekly = Weekly_Recipe.query.get_or_404(6)
+            weekly.rname = saturday_form.name6.data
+            db.session.commit()
+            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
+            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
+            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
+            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
+            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
+            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
+            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
+        return render_template(
+            "weekly_planner.html",
+            monday_form=monday_form,
+            tuesday_form=tuesday_form,
+            wednesday_form=wednesday_form,
+            thursday_form=thursday_form,
+            friday_form=friday_form,
+            saturday_form=saturday_form,
+            sunday_form=sunday_form,
+            a=a,
+            x=x,
+        )
+    if sunday_form.submit7.data and sunday_form.validate_on_submit():
+        u_sun1 = Recipe.query.filter_by(name=sunday_form.name7.data).first()
+        u_sun2 = (
+            RecipeIngredient.query.filter_by(rid=u_sun1.id)
+            .order_by(RecipeIngredient.rid)
+            .all()
+        )
+        for x in u_sun2:
+            u_sun4 = Shopping(
+                ingredient_name=x.ingredient.name,
+                qty=sunday_form.rqty7.data * Decimal(x.qty),
+                unit_name=x.ingredient.unit.label,
+                aisle_name=x.ingredient.aisle.name,
+                aisle_id=x.ingredient.aisle_id,
+                day_label="saturday",
+            )
+            db.session.add(u_sun4)
+            db.session.commit()
+        else:
+            weekly = Weekly_Recipe.query.get_or_404(7)
+            weekly.rname = sunday_form.name7.data
+            db.session.commit()
+            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
+            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
+            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
+            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
+            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
+            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
+            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
+        return render_template(
+            "weekly_planner.html",
+            monday_form=monday_form,
+            tuesday_form=tuesday_form,
+            wednesday_form=wednesday_form,
+            thursday_form=thursday_form,
+            friday_form=friday_form,
+            saturday_form=saturday_form,
+            sunday_form=sunday_form,
+            a=a,
+            x=x,
+        )
+
     return render_template(
         "weekly_planner.html",
         monday_form=monday_form,
@@ -153,7 +430,6 @@ def list():
     names = [i[0] for i in names]
     form = ShoppingForm()
     form.name.choices = [("")] + [(name) for name in names]
-    item = None
     form2 = ManualShoppingForm()
     if form.validate_on_submit():
         u1 = Ingredient.query.filter_by(name=form.name.data).first()
@@ -197,7 +473,6 @@ def list():
             "list.html",
             form=form,
             form2=form2,
-            item=item,
             name=name,
             our_add=our_add,
             deleted_items=deleted_items,
@@ -239,12 +514,10 @@ def list():
             .limit(100)
             .all()
         )
-        form2.item.data = ""
         return render_template(
             "list.html",
             form=form,
             form2=form2,
-            item=item,
             name=name,
             our_add=our_add,
             deleted_items=deleted_items,
@@ -254,7 +527,6 @@ def list():
             "list.html",
             form=form,
             form2=form2,
-            item=item,
             name=name,
             our_add=our_add,
             deleted_items=deleted_items,

@@ -6,6 +6,7 @@ from models import (
     Recipe,
     RecipeIngredient,
     connect_db,
+    Weekly_Recipe,
     db,
 )
 from main import app
@@ -51,4 +52,15 @@ ri5 = RecipeIngredient(id=5, rid=2, iid=5, qty=2, unit_suffix="Toasted")
 ri6 = RecipeIngredient(id=6, rid=2, iid=5, qty=1, unit_suffix="Toasted")
 
 db.session.add_all([ri1, ri2, ri3, ri4, ri5, ri6])
+db.session.commit()
+
+w1 = Weekly_Recipe(id=1, rname="Recipe")
+w2 = Weekly_Recipe(id=2, rname="Recipe")
+w3 = Weekly_Recipe(id=3, rname="Recipe")
+w4 = Weekly_Recipe(id=4, rname="Recipe")
+w5 = Weekly_Recipe(id=5, rname="Recipe")
+w6 = Weekly_Recipe(id=6, rname="Recipe")
+w7 = Weekly_Recipe(id=7, rname="Recipe")
+
+db.session.add_all([w1, w2, w3, w4, w5, w6, w7])
 db.session.commit()

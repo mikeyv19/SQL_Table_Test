@@ -30,54 +30,60 @@
         <h3>Tuesday</h3>
         <form method="POST">
           {{ tuesday_form.hidden_tag() }}{{
-          tuesday_form.rqty(class="half-box-form") }}x
+          tuesday_form.rqty2(class="half-box-form") }}x
           {{ tuesday_form.hidden_tag() }}{{
-          tuesday_form.name(class="full-box-form", id="tuesday") }}
+          tuesday_form.name2(class="full-box-form", id="tuesday") }}
+          <br>{{ tuesday_form.submit2(class="btn btn-secondary")}}
         </form>
       </div>
       <div class="column">
         <h3>Wednesday</h3>
         <form method="POST">
           {{ wednesday_form.hidden_tag() }}{{
-          wednesday_form.rqty(class="half-box-form") }}x
+          wednesday_form.rqty3(class="half-box-form") }}x
           {{ wednesday_form.hidden_tag() }} {{
-          wednesday_form.name(class="full-box-form", id="wednesday") }}
+          wednesday_form.name3(class="full-box-form", id="wednesday") }}
+          <br>{{ wednesday_form.submit3(class="btn btn-secondary")}}
         </form>
       </div>
       <div class="column">
         <h3>Thursday</h3>
         <form method="POST">
           {{ thursday_form.hidden_tag() }}{{
-          thursday_form.rqty(class="half-box-form") }}x
+          thursday_form.rqty4(class="half-box-form") }}x
           {{ thursday_form.hidden_tag() }} {{
-          thursday_form.name(class="full-box-form", id="thursday") }}
+          thursday_form.name4(class="full-box-form", id="thursday") }}
+          <br>{{ thursday_form.submit4(class="btn btn-secondary")}}
         </form>
       </div>
       <div class="column">
         <h3>Friday</h3>
         <form method="POST">
           {{ friday_form.hidden_tag() }}{{
-          friday_form.rqty(class="half-box-form") }}x
+          friday_form.rqty5(class="half-box-form") }}x
           {{ friday_form.hidden_tag() }}  {{
-          friday_form.name(class="full-box-form", id="friday") }}
+          friday_form.name5(class="full-box-form", id="friday") }}
+          <br>{{ friday_form.submit5(class="btn btn-secondary")}}
         </form>
       </div>
       <div class="column">
         <h3>Saturday</h3>
         <form method="POST">
           {{ saturday_form.hidden_tag() }} {{
-          saturday_form.rqty(class="half-box-form") }}x
+          saturday_form.rqty6(class="half-box-form") }}x
           {{ saturday_form.hidden_tag() }}  {{
-          saturday_form.name(class="full-box-form", id="saturday") }}
+          saturday_form.name6(class="full-box-form", id="saturday") }}
+          <br>{{ saturday_form.submit6(class="btn btn-secondary")}}
         </form>
       </div>
       <div class="column">
         <h3>Sunday</h3>
         <form method="POST">
           {{ sunday_form.hidden_tag() }}{{
-          sunday_form.rqty(class="half-box-form") }}x
+          sunday_form.rqty7(class="half-box-form") }}x
           {{ sunday_form.hidden_tag() }} {{
-          sunday_form.name(class="full-box-form", id="sunday") }}
+          sunday_form.name7(class="full-box-form", id="sunday") }}
+          <br>{{ sunday_form.submit7(class="btn btn-secondary")}}
         </form>
       </div>
       </table>
@@ -91,32 +97,32 @@
         width: "150px",
       });
       $("#tuesday").select2({
-        placeholder: "{{ tuesday_form.name.label.text }}",
+        placeholder: "{{ tuesday_form.name2.label.text }}",
         allowClear: true,
         width: "150px",
       });
       $("#wednesday").select2({
-        placeholder: "{{ wednesday_form.name.label.text }}",
+        placeholder: "{{ wednesday_form.name3.label.text }}",
         allowClear: true,
         width: "150px",
       });
       $("#thursday").select2({
-        placeholder: "{{ thursday_form.name.label.text }}",
+        placeholder: "{{ thursday_form.name4.label.text }}",
         allowClear: true,
         width: "150px",
       });
       $("#friday").select2({
-        placeholder: "{{ friday_form.name.label.text }}",
+        placeholder: "{{ friday_form.name5.label.text }}",
         allowClear: true,
         width: "150px",
       });
       $("#saturday").select2({
-        placeholder: "{{ saturday_form.name.label.text }}",
+        placeholder: "{{ saturday_form.name6.label.text }}",
         allowClear: true,
         width: "150px",
       });
       $("#sunday").select2({
-        placeholder: "{{ sunday_form.name.label.text }}",
+        placeholder: "{{ sunday_form.name7.label.text }}",
         allowClear: true,
         width: "150px",
       });

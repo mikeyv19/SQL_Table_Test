@@ -82,6 +82,14 @@ class RecipeIngredient(db.Model):
         return "<RecipeIngredient %r>" % self.rid
 
 
+class Weekly_Recipe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rname = db.Column(db.String(100))
+
+    def __repr__(self):
+        return "<WeeklyRec %r>" % self.rid
+
+
 def connect_db(app):
     db.app = app
     db.init_app(app)
