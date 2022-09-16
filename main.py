@@ -16,6 +16,7 @@ from models import (
 )
 from forms import ManualShoppingForm, ShoppingForm, CreateIngredient, SelectRecipe
 from sqlalchemy import func
+from decimal import Decimal
 
 
 app = Flask(__name__)
@@ -54,18 +55,22 @@ def weekly_plan():
     sunday_form.name.choices = [("")] + [(x) for x in a]
     if monday_form.validate_on_submit():
         u_mon1 = Recipe.query.filter_by(name=monday_form.name.data).first()
-        u_mon2 = RecipeIngredient.query.filter_by(id=u_mon1.id).first()
-        xqty = monday_form.rqty.data
-        u_mon4 = Shopping(
-            ingredient_name=u_mon2.ingredient.name,
-            qty=xqty,
-            unit_name=u_mon2.ingredient.unit.label,
-            aisle_name=u_mon2.ingredient.aisle.name,
-            aisle_id=u_mon2.ingredient.aisle_id,
-            day_label = "monday"
+        u_mon2 = (
+            RecipeIngredient.query.filter_by(rid=u_mon1.id)
+            .order_by(RecipeIngredient.rid)
+            .all()
         )
-        db.session.add(u_mon4)
-        db.session.commit()
+        for x in u_mon2:
+            u_mon4 = Shopping(
+                ingredient_name=x.ingredient.name,
+                qty=monday_form.rqty.data * Decimal(x.qty),
+                unit_name=x.ingredient.unit.label,
+                aisle_name=x.ingredient.aisle.name,
+                aisle_id=x.ingredient.aisle_id,
+                day_label="monday",
+            )
+            db.session.add(u_mon4)
+            db.session.commit()
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
@@ -76,6 +81,7 @@ def weekly_plan():
             saturday_form=saturday_form,
             sunday_form=sunday_form,
             a=a,
+            x=x,
         )
     return render_template(
         "weekly_planner.html",
