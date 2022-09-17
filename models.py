@@ -35,6 +35,15 @@ class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     unit_id = db.Column(db.Integer, db.ForeignKey("unit.id"))
+    icalories = db.Column(db.Float)
+    protein = db.Column(db.Float)
+    carbs = db.Column(db.Float)
+    fat = db.Column(db.Float)
+    fiber = db.Column(db.Float)
+    sugar = db.Column(db.Float)
+    item_unit_size = db.Column(db.Float) # How many units of item at store
+    item_price = db.Column(db.Float) # Price for full item at store
+    u_price = db.Column(db.Float)
     aisle_id = db.Column(db.Integer, db.ForeignKey("aisle.id"))
     ingredients = db.relationship("RecipeIngredient", backref="ingredient")
 

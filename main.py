@@ -38,7 +38,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///food.db"
 
 connect_db(app)
 
-
 @app.route("/")
 def index():
     return render_template("index.html")

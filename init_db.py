@@ -26,11 +26,82 @@ unit3 = Unit(id=3, label="Egg(s)")
 unit4 = Unit(id=4, label="Fruit(s)")
 unit5 = Unit(id=5, label="Slice(s)")
 
-ingredient1 = Ingredient(id=1, name="Salt", unit_id=2, aisle_id=3)
-ingredient2 = Ingredient(id=2, name="Apple", unit_id=4, aisle_id=1)
-ingredient3 = Ingredient(id=3, name="Eggs", unit_id=3, aisle_id=5)
-ingredient4 = Ingredient(id=4, name="Salmon", unit_id=1, aisle_id=2)
-ingredient5 = Ingredient(id=5, name="Bread", unit_id=5, aisle_id=4)
+ingredient1 = Ingredient(
+    id=1,
+    name="Salt",
+    unit_id=2,
+    icalories=0,
+    protein=0,
+    carbs=0,
+    fat=0,
+    fiber=0,
+    sugar=0,
+    item_unit_size=2270,
+    item_price=15.80,
+    u_price=15.80 / 2270,
+    aisle_id=3,
+)
+
+ingredient2 = Ingredient(
+    id=2,
+    name="Apple",
+    unit_id=4,
+    icalories=104.7,
+    protein=0.5,
+    carbs=25,
+    fat=0.3,
+    fiber=4.4,
+    sugar=18.9,
+    item_unit_size=1,
+    item_price=1.25,
+    u_price=1.25 / 1,
+    aisle_id=1,
+)
+ingredient3 = Ingredient(
+    id=3,
+    name="Eggs",
+    unit_id=3,
+    icalories=60,
+    protein=6,
+    carbs=0,
+    fat=4,
+    fiber=0,
+    sugar=0,
+    item_unit_size=18,
+    item_price=5.49,
+    u_price=5.49 / 18,
+    aisle_id=5,
+)
+ingredient4 = Ingredient(
+    id=4,
+    name="Salmon",
+    unit_id=1,
+    icalories=46,
+    protein=7,
+    carbs=0,
+    fat=2,
+    fiber=0,
+    sugar=0,
+    item_unit_size=1,
+    item_price=0.687,
+    u_price=0.687 / 1,
+    aisle_id=2,
+)
+ingredient5 = Ingredient(
+    id=5,
+    name="Bread",
+    unit_id=5,
+    icalories=67.2,
+    protein=2,
+    carbs=13,
+    fat=0.8,
+    fiber=0.5,
+    sugar=1.5,
+    item_unit_size=20,
+    item_price=1.29,
+    u_price=1.29 / 20,
+    aisle_id=4,
+)
 
 db.session.add_all([aisle1, aisle2, aisle3, aisle4, aisle5])
 db.session.add_all([unit1, unit2, unit3, unit4, unit5])
