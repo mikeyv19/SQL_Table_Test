@@ -2,7 +2,7 @@ from itertools import groupby
 from pickle import NONE
 from tkinter.tix import Select
 from unicodedata import name
-from flask import Flask, flash, render_template, request
+from flask import Flask, flash, render_template, request, redirect, url_for, jsonify
 from models import (
     Ingredient,
     Aisle,
@@ -19,6 +19,8 @@ from forms import (
     ManualShoppingForm,
     ShoppingForm,
     CreateIngredient,
+    CreateRecipe,
+    AddIngredient,
     SelectRecipe,
     SelectRecipe2,
     SelectRecipe3,
@@ -30,7 +32,6 @@ from forms import (
 from sqlalchemy import func
 from decimal import Decimal
 
-
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = "sk"
@@ -38,13 +39,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///food.db"
 
 connect_db(app)
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 
 #################
-## Weekly PLan ##
+## Weekly Plan ##
 #################
 @app.route("/weekly_plan", methods=["GET", "POST"])
 def weekly_plan():
@@ -372,6 +374,34 @@ def weekly_plan():
     )
 
 
+################
+## RECIPE ADD ##
+################
+@app.route("/unit_label_update", methods=["GET", "POST"])
+def unit_label_update():
+    if request.method == "POST":
+        y = request.json
+        x = Ingredient.query.filter_by(name=y).first()
+        return jsonify(x.unit.label)
+
+
+@app.route("/add_recipe", methods=["GET", "POST"])
+def add_recipe():
+    form = CreateRecipe()
+    if form.submit.data and form.validate_on_submit():
+        update = Recipe(
+            name=form.name.data,
+            course=form.course.data,
+            servings=form.servings.data,
+            serving_size=form.serving_size.data,
+        )
+        db.session.add(update)
+        db.session.commit()
+        new_entry = Recipe.query.order_by(Recipe.id.desc()).first()
+        return redirect(url_for("recipe_edit", id=new_entry.id))
+    return render_template("add_recipe.html", form=form)
+
+
 #################
 ## RECIPE LIST ##
 #################
@@ -379,6 +409,40 @@ def weekly_plan():
 def recipe_list():
     recipe_list = Recipe.query.order_by(Recipe.name)
     return render_template("recipe_list.html", recipe_list=recipe_list)
+
+
+#################
+## RECIPE EDIT ##
+#################
+
+
+@app.route("/recipe/<int:id>/edit", methods=["GET", "POST"])
+def recipe_edit(id):
+    r = Recipe.query.get_or_404(id)
+    title = r.name
+    x = 1
+    iquery = RecipeIngredient.query.filter_by(rid=id).all()
+    form = AddIngredient()
+    a = db.session.query(Ingredient.name).order_by(Ingredient.name)
+    a = [i[0] for i in a]
+    form.name.choices = [("")] + [(y) for y in a]
+    if form.submit.data and form.validate_on_submit():
+        u1 = Ingredient.query.filter_by(name=form.name.data).first()
+        update = RecipeIngredient(
+            rid=id,
+            iid=u1.id,
+            qty=form.qty.data,
+            unit_suffix=form.suffix.data,
+            cost=u1.u_price * form.qty.data,
+        )
+    return render_template(
+        "recipe_edit.html",
+        r=r,
+        title=title,
+        x=x,
+        iquery=iquery,
+        form=form,
+    )
 
 
 #################

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shopping List</title>
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="{{ url_for('static', filename='css/select2.css') }}"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+
+    {% extends 'base.html' %} {% block content %}
+  </head>
+
+  <body>
+    <!------------>
+    <!-- RECIPE -->
+    <!------------>
+    <div class="container">
+      <h1>{{title}}</h1>
+      <form method="POST">
+        {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }}
+        <br />{{ form.name(class="form-control", id="selector") }}
+        <span id="dynamic"></span>
+        <br />
+        {{ form.qty.label(class="form-label") }} <br />
+        {{ form.qty(class="form-control") }}
+        <br />
+        {{ form.suffix.label(class="form-label") }} <br />
+        {{ form.suffix(class="form-control") }}
+        <br /><br />
+        {{ form.submit(class="btn btn-secondary") }}
+      </form>
+      <p id="dynamic"></p>
+      <table class="table table-hover table-bordered table-striped">
+        {% for i in iquery %}
+        <tr>
+          <td>
+            <b>{{i.qty}}</b>-{{i.ingredient.unit.label}}
+            <b>{{i.ingredient.name}}</b>
+            {{i.unit_suffix}}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $("#selector").select2({
+          placeholder: "{{ form.name.label.text }}",
+          allowClear: true,
+          width: "300px",
+        });
+        $("#selector").change(function () {
+          $.ajax({
+            type: "POST",
+            url: "/unit_label_update",
+            dataType: "json",
+            data: JSON.stringify(
+              $("#select2-selector-container").attr("title")
+            ),
+            contentType: "application/json;charset=UTF-8",
+            success: function (data) {
+              document.getElementById("dynamic").innerHTML = data;
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+  {% endblock %}
+</html>

@@ -23,7 +23,7 @@
     <h3>Currently Editing:</h3>
     <form method="POST">
       {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br />
-      {{ form.name(class="form-control w-25", placeholder=editing_item.name) }}
+      {{ form.name(class="form-control w-25", value=editing_item.name) }}
       <br />
       {{ form.hidden_tag() }} {{ form.unit.label(class="form-label") }} <br />
       {{ form.unit(class="form-control w-25") }}
@@ -41,6 +41,7 @@
           allowClear: true,
           width: "10%",
         });
+        $("#unit").val("{{ editing_item.unit.label }}").trigger("change");
       });
       $(document).ready(function () {
         $("#aisle").select2({
@@ -49,6 +50,7 @@
           allowClear: true,
           width: "10%",
         });
+        $("#aisle").val("{{ editing_item.aisle.name }}").trigger("change");
       });
     </script>
   </body>

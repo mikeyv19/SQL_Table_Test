@@ -1,3 +1,4 @@
+from time import process_time_ns
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -41,8 +42,8 @@ class Ingredient(db.Model):
     fat = db.Column(db.Float)
     fiber = db.Column(db.Float)
     sugar = db.Column(db.Float)
-    item_unit_size = db.Column(db.Float) # How many units of item at store
-    item_price = db.Column(db.Float) # Price for full item at store
+    item_unit_size = db.Column(db.Float)  # How many units of item at store
+    item_price = db.Column(db.Float)  # Price for full item at store
     u_price = db.Column(db.Float)
     aisle_id = db.Column(db.Integer, db.ForeignKey("aisle.id"))
     ingredients = db.relationship("RecipeIngredient", backref="ingredient")
@@ -72,9 +73,16 @@ class Unit(db.Model):
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-
-    ##Add tags - Dinner/App/Dessert? Chicken/Shrimp? Oven Only?
-    ##Will also need Tag ID table
+    course = db.Column(db.String(30))
+    servings = db.Column(db.Float)
+    serving_size = db.Column(db.String(30))
+    protein = db.Column(db.Float)
+    carbs = db.Column(db.Float)
+    fat = db.Column(db.Float)
+    fiber = db.Column(db.Float)
+    sugar = db.Column(db.Float)
+    calories = db.Column(db.Float)
+    total_cost = db.Column(db.Float)
 
     def __repr__(self):
         return "<Recipe %r>" % self.name
@@ -86,6 +94,7 @@ class RecipeIngredient(db.Model):
     iid = db.Column(db.Integer, db.ForeignKey("ingredient.id"))
     qty = db.Column(db.Float)
     unit_suffix = db.Column(db.String(50))
+    cost = db.Column(db.Float)
 
     def __repr__(self):
         return "<RecipeIngredient %r>" % self.rid

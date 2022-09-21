@@ -22,3 +22,14 @@ from main import Aisle  //or whatever table you are updating
 To query:
 # Ingredient.query.all()
 # Aisle.query.all()
+
+Recipe Notes
+
+Create Recipe -->
+Input Name, Course, Servings, Serving_Size
+
+Select Recipe to Edit -->
+Edit ingredients
+name (link to id)
+qty
+unit suffix

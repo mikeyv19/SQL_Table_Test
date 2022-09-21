@@ -34,6 +34,41 @@ class CreateIngredient(FlaskForm):
     submit = SubmitField("Submit")
 
 
+class CreateRecipe(FlaskForm):
+    name = StringField("Name", validators=[validators.DataRequired()])
+    course = SelectField(
+        "Course",
+        choices=[
+            ("Entree"),
+            ("Appetizer"),
+            ("Dessert"),
+            ("Side Dish"),
+            ("Beverage"),
+            ("Other"),
+        ],
+        validators=[validators.DataRequired()],
+    )
+    servings = DecimalField("Servings:", validators=[validators.InputRequired()])
+    serving_size = StringField("Serving Size", validators=[validators.DataRequired()])
+    submit = SubmitField("Submit")
+
+
+class AddIngredient(FlaskForm):
+    name = SelectField(
+        "Ingredient:",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    qty = DecimalField("Qty:", validators=[validators.InputRequired()])
+    suffix = StringField("Notes", validators=[validators.DataRequired()])
+    submit = SubmitField("Submit")
+
+
+###########################
+# WEEKLY DINNER PLAN PAGE #
+###########################
+
+
 class SelectRecipe(FlaskForm):
     rqty = DecimalField("Multiplyer", validators=[validators.InputRequired()])
     name = SelectField(
