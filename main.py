@@ -1,5 +1,6 @@
 from itertools import groupby
 from pickle import NONE
+from tkinter import W
 from tkinter.tix import Select
 from unicodedata import name
 from flask import Flask, flash, render_template, request, redirect, url_for, jsonify
@@ -415,6 +416,8 @@ def recipe_list():
 ## RECIPE EDIT ##
 #################
 
+"""Edit Recipe"""
+
 
 @app.route("/recipe/<int:id>/edit", methods=["GET", "POST"])
 def recipe_edit(id):
@@ -433,7 +436,18 @@ def recipe_edit(id):
             iid=u1.id,
             qty=form.qty.data,
             unit_suffix=form.suffix.data,
-            cost=u1.u_price * form.qty.data,
+            cost=Decimal(u1.u_price) * form.qty.data,
+        )
+        db.session.add(update)
+        db.session.commit()
+        iquery = RecipeIngredient.query.filter_by(rid=id).all()
+        return render_template(
+            "recipe_edit.html",
+            r=r,
+            title=title,
+            x=x,
+            iquery=iquery,
+            form=form,
         )
     return render_template(
         "recipe_edit.html",
@@ -445,9 +459,41 @@ def recipe_edit(id):
     )
 
 
+"""Move Recipe Ingredient Down in List"""
+
+
+@app.route("/recipe/<int:rid>/edit/down/<int:id>", methods=["GET", "POST"])
+def recipe_ingredient_move_down(rid, id):
+    a = RecipeIngredient.query.get_or_404(id)
+    b = RecipeIngredient.query.filter(
+        RecipeIngredient.rid == rid, RecipeIngredient.id > a.id
+    ).first_or_404()
+
+    w = a.iid
+    x = a.qty
+    y = a.unit_suffix
+    z = a.cost
+
+    a.iid = b.iid
+    a.qty = b.qty
+    a.unit_suffix = b.unit_suffix
+    a.cost = b.cost
+
+    b.iid = w
+    b.qty = x
+    b.unit_suffix = y
+    b.cost = z
+
+    db.session.commit()
+    return redirect(url_for("recipe_edit", id=rid))
+
+
 #################
 ## RECIPE PAGE ##
 #################
+"""View Recipes"""
+
+
 @app.route("/recipe/<int:id>")
 def recipe(id):
     r = Recipe.query.get_or_404(id)

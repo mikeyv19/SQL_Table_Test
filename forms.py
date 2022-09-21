@@ -60,7 +60,7 @@ class AddIngredient(FlaskForm):
         validate_choice=False,
     )
     qty = DecimalField("Qty:", validators=[validators.InputRequired()])
-    suffix = StringField("Notes", validators=[validators.DataRequired()])
+    suffix = StringField("Notes")
     submit = SubmitField("Submit")
 
 

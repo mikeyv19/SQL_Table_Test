@@ -27,7 +27,7 @@
         {% for recipe_table in recipe_list %}
         <tr>
           <td>{{recipe_table.id}} {{recipe_table.name}} <a href="{{url_for('recipe', id=recipe_table.id)}}">
-            View</a</td>
+            View</td>
         </tr>
         {% endfor %}
       </table>
