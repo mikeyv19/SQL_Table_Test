@@ -27,7 +27,34 @@
       <a href="{{url_for('recipe', id=r.id)}}"><h6>Return</h6></a>
       Recipe Info:
       <br> Course = {{r.course}},  Servings = {{r.servings}},  Serving Size = {{r.serving_size}}<br>
-      Protein = {{r.protein}}
+
+     {% set ns=namespace(totalProtein=0, totalCarbs=0, totalFat=0, totalFiber=0, totalSugar=0, totalPrice=0) %}
+     {% for macro in iquery %}
+     {% set ns.totalProtein = ns.totalProtein + (macro.ingredient.protein * macro.qty) %}
+     {% set ns.totalCarbs = ns.totalCarbs + (macro.ingredient.carbs * macro.qty) %}
+     {% set ns.totalFat = ns.totalFat + (macro.ingredient.fat * macro.qty) %}
+     {% set ns.totalFiber = ns.totalFiber + (macro.ingredient.fiber * macro.qty) %}
+     {% set ns.totalSugar = ns.totalSugar + (macro.ingredient.sugar * macro.qty) %}
+     {% set ns.totalPrice = ns.totalPrice + (macro.ingredient.u_price * macro.qty) %}
+     {% endfor %}
+<br>
+Per Serving:
+<br>
+Calories = {{'%0.0f'|format(((ns.totalProtein*4)+(ns.totalCarbs*4)+(ns.totalFat*9))/(r.servings))}}
+<br>
+Protein = {{'%0.0fg'|format(ns.totalProtein/r.servings)}}
+<br>
+Carbs = {{'%0.0fg'|format(ns.totalCarbs/r.servings)}}
+<br>
+Fat = {{'%0.0fg'|format(ns.totalFat/r.servings)}}
+<br>
+Fiber = {{'%0.0f'|format(ns.totalFiber/r.servings)}}
+<br>
+Sugar = {{'%0.0f'|format(ns.totalSugar/r.servings)}}
+<br>
+Price = {{'$%0.2f'|format(ns.totalPrice)}}
+
+
       <br>
       <h2>Update Recipe Info</h2>
       <form method="POST">

@@ -27,7 +27,7 @@
       <table class="table table-hover table-bordered table-striped">
         {% for recipe_table in recipe_list %}
         <tr>
-          <td>{{recipe_table.id}} {{recipe_table.name}} <a href="{{url_for('recipe', id=recipe_table.id)}}">
+          <td>{{recipe_table.name}} -- {{recipe_table.course}} -- {{recipe_table.servings}} {{recipe_table.get_total_cost()}}<a href="{{url_for('recipe', id=recipe_table.id)}}">
             View</td>
         </tr>
         {% endfor %}

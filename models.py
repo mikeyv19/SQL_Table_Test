@@ -1,7 +1,6 @@
 from time import process_time_ns
 from flask_sqlalchemy import SQLAlchemy
 
-
 db = SQLAlchemy()
 
 
@@ -86,6 +85,12 @@ class Recipe(db.Model):
 
     def __repr__(self):
         return "<Recipe %r>" % self.name
+
+    def get_total_cost(self):
+        for tc in (
+            RecipeIngredient.query.filter_by(rid=self.id).all()
+        ):
+            return tc.qty * tc.ingredient.u_price
 
 
 class RecipeIngredient(db.Model):

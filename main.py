@@ -395,6 +395,7 @@ def add_recipe():
             course=form.course.data,
             servings=form.servings.data,
             serving_size=form.serving_size.data,
+            protein=0,
         )
         db.session.add(update)
         db.session.commit()
@@ -406,10 +407,14 @@ def add_recipe():
 #################
 ## RECIPE LIST ##
 #################
+"""View Specific Recipe"""
+
+
 @app.route("/recipe_list")
 def recipe_list():
     recipe_list = Recipe.query.order_by(Recipe.name)
-    return render_template("/recipes/recipe_list.html", recipe_list=recipe_list)
+    return render_template(
+        "/recipes/recipe_list.html", recipe_list=recipe_list)
 
 
 #################
@@ -510,16 +515,18 @@ def recipe_ingredient_move_down(rid, id):
 @app.route("/recipe/delete_ingredient/<int:id>", methods=["GET", "POST"])
 def recipe_delete_ingredient(id):
     a = RecipeIngredient.query.get_or_404(id)
+    u1 = Ingredient.query.get_or_404(a.iid)
     rid = a.rid
     db.session.delete(a)
     db.session.commit()
+
     return redirect(url_for("recipe_edit", id=rid))
 
 
 ############################
 ## INDIVIDUAL RECIPE PAGE ##
 ############################
-"""View Recipes"""
+"""View Specific Recipe"""
 
 
 @app.route("/recipe/<int:id>")
