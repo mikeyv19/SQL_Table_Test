@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Recipe</title>
+
+    {% extends 'base.html' %} {% block content %}
+  </head>
+  <body>
+    <h1>Delete Recipe:</h1>
+    <h2>{{title}}</h2>
+    <div class="container">
+      <a href="{{url_for('recipe', id=r.id)}}"><h3>Return</h3></a>
+      <div class="container">
+        WARNING: Are you sure you want to delete the recipe: <b>{{title}}</b>?
+        You cannot undo this action!
+        <br />
+        <br />
+        <br />
+        <a href="{{url_for('recipe_delete_all_ingredient', id=r.id)}}">
+          <button type="button" class="btn btn-danger">
+            DELETE PERMANENTLY
+          </button>
+        </a>
+      </div>
+    </div>
+  </body>
+  {% endblock %}
+</html>

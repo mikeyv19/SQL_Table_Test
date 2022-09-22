@@ -9,16 +9,17 @@
   </head>
   <body>
     <form method="POST">
-      {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br />{{
-      form.name(class="form-control") }}{{ form.course.label(class="form-label")
-      }} <br />{{ form.course(class="form-control") }}{{
+      {{ form.hidden_tag() }} {{ form.recipe_name.label(class="form-label") }}
+      <br />{{ form.recipe_name(class="form-control") }}{{
+      form.course.label(class="form-label") }} <br />{{
+      form.course(class="form-control") }}{{
       form.servings.label(class="form-label") }} <br />{{
       form.servings(class="form-control") }}{{
       form.serving_size.label(class="form-label") }} <br />
       {{ form.serving_size(class="form-control") }}
       <br />
       <br />
-      {{ form.submit(class="btn btn-secondary") }}
+      {{ form.submit2(class="btn btn-secondary") }}
     </form>
   </body>
   {% endblock %}

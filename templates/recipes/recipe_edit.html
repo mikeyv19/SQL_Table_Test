@@ -23,7 +23,30 @@
     <!-- RECIPE -->
     <!------------>
     <div class="container">
-      <h1>{{title}}</h1>
+      <h1>{{title}} (Edit Mode)</h1>
+      <a href="{{url_for('recipe', id=r.id)}}"><h6>Return</h6></a>
+      Recipe Info:
+      <br> Course = {{r.course}},  Servings = {{r.servings}},  Serving Size = {{r.serving_size}}<br>
+      Protein = {{r.protein}}
+      <br>
+      <h2>Update Recipe Info</h2>
+      <form method="POST">
+        <div class="row">
+          <div class="col">
+            {{ form.hidden_tag() }} {{ form2.recipe_name(class="form-control") }}
+          </div>
+          <div class="col-2">
+            {{ form2.course(class="form-control ") }}
+          </div>
+          <div class="col-1">
+            {{ form2.servings(class="form-control")}}
+          </div>
+          <div class="col-3">
+            {{ form2.serving_size(class="form-control")}}
+          </div>
+          <div class="col">{{ form2.submit2(class="btn btn-secondary") }}</div>
+        </div>
+      </form>
       <h2>Add Ingredients:</h2>
       <form method="POST">
         <div class="row">
@@ -44,21 +67,21 @@
       <br />
       <div class="row">
         <div class="col-4">
-          <h2>Ingredients:</h2>
+          <h2>Edit Ingredients:</h2>
           <table class="table table-hover table-bordered table-striped">
             {% for i in iquery %}
             <tr>
               <td>
-                <b><a href="{{url_for('recipe_ingredient_move_down', rid=i.rid, id=i.id)}}"><img src="{{ url_for('static', filename='images/down_arrow.png') }}" width="15" /></a>{{(' %0.0f '|format(i.qty)) if (i.qty%1==0) else (' %0.2f '|format(i.qty))}}</b>{{i.ingredient.unit.label}}
+                <b><a href="{{url_for('recipe_ingredient_move_down', rid=i.rid, id=i.id)}}"><img src="{{ url_for('static', filename='images/down_arrow.png') }}" width="10" /></a>{{(' %0.0f '|format(i.qty)) if (i.qty%1==0) else (' %0.2f '|format(i.qty))}}</b>{{i.ingredient.unit.label}}
                 <b>{{i.ingredient.name}}</b>
-                {{i.unit_suffix}}
+                {{i.unit_suffix}}<a href="{{url_for('recipe_delete_ingredient',id=i.id)}}">Delete</a>
               </td>
             </tr>
             {% endfor %}
           </table>
         </div>
           <div class="col-5">
-          <h2>Instructions:</h2>
+          <h2>Edit Instructions:</h2>
         </div>
         </div>
       </div>

@@ -23,6 +23,7 @@
     <!------------------------->
     <div class="container">
       <h1>Recipe List:</h1>
+      <a href="{{url_for('add_recipe')}}"><h6>Add New</h6></a>
       <table class="table table-hover table-bordered table-striped">
         {% for recipe_table in recipe_list %}
         <tr>

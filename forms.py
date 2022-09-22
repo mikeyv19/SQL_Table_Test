@@ -33,9 +33,12 @@ class CreateIngredient(FlaskForm):
     )
     submit = SubmitField("Submit")
 
+#######################
+# RECIPE EDITING PAGE #
+#######################
 
 class CreateRecipe(FlaskForm):
-    name = StringField("Name", validators=[validators.DataRequired()])
+    recipe_name = StringField("Name", validators=[validators.DataRequired()])
     course = SelectField(
         "Course",
         choices=[
@@ -50,7 +53,8 @@ class CreateRecipe(FlaskForm):
     )
     servings = DecimalField("Servings:", validators=[validators.InputRequired()])
     serving_size = StringField("Serving Size", validators=[validators.DataRequired()])
-    submit = SubmitField("Submit")
+    submit2 = SubmitField("Submit")
+
 
 
 class AddIngredient(FlaskForm):

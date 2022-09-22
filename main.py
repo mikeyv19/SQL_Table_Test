@@ -375,9 +375,9 @@ def weekly_plan():
     )
 
 
-################
-## RECIPE ADD ##
-################
+####################
+## RECIPE ADD NEW ##
+####################
 @app.route("/unit_label_update", methods=["GET", "POST"])
 def unit_label_update():
     if request.method == "POST":
@@ -389,9 +389,9 @@ def unit_label_update():
 @app.route("/add_recipe", methods=["GET", "POST"])
 def add_recipe():
     form = CreateRecipe()
-    if form.submit.data and form.validate_on_submit():
+    if form.submit2.data and form.validate_on_submit():
         update = Recipe(
-            name=form.name.data,
+            name=form.recipe_name.data,
             course=form.course.data,
             servings=form.servings.data,
             serving_size=form.serving_size.data,
@@ -400,7 +400,7 @@ def add_recipe():
         db.session.commit()
         new_entry = Recipe.query.order_by(Recipe.id.desc()).first()
         return redirect(url_for("recipe_edit", id=new_entry.id))
-    return render_template("add_recipe.html", form=form)
+    return render_template("/recipes/add_recipe.html", form=form)
 
 
 #################
@@ -409,7 +409,7 @@ def add_recipe():
 @app.route("/recipe_list")
 def recipe_list():
     recipe_list = Recipe.query.order_by(Recipe.name)
-    return render_template("recipe_list.html", recipe_list=recipe_list)
+    return render_template("/recipes/recipe_list.html", recipe_list=recipe_list)
 
 
 #################
@@ -421,14 +421,19 @@ def recipe_list():
 
 @app.route("/recipe/<int:id>/edit", methods=["GET", "POST"])
 def recipe_edit(id):
+    """Page Load Info"""
     r = Recipe.query.get_or_404(id)
     title = r.name
     x = 1
     iquery = RecipeIngredient.query.filter_by(rid=id).all()
+    """Update Meta Data Form"""
+    form2 = CreateRecipe()
+    """Add Ingredient Form"""
     form = AddIngredient()
     a = db.session.query(Ingredient.name).order_by(Ingredient.name)
     a = [i[0] for i in a]
     form.name.choices = [("")] + [(y) for y in a]
+    """Add Ingredient Button Action"""
     if form.submit.data and form.validate_on_submit():
         u1 = Ingredient.query.filter_by(name=form.name.data).first()
         update = RecipeIngredient(
@@ -442,20 +447,31 @@ def recipe_edit(id):
         db.session.commit()
         iquery = RecipeIngredient.query.filter_by(rid=id).all()
         return render_template(
-            "recipe_edit.html",
+            "/recipes/recipe_edit.html",
             r=r,
             title=title,
             x=x,
             iquery=iquery,
             form=form,
+            form2=form2,
         )
+    """Update Meta Data Button Action"""
+    if form2.submit2.data and form2.validate_on_submit():
+        r.name = form2.recipe_name.data
+        r.course = form2.course.data
+        r.servings = form2.servings.data
+        r.serving_size = form2.serving_size.data
+        db.session.commit()
+        form2.recipe_name.data = ""
+        form2.serving_size.data = ""
     return render_template(
-        "recipe_edit.html",
+        "/recipes/recipe_edit.html",
         r=r,
-        title=title,
+        title=r.name,
         x=x,
         iquery=iquery,
         form=form,
+        form2=form2,
     )
 
 
@@ -488,9 +504,21 @@ def recipe_ingredient_move_down(rid, id):
     return redirect(url_for("recipe_edit", id=rid))
 
 
-#################
-## RECIPE PAGE ##
-#################
+"""Delete Ingredient From Recipe"""
+
+
+@app.route("/recipe/delete_ingredient/<int:id>", methods=["GET", "POST"])
+def recipe_delete_ingredient(id):
+    a = RecipeIngredient.query.get_or_404(id)
+    rid = a.rid
+    db.session.delete(a)
+    db.session.commit()
+    return redirect(url_for("recipe_edit", id=rid))
+
+
+############################
+## INDIVIDUAL RECIPE PAGE ##
+############################
 """View Recipes"""
 
 
@@ -500,7 +528,37 @@ def recipe(id):
     title = r.name
     x = 1
     iquery = RecipeIngredient.query.filter_by(rid=id).all()
-    return render_template("recipe.html", r=r, title=title, x=x, iquery=iquery)
+    return render_template("/recipes/recipe.html", r=r, title=title, x=x, iquery=iquery)
+
+
+###################
+## RECIPE DELETE ##
+###################
+
+"""Confirmation Page"""
+
+
+@app.route("/recipe/<int:id>/delete_confirmation")
+def delete_recipe_confirmation(id):
+    r = Recipe.query.get_or_404(id)
+    title = r.name
+    return render_template("/recipes/delete_recipe_conf.html", r=r, title=title)
+
+
+"""Delete Function"""
+
+
+@app.route(
+    "/recipe/<int:id>/delete_confirmation/delete_forever", methods=["GET", "POST"]
+)
+def recipe_delete_all_ingredient(id):
+    recipe = Recipe.query.get_or_404(id)
+    ingredients_delete = RecipeIngredient.query.filter_by(rid=id).all()
+    db.session.delete(recipe)
+    for ingredient in ingredients_delete:
+        db.session.delete(ingredient)
+    db.session.commit()
+    return redirect(url_for("recipe_list"))
 
 
 #################
@@ -532,7 +590,7 @@ def list():
             func.sum(Shopping.qty).label("total"),
         )
         .group_by(Shopping.ingredient_name)
-        .order_by(Shopping.ingredient_name)
+        .order_by(Shopping.aisle_id)
         .all()
     )
     names = db.session.query(Ingredient.name).order_by(Ingredient.name)
@@ -561,7 +619,7 @@ def list():
                 func.sum(Shopping.qty).label("total"),
             )
             .group_by(Shopping.ingredient_name)
-            .order_by(Shopping.ingredient_name)
+            .order_by(Shopping.aisle_id)
             .all()
         )
         deleted_items = (
@@ -606,7 +664,7 @@ def list():
                 func.sum(Shopping.qty).label("total"),
             )
             .group_by(Shopping.ingredient_name)
-            .order_by(Shopping.ingredient_name)
+            .order_by(Shopping.aisle_id)
             .all()
         )
         deleted_items = (
