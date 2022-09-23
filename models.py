@@ -87,10 +87,97 @@ class Recipe(db.Model):
         return "<Recipe %r>" % self.name
 
     def get_total_cost(self):
-        for tc in (
-            RecipeIngredient.query.filter_by(rid=self.id).all()
-        ):
-            return tc.qty * tc.ingredient.u_price
+        x = [x.qty for x in RecipeIngredient.query.filter_by(rid=self.id).all()]
+        y = [
+            y.ingredient.u_price
+            for y in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        tc = []
+        for num1, num2 in zip(x, y):
+            tc.append(num1 * num2)
+        return sum(tc)
+
+    def get_total_protein(self):
+        x = [x.qty for x in RecipeIngredient.query.filter_by(rid=self.id).all()]
+        y = [
+            y.ingredient.protein
+            for y in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        t = []
+        for num1, num2 in zip(x, y):
+            t.append(num1 * num2)
+        return sum(t)
+
+    def get_total_carbs(self):
+        x = [x.qty for x in RecipeIngredient.query.filter_by(rid=self.id).all()]
+        y = [
+            y.ingredient.carbs
+            for y in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        t = []
+        for num1, num2 in zip(x, y):
+            t.append(num1 * num2)
+        return sum(t)
+
+    def get_total_fat(self):
+        x = [x.qty for x in RecipeIngredient.query.filter_by(rid=self.id).all()]
+        y = [
+            y.ingredient.fat
+            for y in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        t = []
+        for num1, num2 in zip(x, y):
+            t.append(num1 * num2)
+        return sum(t)
+
+    def get_total_fiber(self):
+        x = [x.qty for x in RecipeIngredient.query.filter_by(rid=self.id).all()]
+        y = [
+            y.ingredient.fiber
+            for y in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        t = []
+        for num1, num2 in zip(x, y):
+            t.append(num1 * num2)
+        return sum(t)
+
+    def get_total_sugar(self):
+        x = [x.qty for x in RecipeIngredient.query.filter_by(rid=self.id).all()]
+        y = [
+            y.ingredient.sugar
+            for y in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        t = []
+        for num1, num2 in zip(x, y):
+            t.append(num1 * num2)
+        return sum(t)
+
+    def get_total_calories(self):
+        a = [a.qty for a in RecipeIngredient.query.filter_by(rid=self.id).all()]
+        p = [
+            p.ingredient.protein
+            for p in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        c = [
+            c.ingredient.carbs
+            for c in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        f = [
+            f.ingredient.fat
+            for f in RecipeIngredient.query.filter_by(rid=self.id).all()
+        ]
+        tp = []
+        for num1, num2 in zip(a, p):
+            tp.append((num1 * num2) * 4)
+        tc = []
+        for num1, num2 in zip(a, c):
+            tc.append((num1 * num2) * 4)
+        tf = []
+        for num1, num2 in zip(a, f):
+            tf.append((num1 * num2) * 9)
+        gtl = (sum(tf))+(sum(tp))+(sum(tc))
+
+        return gtl
 
 
 class RecipeIngredient(db.Model):
