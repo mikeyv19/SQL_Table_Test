@@ -1,125 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Shopping List</title>
 
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="{{ url_for('static', filename='css/select2.css') }}"
-      rel="stylesheet"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Shopping List</title>
 
-    {% extends 'base.html' %} {% block content %}
-  </head>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
 
-  <body>
-    <!------------>
-    <!-- RECIPE -->
-    <!------------>
-    <div class="container">
-      <h1>{{title}} (Edit Mode)</h1>
-      <a href="{{url_for('recipe', id=r.id)}}"><h6>Return</h6></a>
-      Recipe Info:
-      <br> Course = {{r.course}},  Servings = {{r.servings}},  Serving Size = {{r.serving_size}}<br>
+  {% extends 'base.html' %} {% block content %}
+</head>
+
+<body>
+  <!------------>
+  <!-- RECIPE -->
+  <!------------>
+  <div class="container">
+    <h1>{{title}} (Edit Mode)</h1>
+    <a href="{{url_for('recipe', id=r.id)}}">
+      <h6>Return</h6>
+    </a>
+    Recipe Info:
+    <br> Course = {{r.course}}, Servings = {{r.servings}}, Serving Size = {{r.serving_size}}<br>
 
 
-     {{'$%0.2f'|format(r.get_total_cost())}}
-     {{'%0.0fg'|format((r.get_total_protein())/r.servings)}}
-     {{'%0.0fg'|format((r.get_total_carbs())/r.servings)}}
-     {{'%0.0fg'|format((r.get_total_fat())/r.servings)}}
-     {{'%0.0fg'|format((r.get_total_fiber())/r.servings)}}
-     {{'%0.0fg'|format((r.get_total_sugar())/r.servings)}}
-     {{'%0.0f'|format((r.get_total_calories())/r.servings)}}
+    {{'$%0.2f'|format(r.get_total_cost())}} <br>
+    p: {{'%0.0fg'|format((r.get_total_protein())/r.servings)}} <br>
+    c: {{'%0.0fg'|format((r.get_total_carbs())/r.servings)}} <br>
+    f: {{'%0.0fg'|format((r.get_total_fat())/r.servings)}} <br>
+    fiber: {{'%0.0fg'|format((r.get_total_fiber())/r.servings)}} <br>
+    sugar: {{'%0.0fg'|format((r.get_total_sugar())/r.servings)}} <br>
+    cal: {{'%0.0f'|format((r.get_total_calories())/r.servings)}} <br>
 
-
-
-      <br>
-      <h2>Update Recipe Info</h2>
-      <form method="POST">
-        <div class="row">
-          <div class="col">
-            {{ form.hidden_tag() }} {{ form2.recipe_name(class="form-control") }}
-          </div>
-          <div class="col-2">
-            {{ form2.course(class="form-control ") }}
-          </div>
-          <div class="col-1">
-            {{ form2.servings(class="form-control")}}
-          </div>
-          <div class="col-3">
-            {{ form2.serving_size(class="form-control")}}
-          </div>
-          <div class="col">{{ form2.submit2(class="btn btn-secondary") }}</div>
-        </div>
-      </form>
-      <h2>Add Ingredients:</h2>
-      <form method="POST">
-        <div class="row">
-          <div class="col">
-            {{ form.hidden_tag() }} {{ form.name(class="form-control",
-            id="selector") }}
-          </div>
-          <div class="col-1">
-            {{ form.qty(class="form-control ", placeholder="Qty") }}
-          </div>
-          <div class="col-1" , id="dynamic"></div>
-          <div class="col">
-            {{ form.suffix(class="form-control", placeholder='Eg. room temp')}}
-          </div>
-          <div class="col">{{ form.submit(class="btn btn-secondary") }}</div>
-        </div>
-      </form>
-      <br />
+    <br>
+    <h2>Update Recipe Info</h2>
+    <form method="POST">
       <div class="row">
-        <div class="col-4">
-          <h2>Edit Ingredients:</h2>
-          <table class="table table-hover table-bordered table-striped">
-            {% for i in iquery %}
-            <tr>
-              <td>
-                <b><a href="{{url_for('recipe_ingredient_move_down', rid=i.rid, id=i.id)}}"><img src="{{ url_for('static', filename='images/down_arrow.png') }}" width="10" /></a>{{(' %0.0f '|format(i.qty)) if (i.qty%1==0) else (' %0.2f '|format(i.qty))}}</b>{{i.ingredient.unit.label}}
-                <b>{{i.ingredient.name}}</b>
-                {{i.unit_suffix}}<a href="{{url_for('recipe_delete_ingredient',id=i.id)}}">Delete</a>
-              </td>
-            </tr>
-            {% endfor %}
-          </table>
+        <div class="col">
+          {{ form.hidden_tag() }} {{ form2.recipe_name(class="form-control") }}
+       
+        <div class="col-2">
+          {{ form2.course(class="form-control ") }}
         </div>
-          <div class="col-5">
-          <h2>Edit Instructions:</h2>
+        <div class="col-1">
+          {{ form2.servings(class="form-control")}}
         </div>
+        <div class="col-3">
+          {{ form2.serving_size(class="form-control")}}
         </div>
+        <div class="col">{{ form2.submit2(class="btn btn-secondary") }}</div>
+      </div>
+    </form>
+    <h2>Add Ingredients:</h2>
+    <form method="POST">
+      <div class="row">
+        <div class="col">
+          {{ form.hidden_tag() }} {{ form.name(class="form-control",
+          id="selector") }}
+        </div>
+        <div class="col-1">
+          {{ form.qty(class="form-control ", placeholder="Qty") }}
+        </div>
+        <div class="col-1" , id="dynamic"></div>
+        <div class="col">
+          {{ form.suffix(class="form-control", placeholder='Eg. room temp')}}
+        </div>
+        <div class="col">{{ form.submit(class="btn btn-secondary") }}</div>
+      </div>
+    </form>
+    <br />
+    <div class="row">
+      <div class="col-4">
+        <h2>Edit Ingredients:</h2>
+        <table class="table table-hover table-bordered table-striped">
+          {% for i in iquery %}
+          <tr>
+            <td>
+              <b><a href="{{url_for('recipe_ingredient_move_down', rid=i.rid, id=i.id)}}"><img
+                    src="{{ url_for('static', filename='images/down_arrow.png') }}" width="10" /></a>{{(' %0.0f
+                '|format(i.qty)) if (i.qty%1==0) else (' %0.2f '|format(i.qty))}}</b>{{i.ingredient.unit.label}}
+              <b>{{i.ingredient.name}}</b>
+              {{i.unit_suffix}}<a href="{{url_for('recipe_delete_ingredient',id=i.id)}}">Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="col-5">
+        <h2>Edit Instructions:</h2>
       </div>
     </div>
-    <script>
-      $(document).ready(function () {
-        $("#selector").select2({
-          placeholder: "{{ form.name.label.text }}",
-          allowClear: true,
-          width: "500",
-        });
-        $("#selector").change(function () {
-          $.ajax({
-            type: "POST",
-            url: "/unit_label_update",
-            dataType: "json",
-            data: JSON.stringify(
-              $("#select2-selector-container").attr("title")
-            ),
-            contentType: "application/json;charset=UTF-8",
-            success: function (data) {
-              document.getElementById("dynamic").innerHTML = data;
-            },
-          });
+  </div>
+  </div>
+  <script>
+    $(document).ready(function () {
+      $("#selector").select2({
+        placeholder: "{{ form.name.label.text }}",
+        allowClear: true,
+        width: "500",
+      });
+      $("#selector").change(function () {
+        $.ajax({
+          type: "POST",
+          url: "/unit_label_update",
+          dataType: "json",
+          data: JSON.stringify(
+            $("#select2-selector-container").attr("title")
+          ),
+          contentType: "application/json;charset=UTF-8",
+          success: function (data) {
+            document.getElementById("dynamic").innerHTML = data;
+          },
         });
       });
-    </script>
-  </body>
-  {% endblock %}
+    });
+  </script>
+</body>
+{% endblock %}
+
 </html>

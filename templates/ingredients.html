@@ -1,73 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Shopping List</title>
 
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="{{ url_for('static', filename='css/select2.css') }}"
-      rel="stylesheet"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Shopping List</title>
 
-    {% extends 'base.html' %} {% block content %}
-  </head>
-  <body>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+  <style>
+    h5 {text-align: center;}
+  </style>
+  {% extends 'base.html' %} {% block content %}
+</head>
+
+<body>
+  <br />
+  <div class="container"></div>
+  <h1>Create New Ingredient:</h1>
+  <font size="-1">*All fields are required, but you can use 0 for placeholders if unkown.</font>
+  <form method="POST">
+    <div class="row">
+      <div class="col">
+        {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }}{{
+        form.name(class="form-control w-50") }}
+        
+        <br>
+        
+      </div>
+      <div class="row">
+        <div class="col-3"><h5>Unit of Measurement</h5>
+        </div>
+        <div class="col-2"><h5>Macros (Per Unit)</h5>
+        </div>
+        <div class="col-3"><h5>Item/Container Size and Pricing</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          {{ form.unit.label(class="form-label") }}
+          {{ form.unit(class="form-control") }}
+          <br>
+          {{ form.aisle.label(class="form-label") }}
+          <br>
+          {{ form.aisle(class="form-control") }}
+        </div>
+        <div class="col-1">
+          {{ form.protein.label(class="form-label") }}
+          {{ form.protein(class="form-control w-100") }}
+          {{ form.carbs.label(class="form-label") }}
+          {{ form.carbs(class="form-control w-100") }}
+          {{ form.fat.label(class="form-label") }}
+          {{ form.fat(class="form-control w-100") }}
+        </div>
+        <div class="col-1">
+          {{ form.fiber.label(class="form-label") }}
+          {{ form.fiber(class="form-control w-100") }}
+          {{ form.sugar.label(class="form-label") }}
+          {{ form.sugar(class="form-control w-100") }}
+        </div>
+        <div class="col-5">
+          <font size="-1">*Note: "Units per item" should be how much the container at the store has. (Eg. eggs at the store come in an 18 pack, tortilla package has 12 tortillas, or a contaier of olive oil has 2,000ml)</font>
+          <br>
+          <br>
+          {{ form.item_unit_size.label(class="form-label") }}
+          {{ form.item_unit_size(class="form-control w-50") }}
+          {{ form.item_price.label(class="form-label") }}
+          {{ form.item_price(class="form-control w-50") }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          {{ form.submit(class="btn btn-secondary") }}
+        </div>
+      </div>
+  </form>
+
+  <script>
+    $(document).ready(function () {
+      $("#unit").select2({
+        // init Select2 on form's name field
+        placeholder: "{{ form.unit.label.text }}",
+        allowClear: true,
+        width: "100%",
+      });
+    });
+    $(document).ready(function () {
+      $("#aisle").select2({
+        // init Select2 on form's name field
+        placeholder: "{{ form.aisle.label.text }}",
+        allowClear: true,
+        width: "100%",
+      });
+    });
+  </script>
+  <!------------------------->
+  <!-- SHOPPING LIST TABLE -->
+  <!------------------------->
+  <div class="container">
     <br />
-    <h1>Add Ingredient:</h1>
-    <form method="POST">
-      {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br />{{
-      form.name(class="form-control w-25") }} <br />
-      {{ form.hidden_tag() }} {{ form.unit.label(class="form-label") }} <br />
-      {{ form.unit(class="form-control w-25") }}
+    <br />
+    <h1>Ingredients:</h1>
+    <table class="table table-hover table-bordered table-striped">
+      {% for ingredient_table in ingredient_list %}
+      <tr>
+        <td>
+          {{ingredient_table.name}}
+          {{ingredient_table.unit.label}} -- {{ ingredient_table.item_unit_size }} -
+          ${{'%0.02f'|format(ingredient_table.item_price|float)}} <a
+            href="{{url_for('ingredient_edit', id=ingredient_table.id)}}">Edit</a>
         </td>
-      <br />
-      {{ form.hidden_tag() }} {{ form.aisle.label(class="form-label") }} <br />
-      {{ form.aisle(class="form-control w-25") }}
-      <br /><br />
-      {{ form.submit(class="btn btn-secondary") }}
-    </form>
-    <script>
-      $(document).ready(function () {
-        $("#unit").select2({
-          // init Select2 on form's name field
-          placeholder: "{{ form.unit.label.text }}",
-          allowClear: true,
-          width: "10%",
-        });
-      });
-      $(document).ready(function () {
-        $("#aisle").select2({
-          // init Select2 on form's name field
-          placeholder: "{{ form.aisle.label.text }}",
-          allowClear: true,
-          width: "10%",
-        });
-      });
-    </script>
-    <!------------------------->
-    <!-- SHOPPING LIST TABLE -->
-    <!------------------------->
-    <div class="container">
-      <br />
-      <br />
-      <h1>Ingredients:</h1>
-      <table class="table table-hover table-bordered table-striped">
-        {% for ingredient_table in ingredient_list %}
-        <tr>
-          <td>
-            {{ingredient_table.name}}
-            {{ingredient_table.unit.label}} -- {{ ingredient_table.item_unit_size }} - ${{'%0.02f'|format(ingredient_table.item_price|float)}} <a href="{{url_for('ingredient_edit', id=ingredient_table.id)}}">Edit</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-  </body>
-  {% endblock %}
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</body>
+{% endblock %}
+
 </html>

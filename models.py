@@ -75,13 +75,6 @@ class Recipe(db.Model):
     course = db.Column(db.String(30))
     servings = db.Column(db.Float)
     serving_size = db.Column(db.String(30))
-    protein = db.Column(db.Float)
-    carbs = db.Column(db.Float)
-    fat = db.Column(db.Float)
-    fiber = db.Column(db.Float)
-    sugar = db.Column(db.Float)
-    calories = db.Column(db.Float)
-    total_cost = db.Column(db.Float)
 
     def __repr__(self):
         return "<Recipe %r>" % self.name

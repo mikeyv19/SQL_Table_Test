@@ -19,38 +19,84 @@
   </head>
   <body>
     <br />
-    <h1>Edit Ingredient:</h1>
-    <h3>Currently Editing:</h3>
+    <div class="container"></div>
+    <h1>Edit Ingredient</h1>
+    <font size="-1">*All fields are required, but you can use 0 for placeholders if unkown.</font>
     <form method="POST">
-      {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br />
-      {{ form.name(class="form-control w-25", value=editing_item.name) }}
-      <br />
-      {{ form.hidden_tag() }} {{ form.unit.label(class="form-label") }} <br />
-      {{ form.unit(class="form-control w-25") }}
-      <br />
-      {{ form.hidden_tag() }} {{ form.aisle.label(class="form-label") }} <br />
-      {{ form.aisle(class="form-control w-25") }}
-      <br /><br />
-      {{ form.submit(class="btn btn-secondary") }}
+      <div class="row">
+        <div class="col">
+          {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }}{{
+          form.name(class="form-control w-50", value=editing_item.name) }}
+          
+          <br>
+          
+        </div>
+        <div class="row">
+          <div class="col-3"><h5>Unit of Measurement</h5>
+          </div>
+          <div class="col-2"><h5>Macros (Per Unit)</h5>
+          </div>
+          <div class="col-3"><h5>Item/Container Size and Pricing</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            {{ form.unit.label(class="form-label") }}
+            {{ form.unit(class="form-control") }}
+            <br>
+            {{ form.aisle.label(class="form-label") }}
+            <br>
+            {{ form.aisle(class="form-control") }}
+          </div>
+          <div class="col-1">
+            {{ form.protein.label(class="form-label") }}
+            {{ form.protein(class="form-control w-100", value=editing_item.protein) }}
+            {{ form.carbs.label(class="form-label") }}
+            {{ form.carbs(class="form-control w-100", value=editing_item.carbs) }}
+            {{ form.fat.label(class="form-label") }}
+            {{ form.fat(class="form-control w-100", value=editing_item.fat) }}
+          </div>
+          <div class="col-1">
+            {{ form.fiber.label(class="form-label") }}
+            {{ form.fiber(class="form-control w-100", value=editing_item.fiber) }}
+            {{ form.sugar.label(class="form-label") }}
+            {{ form.sugar(class="form-control w-100", value=editing_item.sugar) }}
+          </div>
+          <div class="col-5">
+            <font size="-1">*Note: "Units per item" should be how much the container at the store has. (Eg. eggs at the store come in an 18 pack, tortilla package has 12 tortillas, or a contaier of olive oil has 2,000ml)</font>
+            <br>
+            <br>
+            {{ form.item_unit_size.label(class="form-label") }}
+            {{ form.item_unit_size(class="form-control w-50", value=editing_item.item_unit_size) }}
+            {{ form.item_price.label(class="form-label") }}
+            {{ form.item_price(class="form-control w-50", value=editing_item.item_price) }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            {{ form.submit(class="btn btn-secondary") }}
+          </div>
+        </div>
     </form>
+  
     <script>
       $(document).ready(function () {
         $("#unit").select2({
           // init Select2 on form's name field
-          placeholder: "{{ editing_item.unit.label }}",
+          placeholder: "{{ form.unit.label.text }}",
           allowClear: true,
-          width: "10%",
+          width: "100%",
         });
-        $("#unit").val("{{ editing_item.unit.label }}").trigger("change");
+        $('#unit').val('{{editing_item.unit.label}}').trigger('change');
       });
       $(document).ready(function () {
         $("#aisle").select2({
           // init Select2 on form's name field
-          placeholder: "{{ editing_item.aisle.name}}",
+          placeholder: "{{ form.aisle.label.text }}",
           allowClear: true,
-          width: "10%",
+          width: "100%",
         });
-        $("#aisle").val("{{ editing_item.aisle.name }}").trigger("change");
+        $('#aisle').val('{{editing_item.aisle.name}}').trigger('change');
       });
     </script>
   </body>

@@ -395,7 +395,6 @@ def add_recipe():
             course=form.course.data,
             servings=form.servings.data,
             serving_size=form.serving_size.data,
-            protein=0,
         )
         db.session.add(update)
         db.session.commit()
@@ -413,8 +412,7 @@ def add_recipe():
 @app.route("/recipe_list")
 def recipe_list():
     recipe_list = Recipe.query.order_by(Recipe.name)
-    return render_template(
-        "/recipes/recipe_list.html", recipe_list=recipe_list)
+    return render_template("/recipes/recipe_list.html", recipe_list=recipe_list)
 
 
 #################
@@ -863,18 +861,20 @@ def delete_all_checked_items():
 
 @app.route("/ingredients", methods=["GET", "POST"])
 def ingredient_page():
-    ingredient_list = Ingredient.query.order_by(Ingredient.name)
-    x = db.session.query(Unit.label).order_by(Unit.label)
+    ingredient_list = Ingredient.query.order_by(func.lower(Ingredient.name))
+    x = db.session.query(Unit.label).order_by(Unit.id)
     x = [i[0] for i in x]
     form = CreateIngredient()
     form.unit.choices = [("")] + [(y) for y in x]
-    a = db.session.query(Aisle.name).order_by(Aisle.name)
+    a = db.session.query(Aisle.name).order_by(Aisle.id)
     a = [i[0] for i in a]
     form.aisle.choices = [("")] + [(b) for b in a]
     if form.validate_on_submit():
         uid = Unit.query.filter_by(label=form.unit.data).first()
         aid = Aisle.query.filter_by(name=form.aisle.data).first()
-        update = Ingredient(name=form.name.data, unit_id=uid.id, aisle_id=aid.id)
+        cal = (form.protein.data*4) + (form.carbs.data*4) + (form.fat.data*9)
+        u_price = (form.item_price.data)/(form.item_unit_size.data)
+        update = Ingredient(name=form.name.data, unit_id=uid.id, icalories=cal, protein=form.protein.data, carbs=form.carbs.data, fat=form.fat.data, fiber=form.fiber.data, sugar=form.sugar.data, item_unit_size=form.item_unit_size.data, item_price=form.item_price.data, u_price=u_price, aisle_id=aid.id)
         db.session.add(update)
         db.session.commit()
     return render_template(
@@ -893,18 +893,29 @@ def ingredient_page():
 def ingredient_edit(id):
     editing_item = Ingredient.query.get(id)
     form = CreateIngredient()
-    x = db.session.query(Unit.label).order_by(Unit.label)
+    x = db.session.query(Unit.label).order_by(Unit.id)
     x = [i[0] for i in x]
     form.unit.choices = [("")] + [(y) for y in x]
-    a = db.session.query(Aisle.name).order_by(Aisle.name)
+    a = db.session.query(Aisle.name).order_by(Aisle.id)
     a = [i[0] for i in a]
     form.aisle.choices = [("")] + [(b) for b in a]
     ingredient_to_update = Ingredient.query.get_or_404(id)
     if form.validate_on_submit():
         uid = Unit.query.filter_by(label=form.unit.data).first()
         aid = Aisle.query.filter_by(name=form.aisle.data).first()
+        cal = (form.protein.data*4) + (form.carbs.data*4) + (form.fat.data*9)
+        u_price = (form.item_price.data)/(form.item_unit_size.data)
         ingredient_to_update.name = form.name.data
         ingredient_to_update.unit_id = uid.id
+        ingredient_to_update.icalories = cal
+        ingredient_to_update.protein = form.protein.data
+        ingredient_to_update.carbs = form.carbs.data
+        ingredient_to_update.fat = form.fat.data
+        ingredient_to_update.fiber = form.fiber.data
+        ingredient_to_update.sugar = form.sugar.data
+        ingredient_to_update.item_unit_size = form.item_unit_size.data
+        ingredient_to_update.item_price = form.item_price.data
+        ingredient_to_update.u_price = u_price
         ingredient_to_update.aisle_id = aid.id
         db.session.commit()
     return render_template(

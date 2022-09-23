@@ -19,6 +19,9 @@ class ManualShoppingForm(FlaskForm):
     submit1 = SubmitField("Submit Manual Item")
 
 
+###########################
+# INGREDIENT EDITING PAGE #
+###########################
 class CreateIngredient(FlaskForm):
     name = StringField("Name:", validators=[validators.InputRequired()])
     unit = SelectField(
@@ -26,6 +29,15 @@ class CreateIngredient(FlaskForm):
         validators=[validators.InputRequired()],
         validate_choice=False,
     )
+    protein = DecimalField("Protein:", validators=[validators.InputRequired()])
+    carbs = DecimalField("Carbs:", validators=[validators.InputRequired()])
+    fat = DecimalField("Fat:", validators=[validators.InputRequired()])
+    fiber = DecimalField("Fiber:", validators=[validators.InputRequired()])
+    sugar = DecimalField("Sugar:", validators=[validators.InputRequired()])
+    item_unit_size = DecimalField(
+        "Units per item:", validators=[validators.InputRequired()]
+    )
+    item_price = DecimalField("Store Price", validators=[validators.InputRequired()])
     aisle = SelectField(
         "Shopping Aisle:",
         validators=[validators.InputRequired()],
@@ -33,9 +45,11 @@ class CreateIngredient(FlaskForm):
     )
     submit = SubmitField("Submit")
 
+
 #######################
 # RECIPE EDITING PAGE #
 #######################
+
 
 class CreateRecipe(FlaskForm):
     recipe_name = StringField("Name", validators=[validators.DataRequired()])
@@ -54,7 +68,6 @@ class CreateRecipe(FlaskForm):
     servings = DecimalField("Servings:", validators=[validators.InputRequired()])
     serving_size = StringField("Serving Size", validators=[validators.DataRequired()])
     submit2 = SubmitField("Submit")
-
 
 
 class AddIngredient(FlaskForm):
