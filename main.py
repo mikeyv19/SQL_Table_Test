@@ -718,7 +718,7 @@ def delete_shopping_item(ingredient_name):
             func.sum(Shopping.qty).label("total"),
         )
         .group_by(Shopping.ingredient_name)
-        .order_by(Shopping.ingredient_name)
+        .order_by(Shopping.id.desc())
         .all()
     )
     deleted_items = (
@@ -758,7 +758,7 @@ def delete_shopping_item(ingredient_name):
                     func.sum(Shopping.qty).label("total"),
                 )
                 .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.ingredient_name)
+                .order_by(Shopping.id.desc())
                 .all()
             )
             deleted_items = (
