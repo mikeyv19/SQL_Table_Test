@@ -32,7 +32,7 @@
         <tr>
           <td>
             <b>{{'%0.0f'|format(shopping_list.total|float) }}</b> {{shopping_list.unit_name }} - <b>{{
-            shopping_list.ingredient_name }}</b> - ({{ shopping_list.aisle_name }}) <a href="{{url_for('delete_shopping_item', ingredient_name=shopping_list.ingredient_name)}}">
+            shopping_list.ingredient_name }}</b> - ({{ shopping_list.aisle_name }}) <a href="{{url_for('delete_shopping_item', id=shopping_list.id)}}">
               Delete</a
           </td>
         </tr>

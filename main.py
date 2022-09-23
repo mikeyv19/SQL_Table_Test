@@ -587,6 +587,7 @@ def list():
     )
     our_add = (
         Shopping.query.with_entities(
+            Shopping.id,
             Shopping.ingredient_name,
             Shopping.qty,
             Shopping.unit_name,
@@ -616,6 +617,7 @@ def list():
         db.session.commit()
         our_add = (
             Shopping.query.with_entities(
+                Shopping.id,
                 Shopping.ingredient_name,
                 Shopping.qty,
                 Shopping.unit_name,
@@ -661,6 +663,7 @@ def list():
         db.session.commit()
         our_add = (
             Shopping.query.with_entities(
+                Shopping.id,
                 Shopping.ingredient_name,
                 Shopping.qty,
                 Shopping.unit_name,
@@ -705,11 +708,13 @@ def list():
         )
 
 
-@app.route("/list/delete/<ingredient_name>")
-def delete_shopping_item(ingredient_name):
-    q = Shopping.query.filter_by(ingredient_name=ingredient_name).first()
+@app.route("/list/delete/<int:id>")
+def delete_shopping_item(id):
+    get_name = Shopping.query.get_or_404(id)
+    q = Shopping.query.filter_by(ingredient_name=get_name.ingredient_name).first()
     our_add = (
         Shopping.query.with_entities(
+            Shopping.id,
             Shopping.ingredient_name,
             Shopping.qty,
             Shopping.unit_name,
@@ -747,9 +752,10 @@ def delete_shopping_item(ingredient_name):
             db.session.add(update)
             db.session.delete(q)
             db.session.commit()
-            q = Shopping.query.filter_by(ingredient_name=ingredient_name).first()
+            q = Shopping.query.filter_by(ingredient_name=get_name.ingredient_name).first()
             our_add = (
                 Shopping.query.with_entities(
+                    Shopping.id,
                     Shopping.ingredient_name,
                     Shopping.qty,
                     Shopping.unit_name,
@@ -872,9 +878,22 @@ def ingredient_page():
     if form.validate_on_submit():
         uid = Unit.query.filter_by(label=form.unit.data).first()
         aid = Aisle.query.filter_by(name=form.aisle.data).first()
-        cal = (form.protein.data*4) + (form.carbs.data*4) + (form.fat.data*9)
-        u_price = (form.item_price.data)/(form.item_unit_size.data)
-        update = Ingredient(name=form.name.data, unit_id=uid.id, icalories=cal, protein=form.protein.data, carbs=form.carbs.data, fat=form.fat.data, fiber=form.fiber.data, sugar=form.sugar.data, item_unit_size=form.item_unit_size.data, item_price=form.item_price.data, u_price=u_price, aisle_id=aid.id)
+        cal = (form.protein.data * 4) + (form.carbs.data * 4) + (form.fat.data * 9)
+        u_price = (form.item_price.data) / (form.item_unit_size.data)
+        update = Ingredient(
+            name=form.name.data,
+            unit_id=uid.id,
+            icalories=cal,
+            protein=form.protein.data,
+            carbs=form.carbs.data,
+            fat=form.fat.data,
+            fiber=form.fiber.data,
+            sugar=form.sugar.data,
+            item_unit_size=form.item_unit_size.data,
+            item_price=form.item_price.data,
+            u_price=u_price,
+            aisle_id=aid.id,
+        )
         db.session.add(update)
         db.session.commit()
     return render_template(
@@ -903,8 +922,8 @@ def ingredient_edit(id):
     if form.validate_on_submit():
         uid = Unit.query.filter_by(label=form.unit.data).first()
         aid = Aisle.query.filter_by(name=form.aisle.data).first()
-        cal = (form.protein.data*4) + (form.carbs.data*4) + (form.fat.data*9)
-        u_price = (form.item_price.data)/(form.item_unit_size.data)
+        cal = (form.protein.data * 4) + (form.carbs.data * 4) + (form.fat.data * 9)
+        u_price = (form.item_price.data) / (form.item_unit_size.data)
         ingredient_to_update.name = form.name.data
         ingredient_to_update.unit_id = uid.id
         ingredient_to_update.icalories = cal
