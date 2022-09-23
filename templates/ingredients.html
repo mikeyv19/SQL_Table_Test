@@ -110,6 +110,8 @@
           {{ingredient_table.unit.label}} -- {{ ingredient_table.item_unit_size }} -
           ${{'%0.02f'|format(ingredient_table.item_price|float)}} <a
             href="{{url_for('ingredient_edit', id=ingredient_table.id)}}">Edit</a>
+            <a href="{{url_for('delete_ingredient_confirmation', id=ingredient_table.id)}}"
+        >Delete</a>
         </td>
       </tr>
       {% endfor %}

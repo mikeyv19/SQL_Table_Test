@@ -723,7 +723,7 @@ def delete_shopping_item(id):
             func.sum(Shopping.qty).label("total"),
         )
         .group_by(Shopping.ingredient_name)
-        .order_by(Shopping.id.desc())
+        .order_by(Shopping.aisle_id)
         .all()
     )
     deleted_items = (
@@ -752,7 +752,9 @@ def delete_shopping_item(id):
             db.session.add(update)
             db.session.delete(q)
             db.session.commit()
-            q = Shopping.query.filter_by(ingredient_name=get_name.ingredient_name).first()
+            q = Shopping.query.filter_by(
+                ingredient_name=get_name.ingredient_name
+            ).first()
             our_add = (
                 Shopping.query.with_entities(
                     Shopping.id,
@@ -764,7 +766,7 @@ def delete_shopping_item(id):
                     func.sum(Shopping.qty).label("total"),
                 )
                 .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.id.desc())
+                .order_by(Shopping.aisle_id)
                 .all()
             )
             deleted_items = (
@@ -943,3 +945,23 @@ def ingredient_edit(id):
         form=form,
         editing_item=editing_item,
     )
+
+
+"""Delete Ingredient From Database Confirmatioin Page"""
+@app.route("/ingredient/<int:id>/delete_confirmation")
+def delete_ingredient_confirmation(id):
+    r = Ingredient.query.get_or_404(id)
+    title = r.name
+    return render_template("ingredient_recipe_conf.html", r=r, title=title)
+
+
+""""Delete Ingredient From Database Function"""
+
+@app.route(
+    "/ingredient/<int:id>/delete_confirmation/delete_forever", methods=["GET", "POST"]
+)
+def ingredient_delete(id):
+    ingredient = Ingredient.query.get_or_404(id)
+    db.session.delete(ingredient)
+    db.session.commit()
+    return redirect(url_for("ingredient_page"))
