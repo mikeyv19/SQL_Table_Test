@@ -9,11 +9,10 @@
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
-
   {% extends 'base.html' %} {% block content %}
 </head>
 
-<body>
+<body><b></b>
   <!------------>
   <!-- RECIPE -->
   <!------------>
@@ -21,34 +20,51 @@
     <h1>{{title}} (Edit Mode)</h1>
     <a href="{{url_for('recipe', id=r.id)}}">
       <h6>Return</h6>
+      <a href="{{url_for('delete_recipe_confirmation', id=r.id)}}"
+      ><h6>Delete Recipe</h6></a
+    >
     </a>
-    Recipe Info:
-    <br> Course = {{r.course}}, Servings = {{r.servings}}, Serving Size = {{r.serving_size}}<br>
-
-
-    {{'$%0.2f'|format(r.get_total_cost())}} <br>
-    p: {{'%0.0fg'|format((r.get_total_protein())/r.servings)}} <br>
-    c: {{'%0.0fg'|format((r.get_total_carbs())/r.servings)}} <br>
-    f: {{'%0.0fg'|format((r.get_total_fat())/r.servings)}} <br>
-    fiber: {{'%0.0fg'|format((r.get_total_fiber())/r.servings)}} <br>
-    sugar: {{'%0.0fg'|format((r.get_total_sugar())/r.servings)}} <br>
-    cal: {{'%0.0f'|format((r.get_total_calories())/r.servings)}} <br>
-
+    <div class="row">
+      <div class="col-4">
+    <h5>Recipe Info:</h5>
+      </div>
+      <div class="col-4">
+        <h5>Per Serving Macros:</h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+    <b>Course: </b> {{r.course}} <br>
+    <b>Servings: </b> {{r.servings}} <br>
+    <b>Serving Size: </b> {{r.serving_size}} <br>
+    <b>Cost to Make: </b>{{'$%0.2f'|format(r.get_total_cost())}} 
+      </div>
+    <div class="col-2">
+    <b>Protein:</b> {{'%0.0fg'|format((r.get_total_protein())/r.servings)}} <br>
+    <b>Carbs:</b> {{'%0.0fg'|format((r.get_total_carbs())/r.servings)}} <br>
+    <b>Fat:</b> {{'%0.0fg'|format((r.get_total_fat())/r.servings)}} <br>
+  </div>
+  <div class="col-2">
+    <b>Calories:</b> {{'%0.0f'|format((r.get_total_calories())/r.servings)}} <br>
+    <b>Fiber:</b> {{'%0.0fg'|format((r.get_total_fiber())/r.servings)}} <br>
+    <b>Sugar:</b> {{'%0.0fg'|format((r.get_total_sugar())/r.servings)}} <br>
+      </div>
+    </div>
     <br>
     <h2>Update Recipe Info</h2>
     <form method="POST">
       <div class="row">
         <div class="col">
-          {{ form.hidden_tag() }} {{ form2.recipe_name(class="form-control") }}
-       
+          {{ form.hidden_tag() }} {{ form2.recipe_name(class="form-control", value=r.name) }}
+        </div>
         <div class="col-2">
-          {{ form2.course(class="form-control ") }}
+          {{ form2.course(class="form-control", valuse=r.course) }}
         </div>
         <div class="col-1">
-          {{ form2.servings(class="form-control")}}
+          {{ form2.servings(class="form-control", value=r.servings)}}
         </div>
         <div class="col-3">
-          {{ form2.serving_size(class="form-control")}}
+          {{ form2.serving_size(class="form-control", value=r.serving_size)}}
         </div>
         <div class="col">{{ form2.submit2(class="btn btn-secondary") }}</div>
       </div>

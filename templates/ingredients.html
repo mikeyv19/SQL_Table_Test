@@ -10,72 +10,83 @@
   <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
   <style>
-    h5 {text-align: center;}
+    h5 {
+      text-align: center;
+    }
+    thead {
+      text-align: center; 
+    }
   </style>
   {% extends 'base.html' %} {% block content %}
 </head>
 
 <body>
   <br />
-  <div class="container"></div>
-  <h1>Create New Ingredient:</h1>
-  <font size="-1">*All fields are required, but you can use 0 for placeholders if unkown.</font>
-  <form method="POST">
-    <div class="row">
-      <div class="col">
-        {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }}{{
-        form.name(class="form-control w-50") }}
-        
-        <br>
-        
-      </div>
-      <div class="row">
-        <div class="col-3"><h5>Unit of Measurement</h5>
-        </div>
-        <div class="col-2"><h5>Macros (Per Unit)</h5>
-        </div>
-        <div class="col-3"><h5>Item/Container Size and Pricing</h5>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-3">
-          {{ form.unit.label(class="form-label") }}
-          {{ form.unit(class="form-control") }}
-          <br>
-          {{ form.aisle.label(class="form-label") }}
-          <br>
-          {{ form.aisle(class="form-control") }}
-        </div>
-        <div class="col-1">
-          {{ form.protein.label(class="form-label") }}
-          {{ form.protein(class="form-control w-100") }}
-          {{ form.carbs.label(class="form-label") }}
-          {{ form.carbs(class="form-control w-100") }}
-          {{ form.fat.label(class="form-label") }}
-          {{ form.fat(class="form-control w-100") }}
-        </div>
-        <div class="col-1">
-          {{ form.fiber.label(class="form-label") }}
-          {{ form.fiber(class="form-control w-100") }}
-          {{ form.sugar.label(class="form-label") }}
-          {{ form.sugar(class="form-control w-100") }}
-        </div>
-        <div class="col-5">
-          <font size="-1">*Note: "Units per item" should be how much the container at the store has. (Eg. eggs at the store come in an 18 pack, tortilla package has 12 tortillas, or a contaier of olive oil has 2,000ml)</font>
-          <br>
-          <br>
-          {{ form.item_unit_size.label(class="form-label") }}
-          {{ form.item_unit_size(class="form-control w-50") }}
-          {{ form.item_price.label(class="form-label") }}
-          {{ form.item_price(class="form-control w-50") }}
-        </div>
-      </div>
+  <div class="container">
+    <h1>Create New Ingredient:</h1>
+    <font size="-1">*All fields are required, but you can use 0 for placeholders if unkown.</font>
+    <form method="POST">
       <div class="row">
         <div class="col">
-          {{ form.submit(class="btn btn-secondary") }}
+          {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }}{{
+          form.name(class="form-control w-50") }}
+
+          <br>
+
         </div>
-      </div>
-  </form>
+        <div class="row">
+          <div class="col-3">
+            <h5>Unit of Measurement</h5>
+          </div>
+          <div class="col-2">
+            <h5>Macros (Per Unit)</h5>
+          </div>
+          <div class="col-3">
+            <h5>Item/Container Size and Pricing</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            {{ form.unit.label(class="form-label") }}
+            {{ form.unit(class="form-control") }}
+            <br>
+            {{ form.aisle.label(class="form-label") }}
+            <br>
+            {{ form.aisle(class="form-control") }}
+          </div>
+          <div class="col-1">
+            {{ form.protein.label(class="form-label") }}
+            {{ form.protein(class="form-control w-100") }}
+            {{ form.carbs.label(class="form-label") }}
+            {{ form.carbs(class="form-control w-100") }}
+            {{ form.fat.label(class="form-label") }}
+            {{ form.fat(class="form-control w-100") }}
+          </div>
+          <div class="col-1">
+            {{ form.fiber.label(class="form-label") }}
+            {{ form.fiber(class="form-control w-100") }}
+            {{ form.sugar.label(class="form-label") }}
+            {{ form.sugar(class="form-control w-100") }}
+          </div>
+          <div class="col-5">
+            <font size="-1">*Note: "Units per item" should be how much the container at the store has. (Eg. eggs at the
+              store come in an 18 pack, tortilla package has 12 tortillas, or a contaier of olive oil has 2,000ml)
+            </font>
+            <br>
+            <br>
+            {{ form.item_unit_size.label(class="form-label") }}
+            {{ form.item_unit_size(class="form-control w-50") }}
+            {{ form.item_price.label(class="form-label") }}
+            {{ form.item_price(class="form-control w-50") }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            {{ form.submit(class="btn btn-secondary") }}
+          </div>
+        </div>
+    </form>
+  </div>
 
   <script>
     $(document).ready(function () {
@@ -103,18 +114,41 @@
     <br />
     <h1>Ingredients:</h1>
     <table class="table table-hover table-bordered table-striped">
-      {% for ingredient_table in ingredient_list %}
-      <tr>
-        <td>
-          {{ingredient_table.name}}
-          {{ingredient_table.unit.label}} -- {{ ingredient_table.item_unit_size }} -
-          ${{'%0.02f'|format(ingredient_table.item_price|float)}} <a
-            href="{{url_for('ingredient_edit', id=ingredient_table.id)}}">Edit</a>
-            <a href="{{url_for('delete_ingredient_confirmation', id=ingredient_table.id)}}"
-        >Delete</a>
-        </td>
-      </tr>
-      {% endfor %}
+
+      <thead>
+        <tr>
+          <th>Ingredient</th>
+          <th>Calories</th>
+          <th>Protein</th>
+          <th>Carbs</th>
+          <th>Fat</th>
+          <th>Unit</th>
+          <th>Units per Item</th>
+          <th>Item Store Price</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        {% for ingredient_table in ingredient_list %}
+        <tr>
+          <td>{{ingredient_table.name}}</td>
+          <td>{{'%0.01f'|format(ingredient_table.icalories|float)}}</td>
+          <td>{{'%0.03f'|format(ingredient_table.protein|float)}}</td>
+          <td>{{'%0.03f'|format(ingredient_table.carbs|float)}}</td>
+          <td>{{'%0.03f'|format(ingredient_table.fat|float)}}</td>
+          <td>{{ingredient_table.unit.label}}</td>
+          <td>{{ ingredient_table.item_unit_size }}</td>
+          <td>{{'$%0.02f'|format(ingredient_table.item_price|float)}}</td>
+          <td>
+            <a href="{{url_for('ingredient_edit', id=ingredient_table.id)}}">Edit</a>
+          </td>
+          <td><a href="{{url_for('delete_ingredient_confirmation', id=ingredient_table.id)}}">Delete</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
     </table>
   </div>
 </body>

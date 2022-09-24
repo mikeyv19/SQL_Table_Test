@@ -948,6 +948,8 @@ def ingredient_edit(id):
 
 
 """Delete Ingredient From Database Confirmatioin Page"""
+
+
 @app.route("/ingredient/<int:id>/delete_confirmation")
 def delete_ingredient_confirmation(id):
     r = Ingredient.query.get_or_404(id)
@@ -957,11 +959,15 @@ def delete_ingredient_confirmation(id):
 
 """"Delete Ingredient From Database Function"""
 
+
 @app.route(
     "/ingredient/<int:id>/delete_confirmation/delete_forever", methods=["GET", "POST"]
 )
 def ingredient_delete(id):
     ingredient = Ingredient.query.get_or_404(id)
+    recipe_ingredients = RecipeIngredient.query.filter_by(iid=id).all()
+    for recipe_ingredient in recipe_ingredients:
+        db.session.delete(recipe_ingredient)
     db.session.delete(ingredient)
     db.session.commit()
     return redirect(url_for("ingredient_page"))
