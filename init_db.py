@@ -5,6 +5,7 @@ from models import (
     Unit,
     Recipe,
     RecipeIngredient,
+    RecipeInstruction,
     connect_db,
     Weekly_Recipe,
     db,

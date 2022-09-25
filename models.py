@@ -168,7 +168,7 @@ class Recipe(db.Model):
         tf = []
         for num1, num2 in zip(a, f):
             tf.append((num1 * num2) * 9)
-        gtl = (sum(tf))+(sum(tp))+(sum(tc))
+        gtl = (sum(tf)) + (sum(tp)) + (sum(tc))
 
         return gtl
 
@@ -179,7 +179,17 @@ class RecipeIngredient(db.Model):
     iid = db.Column(db.Integer, db.ForeignKey("ingredient.id"))
     qty = db.Column(db.Float)
     unit_suffix = db.Column(db.String(50))
-    cost = db.Column(db.Float)
+    ingredient_color_tag = db.String(20)
+
+    def __repr__(self):
+        return "<RecipeIngredient %r>" % self.rid
+
+
+class RecipeInstruction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rid = db.Column(db.Integer, db.ForeignKey("recipe.id"))
+    instruction = db.Column(db.Text)
+    instruction_color_tag = db.String(20)
 
     def __repr__(self):
         return "<RecipeIngredient %r>" % self.rid

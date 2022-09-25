@@ -1,6 +1,6 @@
 from tokenize import String
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, SubmitField, DecimalField, validators
+from wtforms import SelectField, StringField, SubmitField, DecimalField, validators, TextAreaField
 
 
 class ShoppingForm(FlaskForm):
@@ -79,6 +79,13 @@ class AddIngredient(FlaskForm):
     qty = DecimalField("Qty:", validators=[validators.InputRequired()])
     suffix = StringField("Notes")
     submit = SubmitField("Submit")
+
+
+class AddInstruction(FlaskForm):
+    instruction = TextAreaField(
+        "Add Instruction Step:", validators=[validators.InputRequired()]
+    )
+    submit3 = SubmitField("Submit")
 
 
 ###########################

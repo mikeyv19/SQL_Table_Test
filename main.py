@@ -11,6 +11,7 @@ from models import (
     Dshopping,
     Recipe,
     RecipeIngredient,
+    RecipeInstruction,
     Unit,
     Weekly_Recipe,
     connect_db,
@@ -22,6 +23,7 @@ from forms import (
     CreateIngredient,
     CreateRecipe,
     AddIngredient,
+    AddInstruction,
     SelectRecipe,
     SelectRecipe2,
     SelectRecipe3,
@@ -436,6 +438,9 @@ def recipe_edit(id):
     a = db.session.query(Ingredient.name).order_by(Ingredient.name)
     a = [i[0] for i in a]
     form.name.choices = [("")] + [(y) for y in a]
+    """Add Instruction Step Form"""
+    form3 = AddInstruction()
+    instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
     """Add Ingredient Button Action"""
     if form.submit.data and form.validate_on_submit():
         u1 = Ingredient.query.filter_by(name=form.name.data).first()
@@ -444,7 +449,6 @@ def recipe_edit(id):
             iid=u1.id,
             qty=form.qty.data,
             unit_suffix=form.suffix.data,
-            cost=Decimal(u1.u_price) * form.qty.data,
         )
         db.session.add(update)
         db.session.commit()
@@ -457,6 +461,8 @@ def recipe_edit(id):
             iquery=iquery,
             form=form,
             form2=form2,
+            form3=form3,
+            instruct_query=instruct_query,
         )
     """Update Meta Data Button Action"""
     if form2.submit2.data and form2.validate_on_submit():
@@ -465,8 +471,12 @@ def recipe_edit(id):
         r.servings = form2.servings.data
         r.serving_size = form2.serving_size.data
         db.session.commit()
-        form2.recipe_name.data = ""
-        form2.serving_size.data = ""
+    """Add Instruction Step Button Action"""
+    if form3.submit3.data and form3.validate_on_submit():
+        update = RecipeInstruction(rid=id, instruction=form3.instruction.data)
+        db.session.add(update)
+        db.session.commit()
+        instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
     return render_template(
         "/recipes/recipe_edit.html",
         r=r,
@@ -475,6 +485,8 @@ def recipe_edit(id):
         iquery=iquery,
         form=form,
         form2=form2,
+        form3=form3,
+        instruct_query=instruct_query,
     )
 
 
@@ -491,17 +503,14 @@ def recipe_ingredient_move_down(rid, id):
     w = a.iid
     x = a.qty
     y = a.unit_suffix
-    z = a.cost
 
     a.iid = b.iid
     a.qty = b.qty
     a.unit_suffix = b.unit_suffix
-    a.cost = b.cost
 
     b.iid = w
     b.qty = x
     b.unit_suffix = y
-    b.cost = z
 
     db.session.commit()
     return redirect(url_for("recipe_edit", id=rid))
@@ -514,6 +523,39 @@ def recipe_ingredient_move_down(rid, id):
 def recipe_delete_ingredient(id):
     a = RecipeIngredient.query.get_or_404(id)
     u1 = Ingredient.query.get_or_404(a.iid)
+    rid = a.rid
+    db.session.delete(a)
+    db.session.commit()
+
+    return redirect(url_for("recipe_edit", id=rid))
+
+
+"""Move Recipe Instruction Down in List"""
+
+
+@app.route("/recipe/<int:rid>/edit_instruction/down/<int:id>", methods=["GET", "POST"])
+def recipe_instruction_move_down(rid, id):
+    a = RecipeInstruction.query.get_or_404(id)
+    b = RecipeInstruction.query.filter(
+        RecipeInstruction.rid == rid, RecipeInstruction.id > a.id
+    ).first_or_404()
+
+    x = a.instruction
+
+    a.instruction = b.instruction
+
+    b.instruction = x
+
+    db.session.commit()
+    return redirect(url_for("recipe_edit", id=rid))
+
+
+"""Delete Instruction From Recipe"""
+
+
+@app.route("/recipe/delete_instruction/<int:id>", methods=["GET", "POST"])
+def recipe_delete_instruction(id):
+    a = RecipeInstruction.query.get_or_404(id)
     rid = a.rid
     db.session.delete(a)
     db.session.commit()

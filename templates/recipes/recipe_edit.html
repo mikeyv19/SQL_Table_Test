@@ -10,6 +10,11 @@
   <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
   {% extends 'base.html' %} {% block content %}
+  <style>
+    #dynamic {
+      margin: auto;
+    }
+  </style>
 </head>
 
 <body><b></b>
@@ -20,13 +25,13 @@
     <h1>{{title}} (Edit Mode)</h1>
     <a href="{{url_for('recipe', id=r.id)}}">
       <h6>Return</h6>
-      <a href="{{url_for('delete_recipe_confirmation', id=r.id)}}"
-      ><h6>Delete Recipe</h6></a
-    >
+      <a href="{{url_for('delete_recipe_confirmation', id=r.id)}}"></a>
+      <h6>Delete Recipe</h6>
+    </a>
     </a>
     <div class="row">
       <div class="col-4">
-    <h5>Recipe Info:</h5>
+        <h5>Recipe Info:</h5>
       </div>
       <div class="col-4">
         <h5>Per Serving Macros:</h5>
@@ -34,20 +39,20 @@
     </div>
     <div class="row">
       <div class="col-4">
-    <b>Course: </b> {{r.course}} <br>
-    <b>Servings: </b> {{r.servings}} <br>
-    <b>Serving Size: </b> {{r.serving_size}} <br>
-    <b>Cost to Make: </b>{{'$%0.2f'|format(r.get_total_cost())}} 
+        <b>Course: </b> {{r.course}} <br>
+        <b>Servings: </b> {{r.servings}} <br>
+        <b>Serving Size: </b> {{r.serving_size}} <br>
+        <b>Cost to Make: </b>{{'$%0.2f'|format(r.get_total_cost())}}
       </div>
-    <div class="col-2">
-    <b>Protein:</b> {{'%0.0fg'|format((r.get_total_protein())/r.servings)}} <br>
-    <b>Carbs:</b> {{'%0.0fg'|format((r.get_total_carbs())/r.servings)}} <br>
-    <b>Fat:</b> {{'%0.0fg'|format((r.get_total_fat())/r.servings)}} <br>
-  </div>
-  <div class="col-2">
-    <b>Calories:</b> {{'%0.0f'|format((r.get_total_calories())/r.servings)}} <br>
-    <b>Fiber:</b> {{'%0.0fg'|format((r.get_total_fiber())/r.servings)}} <br>
-    <b>Sugar:</b> {{'%0.0fg'|format((r.get_total_sugar())/r.servings)}} <br>
+      <div class="col-2">
+        <b>Protein:</b> {{'%0.0fg'|format((r.get_total_protein())/r.servings)}} <br>
+        <b>Carbs:</b> {{'%0.0fg'|format((r.get_total_carbs())/r.servings)}} <br>
+        <b>Fat:</b> {{'%0.0fg'|format((r.get_total_fat())/r.servings)}} <br>
+      </div>
+      <div class="col-2">
+        <b>Calories:</b> {{'%0.0f'|format((r.get_total_calories())/r.servings)}} <br>
+        <b>Fiber:</b> {{'%0.0fg'|format((r.get_total_fiber())/r.servings)}} <br>
+        <b>Sugar:</b> {{'%0.0fg'|format((r.get_total_sugar())/r.servings)}} <br>
       </div>
     </div>
     <br>
@@ -69,26 +74,45 @@
         <div class="col">{{ form2.submit2(class="btn btn-secondary") }}</div>
       </div>
     </form>
-    <h2>Add Ingredients:</h2>
-    <form method="POST">
-      <div class="row">
-        <div class="col">
-          {{ form.hidden_tag() }} {{ form.name(class="form-control",
-          id="selector") }}
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col-5">
+            <h2>Add Ingredients:</h2>
+            <form method="POST">
+              <div class="col">
+                {{ form.hidden_tag() }} {{ form.name(class="form-control",
+                id="selector") }}
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  {{ form.qty(class="form-control ", placeholder="Qty") }}
+                </div>
+                <div class="col" , id="dynamic">
+                </div>
+              </div>
+              <div class="col">
+                {{ form.suffix(class="form-control", placeholder='Eg. room temp')}}
+              </div>
+              <div class="col">{{ form.submit(class="btn btn-secondary mt-2") }}
+              </div>
+            </form>
+          </div>
+          <div class="col">
+            <h2>Add Instruction Step:</h2>
+            <form method="POST">
+              <div class="col">
+                {{ form3.hidden_tag() }} {{ form3.instruction(class="form-control") }}
+              </div>
+              <div class="col">{{ form3.submit3(class="btn btn-secondary mt-2") }}</div>
+            </form>
+          </div>
         </div>
-        <div class="col-1">
-          {{ form.qty(class="form-control ", placeholder="Qty") }}
-        </div>
-        <div class="col-1" , id="dynamic"></div>
-        <div class="col">
-          {{ form.suffix(class="form-control", placeholder='Eg. room temp')}}
-        </div>
-        <div class="col">{{ form.submit(class="btn btn-secondary") }}</div>
       </div>
-    </form>
+    </div>
     <br />
     <div class="row">
-      <div class="col-4">
+      <div class="col-5">
         <h2>Edit Ingredients:</h2>
         <table class="table table-hover table-bordered table-striped">
           {% for i in iquery %}
@@ -104,18 +128,28 @@
           {% endfor %}
         </table>
       </div>
-      <div class="col-5">
+      <div class="col-6">
         <h2>Edit Instructions:</h2>
+        <table class="table table-hover table-bordered table-striped">
+          {% for in in instruct_query %}
+          <tr>
+            <td>
+              <a href="{{url_for('recipe_instruction_move_down', rid=in.rid, id=in.id)}}"><img
+                  src="{{ url_for('static', filename='images/down_arrow.png') }}" width="10" /></a>{{in.instruction}}<a
+                href="{{url_for('recipe_delete_instruction',id=in.id)}}">Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
       </div>
     </div>
-  </div>
   </div>
   <script>
     $(document).ready(function () {
       $("#selector").select2({
         placeholder: "{{ form.name.label.text }}",
         allowClear: true,
-        width: "500",
+        width: "100%",
       });
       $("#selector").change(function () {
         $.ajax({
