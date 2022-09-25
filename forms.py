@@ -1,6 +1,13 @@
 from tokenize import String
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, SubmitField, DecimalField, validators, TextAreaField
+from wtforms import (
+    SelectField,
+    StringField,
+    SubmitField,
+    DecimalField,
+    validators,
+    TextAreaField,
+)
 
 
 class ShoppingForm(FlaskForm):
@@ -25,7 +32,7 @@ class ManualShoppingForm(FlaskForm):
 class CreateIngredient(FlaskForm):
     name = StringField("Name:", validators=[validators.InputRequired()])
     unit = SelectField(
-        "Unit:",
+        "Set Default Unit:",
         validators=[validators.InputRequired()],
         validate_choice=False,
     )
@@ -44,6 +51,18 @@ class CreateIngredient(FlaskForm):
         validate_choice=False,
     )
     submit = SubmitField("Submit")
+
+
+class AddUnitConversion(FlaskForm):
+    unit2 = SelectField(
+        "Unit Conversion Option:",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    multiplyer = DecimalField(
+        "How many base units?:", validators=[validators.InputRequired()]
+    )
+    submit2 = SubmitField("Submit")
 
 
 #######################

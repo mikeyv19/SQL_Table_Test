@@ -120,7 +120,7 @@
             <td>
               <b><a href="{{url_for('recipe_ingredient_move_down', rid=i.rid, id=i.id)}}"><img
                     src="{{ url_for('static', filename='images/down_arrow.png') }}" width="10" /></a>{{(' %0.0f
-                '|format(i.qty)) if (i.qty%1==0) else (' %0.2f '|format(i.qty))}}</b>{{i.ingredient.unit.label}}
+                '|format(i.qty)) if (i.qty%1==0) else (' %0.2f '|format(i.qty))}}</b>{{i.ingredient.default_ingredient_unit()}}
               <b>{{i.ingredient.name}}</b>
               {{i.unit_suffix}}<a href="{{url_for('recipe_delete_ingredient',id=i.id)}}">Delete</a>
             </td>

@@ -34,7 +34,6 @@ class Ingredient(db.Model):
     __tablename__ = "ingredient"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
-    unit_id = db.Column(db.Integer, db.ForeignKey("unit.id"))
     icalories = db.Column(db.Float)
     protein = db.Column(db.Float)
     carbs = db.Column(db.Float)
@@ -50,6 +49,13 @@ class Ingredient(db.Model):
     def __str__(self):
         return "<Ingredient %r>" % self.name
 
+    def default_ingredient_unit(self):
+        try:
+            x = UnitIngredient.query.filter_by(iid=self.id).first()
+            return x.unit.name
+        except:
+            return "Unknown"
+
 
 class Aisle(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -62,11 +68,21 @@ class Aisle(db.Model):
 
 class Unit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    label = db.Column(db.String(30))
-    ingredients = db.relationship("Ingredient", backref="unit")
+    name = db.Column(db.String(30))
+    ingredients = db.relationship("UnitIngredient", backref="unit")
 
     def __repr__(self):
-        return "<Aisle %r>" % self.name
+        return "<Unit %r>" % self.name
+
+
+class UnitIngredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    iid = db.Column(db.Integer, db.ForeignKey("ingredient.id"))
+    uid = db.Column(db.Integer, db.ForeignKey("unit.id"))
+    multiplyer = db.Column(db.Float)
+
+    def __repr__(self):
+        return "<UnitIngredient %r>" % self.id
 
 
 class Recipe(db.Model):

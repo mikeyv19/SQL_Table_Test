@@ -29,7 +29,7 @@ contents = csv.reader(file)
 
 # SQL query to insert data into the
 # unit table
-insert_records = "INSERT INTO unit (id, label) VALUES(?, ?)"
+insert_records = "INSERT INTO unit (id, name) VALUES(?, ?)"
 
 # Importing the contents of the file
 # into our person table
@@ -72,7 +72,7 @@ file = open("ingredient.csv")
 
 contents = csv.reader(file)
 
-insert_records = "INSERT INTO ingredient (id, name, unit_id, icalories, protein, carbs, fat, fiber, sugar, item_unit_size, item_price, u_price, aisle_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+insert_records = "INSERT INTO ingredient (id, name, icalories, protein, carbs, fat, fiber, sugar, item_unit_size, item_price, u_price, aisle_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 
 cursor.executemany(insert_records, contents)
 
@@ -82,4 +82,23 @@ rows = cursor.execute(select_all).fetchall()
 for r in rows:
     print(r)
 connection.commit()
+
+# Import UnitIngredient
+file = open("unitingredient.csv")
+
+contents = csv.reader(file)
+
+insert_records = (
+    "INSERT INTO unit_ingredient (id, iid, uid, multiplyer) VALUES(?, ?, ?, ?)"
+)
+
+cursor.executemany(insert_records, contents)
+
+select_all = "SELECT * FROM unit_ingredient"
+rows = cursor.execute(select_all).fetchall()
+
+for r in rows:
+    print(r)
+connection.commit()
+
 connection.close()

@@ -92,7 +92,7 @@
     $(document).ready(function () {
       $("#unit").select2({
         // init Select2 on form's name field
-        placeholder: "{{ form.unit.label.text }}",
+        placeholder: "Default Unit",
         allowClear: true,
         width: "100%",
       });
@@ -100,7 +100,7 @@
     $(document).ready(function () {
       $("#aisle").select2({
         // init Select2 on form's name field
-        placeholder: "{{ form.aisle.label.text }}",
+        placeholder: "Aisle",
         allowClear: true,
         width: "100%",
       });
@@ -122,7 +122,7 @@
           <th>Protein</th>
           <th>Carbs</th>
           <th>Fat</th>
-          <th>Unit</th>
+          <th>Default Unit</th>
           <th>Units per Item</th>
           <th>Item Store Price</th>
           <th>Edit</th>
@@ -138,7 +138,7 @@
           <td>{{'%0.03f'|format(ingredient_table.protein|float)}}</td>
           <td>{{'%0.03f'|format(ingredient_table.carbs|float)}}</td>
           <td>{{'%0.03f'|format(ingredient_table.fat|float)}}</td>
-          <td>{{ingredient_table.unit.label}}</td>
+          <td>{{ingredient_table.default_ingredient_unit()}}</td>
           <td>{{ ingredient_table.item_unit_size }}</td>
           <td>{{'$%0.02f'|format(ingredient_table.item_price|float)}}</td>
           <td>

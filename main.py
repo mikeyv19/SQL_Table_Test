@@ -13,6 +13,7 @@ from models import (
     RecipeIngredient,
     RecipeInstruction,
     Unit,
+    UnitIngredient,
     Weekly_Recipe,
     connect_db,
     db,
@@ -31,6 +32,7 @@ from forms import (
     SelectRecipe5,
     SelectRecipe6,
     SelectRecipe7,
+    AddUnitConversion,
 )
 from sqlalchemy import func
 from decimal import Decimal
@@ -87,7 +89,7 @@ def weekly_plan():
             u_mon4 = Shopping(
                 ingredient_name=x.ingredient.name,
                 qty=monday_form.rqty.data * Decimal(x.qty),
-                unit_name=x.ingredient.unit.label,
+                unit_name=x.ingredient.default_ingredient_unit(),
                 aisle_name=x.ingredient.aisle.name,
                 aisle_id=x.ingredient.aisle_id,
                 day_label="monday",
@@ -128,7 +130,7 @@ def weekly_plan():
             u_tue4 = Shopping(
                 ingredient_name=x.ingredient.name,
                 qty=tuesday_form.rqty2.data * Decimal(x.qty),
-                unit_name=x.ingredient.unit.label,
+                unit_name=x.ingredient.default_ingredient_unit(),
                 aisle_name=x.ingredient.aisle.name,
                 aisle_id=x.ingredient.aisle_id,
                 day_label="tuesday",
@@ -169,7 +171,7 @@ def weekly_plan():
             u_wed4 = Shopping(
                 ingredient_name=x.ingredient.name,
                 qty=wednesday_form.rqty3.data * Decimal(x.qty),
-                unit_name=x.ingredient.unit.label,
+                unit_name=x.ingredient.default_ingredient_unit(),
                 aisle_name=x.ingredient.aisle.name,
                 aisle_id=x.ingredient.aisle_id,
                 day_label="wednesday",
@@ -210,7 +212,7 @@ def weekly_plan():
             u_thur4 = Shopping(
                 ingredient_name=x.ingredient.name,
                 qty=thursday_form.rqty4.data * Decimal(x.qty),
-                unit_name=x.ingredient.unit.label,
+                unit_name=x.ingredient.default_ingredient_unit(),
                 aisle_name=x.ingredient.aisle.name,
                 aisle_id=x.ingredient.aisle_id,
                 day_label="thursday",
@@ -251,7 +253,7 @@ def weekly_plan():
             u_fri4 = Shopping(
                 ingredient_name=x.ingredient.name,
                 qty=friday_form.rqty5.data * Decimal(x.qty),
-                unit_name=x.ingredient.unit.label,
+                unit_name=x.ingredient.default_ingredient_unit(),
                 aisle_name=x.ingredient.aisle.name,
                 aisle_id=x.ingredient.aisle_id,
                 day_label="friday",
@@ -292,7 +294,7 @@ def weekly_plan():
             u_sat4 = Shopping(
                 ingredient_name=x.ingredient.name,
                 qty=saturday_form.rqty6.data * Decimal(x.qty),
-                unit_name=x.ingredient.unit.label,
+                unit_name=x.ingredient.default_ingredient_unit(),
                 aisle_name=x.ingredient.aisle.name,
                 aisle_id=x.ingredient.aisle_id,
                 day_label="saturday",
@@ -333,7 +335,7 @@ def weekly_plan():
             u_sun4 = Shopping(
                 ingredient_name=x.ingredient.name,
                 qty=sunday_form.rqty7.data * Decimal(x.qty),
-                unit_name=x.ingredient.unit.label,
+                unit_name=x.ingredient.default_ingredient_unit(),
                 aisle_name=x.ingredient.aisle.name,
                 aisle_id=x.ingredient.aisle_id,
                 day_label="saturday",
@@ -385,7 +387,7 @@ def unit_label_update():
     if request.method == "POST":
         y = request.json
         x = Ingredient.query.filter_by(name=y).first()
-        return jsonify(x.unit.label)
+        return jsonify(x.default_ingredient_unit())
 
 
 @app.route("/add_recipe", methods=["GET", "POST"])
@@ -651,7 +653,7 @@ def list():
         update = Shopping(
             ingredient_name=u1.name,
             qty=form.aqty.data,
-            unit_name=u1.unit.label,
+            unit_name=u1.default_ingredient_unit(),
             aisle_name=u1.aisle.name,
             aisle_id=u1.aisle_id,
         )
@@ -912,7 +914,7 @@ def delete_all_checked_items():
 @app.route("/ingredients", methods=["GET", "POST"])
 def ingredient_page():
     ingredient_list = Ingredient.query.order_by(func.lower(Ingredient.name))
-    x = db.session.query(Unit.label).order_by(Unit.id)
+    x = db.session.query(Unit.name).order_by(Unit.id)
     x = [i[0] for i in x]
     form = CreateIngredient()
     form.unit.choices = [("")] + [(y) for y in x]
@@ -920,13 +922,12 @@ def ingredient_page():
     a = [i[0] for i in a]
     form.aisle.choices = [("")] + [(b) for b in a]
     if form.validate_on_submit():
-        uid = Unit.query.filter_by(label=form.unit.data).first()
+        uid = Unit.query.filter_by(name=form.unit.data).first()
         aid = Aisle.query.filter_by(name=form.aisle.data).first()
         cal = (form.protein.data * 4) + (form.carbs.data * 4) + (form.fat.data * 9)
         u_price = (form.item_price.data) / (form.item_unit_size.data)
         update = Ingredient(
             name=form.name.data,
-            unit_id=uid.id,
             icalories=cal,
             protein=form.protein.data,
             carbs=form.carbs.data,
@@ -939,6 +940,10 @@ def ingredient_page():
             aisle_id=aid.id,
         )
         db.session.add(update)
+        db.session.commit()
+        iid = Ingredient.query.order_by(Ingredient.id.desc()).first()
+        update2 = UnitIngredient(uid=uid.id, iid=iid.id, multiplyer=1)
+        db.session.add(update2)
         db.session.commit()
     return render_template(
         "ingredients.html",
@@ -954,22 +959,26 @@ def ingredient_page():
 
 @app.route("/ingredients/<int:id>", methods=["GET", "POST"])
 def ingredient_edit(id):
+    """Ingredient Meta Edit"""
     editing_item = Ingredient.query.get(id)
     form = CreateIngredient()
-    x = db.session.query(Unit.label).order_by(Unit.id)
+    x = db.session.query(Unit.name).order_by(Unit.id)
     x = [i[0] for i in x]
     form.unit.choices = [("")] + [(y) for y in x]
     a = db.session.query(Aisle.name).order_by(Aisle.id)
     a = [i[0] for i in a]
     form.aisle.choices = [("")] + [(b) for b in a]
     ingredient_to_update = Ingredient.query.get_or_404(id)
-    if form.validate_on_submit():
-        uid = Unit.query.filter_by(label=form.unit.data).first()
+    unit_to_update = UnitIngredient.query.filter_by(iid=id).first()
+    """Add Conversion Option"""
+    form2 = AddUnitConversion()
+    form2.unit2.choices = [("")] + [(y) for y in x]
+    if form.submit.data and form.validate_on_submit():
+        uid = Unit.query.filter_by(name=form.unit.data).first()
         aid = Aisle.query.filter_by(name=form.aisle.data).first()
         cal = (form.protein.data * 4) + (form.carbs.data * 4) + (form.fat.data * 9)
         u_price = (form.item_price.data) / (form.item_unit_size.data)
         ingredient_to_update.name = form.name.data
-        ingredient_to_update.unit_id = uid.id
         ingredient_to_update.icalories = cal
         ingredient_to_update.protein = form.protein.data
         ingredient_to_update.carbs = form.carbs.data
@@ -980,12 +989,21 @@ def ingredient_edit(id):
         ingredient_to_update.item_price = form.item_price.data
         ingredient_to_update.u_price = u_price
         ingredient_to_update.aisle_id = aid.id
+        unit_to_update.uid = uid.id
         db.session.commit()
+    if form2.submit2.data and form2.validate_on_submit():
+        uid = Unit.query.filter_by(name=form2.unit2.data).first()
+        update2 = UnitIngredient(iid=id, uid=uid.id, multiplyer=form2.multiplyer.data)
+        db.session.add(update2)
+        db.session.commit()
+    else:
+        print("noo luck")
     return render_template(
         "ingredient_update.html",
         ingredient_to_update=ingredient_to_update,
         form=form,
         editing_item=editing_item,
+        form2=form2,
     )
 
 
@@ -1008,6 +1026,9 @@ def delete_ingredient_confirmation(id):
 def ingredient_delete(id):
     ingredient = Ingredient.query.get_or_404(id)
     recipe_ingredients = RecipeIngredient.query.filter_by(iid=id).all()
+    unit_ingredients = UnitIngredient.query.filter_by(iid=id).all()
+    for unit_ingredient in unit_ingredients:
+        db.session.delete(unit_ingredient)
     for recipe_ingredient in recipe_ingredients:
         db.session.delete(recipe_ingredient)
     db.session.delete(ingredient)
