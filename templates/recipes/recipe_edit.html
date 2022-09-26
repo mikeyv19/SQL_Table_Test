@@ -88,7 +88,8 @@
                 <div class="col-4">
                   {{ form.qty(class="form-control ", placeholder="Qty") }}
                 </div>
-                <div class="col" , id="dynamic">
+                <div class="col-4">
+                  {{form.unit(class="form-control", id="unit")}}
                 </div>
               </div>
               <div class="col">
@@ -120,7 +121,8 @@
             <td>
               <b><a href="{{url_for('recipe_ingredient_move_down', rid=i.rid, id=i.id)}}"><img
                     src="{{ url_for('static', filename='images/down_arrow.png') }}" width="10" /></a>{{(' %0.0f
-                '|format(i.qty)) if (i.qty%1==0) else (' %0.2f '|format(i.qty))}}</b>{{i.ingredient.default_ingredient_unit()}}
+                '|format(i.qty)) if (i.qty%1==0) else (' %0.2f
+                '|format(i.qty))}}</b>{{i.ingredient.default_ingredient_unit()}}
               <b>{{i.ingredient.name}}</b>
               {{i.unit_suffix}}<a href="{{url_for('recipe_delete_ingredient',id=i.id)}}">Delete</a>
             </td>
@@ -151,19 +153,14 @@
         allowClear: true,
         width: "100%",
       });
-      $("#selector").change(function () {
-        $.ajax({
-          type: "POST",
-          url: "/unit_label_update",
-          dataType: "json",
-          data: JSON.stringify(
-            $("#select2-selector-container").attr("title")
-          ),
-          contentType: "application/json;charset=UTF-8",
-          success: function (data) {
-            document.getElementById("dynamic").innerHTML = data;
-          },
-        });
+      $('#selector').change(function () {
+
+        $.getJSON('/url_to_flask_view_function', {
+          selected_class: $('#selector').val()
+
+        }).done(function (data) {
+          $('#unit').html(data.html_string_selected);
+        })
       });
     });
   </script>

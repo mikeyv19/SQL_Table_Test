@@ -394,6 +394,23 @@ def unit_label_update():
         return jsonify(x.default_ingredient_unit())
 
 
+@app.route("/url_to_flask_view_function", methods=["GET", "POST"])
+def form_processing():
+    # the value of the first dropdown (selected by the user)
+    selected_class = request.args.get("selected_class", type=str)
+    # Get Ingredient by Name
+
+    # get values for the second dropdown
+    updated_values = db.session.query(Ingredient.name).order_by(Ingredient.name)
+    updated_values = [i[0] for i in updated_values]
+    # create the value sin the dropdown as a html string
+    html_string_selected = ""
+    for entry in updated_values:
+        html_string_selected += '<option value="{}">{}</option>'.format(entry, entry)
+
+    return jsonify(html_string_selected=html_string_selected)
+
+
 @app.route("/add_recipe", methods=["GET", "POST"])
 def add_recipe():
     form = CreateRecipe()
