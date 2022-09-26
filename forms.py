@@ -95,6 +95,11 @@ class AddIngredient(FlaskForm):
         validators=[validators.InputRequired()],
         validate_choice=False,
     )
+    unit = SelectField(
+        "Unit Conversion Option:",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
     qty = DecimalField("Qty:", validators=[validators.InputRequired()])
     suffix = StringField("Notes")
     submit = SubmitField("Submit")
@@ -106,6 +111,15 @@ class AddInstruction(FlaskForm):
     )
     submit3 = SubmitField("Submit")
 
+#####################
+# UNIT EDITING PAGE #
+#####################
+class AddUnit(FlaskForm):
+    unit = StringField(
+        "Add Unit",
+        validators=[validators.InputRequired()],
+    )
+    submit = SubmitField("Submit")
 
 ###########################
 # WEEKLY DINNER PLAN PAGE #

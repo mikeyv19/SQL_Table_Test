@@ -1,6 +1,7 @@
 from time import process_time_ns
 from flask_sqlalchemy import SQLAlchemy
 
+
 db = SQLAlchemy()
 
 
@@ -68,11 +69,16 @@ class Aisle(db.Model):
 
 class Unit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    oid = db.Column(db.Integer, autoincrement=True)
     name = db.Column(db.String(30))
     ingredients = db.relationship("UnitIngredient", backref="unit")
 
     def __repr__(self):
         return "<Unit %r>" % self.name
+
+    def count_unit(self):
+        count = UnitIngredient.query.filter_by(uid=self.id).count()
+        return (count)
 
 
 class UnitIngredient(db.Model):

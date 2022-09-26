@@ -29,7 +29,7 @@ contents = csv.reader(file)
 
 # SQL query to insert data into the
 # unit table
-insert_records = "INSERT INTO unit (id, name) VALUES(?, ?)"
+insert_records = "INSERT INTO unit (id, oid, name) VALUES(?, ?, ?)"
 
 # Importing the contents of the file
 # into our person table

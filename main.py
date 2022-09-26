@@ -1,6 +1,4 @@
 from itertools import groupby
-from pickle import NONE
-from tkinter import W
 from tkinter.tix import Select
 from unicodedata import name
 from flask import Flask, flash, render_template, request, redirect, url_for, jsonify
@@ -33,9 +31,11 @@ from forms import (
     SelectRecipe6,
     SelectRecipe7,
     AddUnitConversion,
+    AddUnit,
 )
 from sqlalchemy import func
 from decimal import Decimal
+import logging
 
 app = Flask(__name__)
 
@@ -43,6 +43,10 @@ app.config["SECRET_KEY"] = "sk"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///food.db"
 
 connect_db(app)
+
+handler = logging.FileHandler("test.log")  # Create the file logger
+app.logger.addHandler(handler)  # Add it to the built-in logger
+app.logger.setLevel(logging.DEBUG)  # Set the log level to debug
 
 
 @app.route("/")
@@ -914,7 +918,7 @@ def delete_all_checked_items():
 @app.route("/ingredients", methods=["GET", "POST"])
 def ingredient_page():
     ingredient_list = Ingredient.query.order_by(func.lower(Ingredient.name))
-    x = db.session.query(Unit.name).order_by(Unit.id)
+    x = db.session.query(Unit.name).order_by(Unit.oid)
     x = [i[0] for i in x]
     form = CreateIngredient()
     form.unit.choices = [("")] + [(y) for y in x]
@@ -963,7 +967,7 @@ def ingredient_edit(id):
     editing_item = Ingredient.query.get(id)
     units = UnitIngredient.query.filter_by(iid=id).all()
     form = CreateIngredient()
-    x = db.session.query(Unit.name).order_by(Unit.id)
+    x = db.session.query(Unit.name).order_by(Unit.oid)
     x = [i[0] for i in x]
     form.unit.choices = [("")] + [(y) for y in x]
     a = db.session.query(Aisle.name).order_by(Aisle.id)
@@ -997,6 +1001,7 @@ def ingredient_edit(id):
         update2 = UnitIngredient(iid=id, uid=uid.id, multiplyer=form2.multiplyer.data)
         db.session.add(update2)
         db.session.commit()
+        units = UnitIngredient.query.filter_by(iid=id).all()
     else:
         print("noo luck")
     return render_template(
@@ -1004,7 +1009,8 @@ def ingredient_edit(id):
         ingredient_to_update=ingredient_to_update,
         form=form,
         editing_item=editing_item,
-        form2=form2, units=units,
+        form2=form2,
+        units=units,
     )
 
 
@@ -1036,16 +1042,96 @@ def ingredient_delete(id):
     db.session.commit()
     return redirect(url_for("ingredient_page"))
 
+
 """Unit Conversion Update"""
+
 
 @app.route("/unit_conversion_update/<int:id>", methods=["GET", "POST"])
 def unit_conversion_update(id):
     unit_to_update = UnitIngredient.query.get(id)
+    title = Ingredient.query.get(unit_to_update.iid)
     form = AddUnitConversion()
-    x = db.session.query(Unit.name).order_by(Unit.id)
+    x = db.session.query(Unit.name).order_by(Unit.oid)
     x = [i[0] for i in x]
-    form.unit.choices = [("")] + [(y) for y in x]
+    form.unit2.choices = [("")] + [(y) for y in x]
     if form.submit2.data and form.validate_on_submit():
-        unit_to_update.uid = form.unit2.data
+        uid = Unit.query.filter_by(name=form.unit2.data).first()
+        unit_to_update.uid = uid.id
         unit_to_update.multiplyer = form.multiplyer.data
-    return render_template("/units/unit_conversion_update.html", form=form, unit_to_update=unit_to_update)
+        db.session.commit()
+        return redirect(url_for("ingredient_edit", id=unit_to_update.iid))
+    return render_template(
+        "/units/unit_conversion_update.html",
+        form=form,
+        unit_to_update=unit_to_update,
+        title=title,
+    )
+
+
+"""Delte Unit Conversion"""
+
+
+@app.route("/unit_conversion_delete/<int:id>", methods=["GET", "POST"])
+def unit_conversion_delete(id):
+    unit_to_update = UnitIngredient.query.get(id)
+    db.session.delete(unit_to_update)
+    db.session.commit()
+    return redirect(url_for("ingredient_edit", id=unit_to_update.iid))
+
+
+################
+# UNIT EDITING #
+################
+
+"""Add Unit"""
+
+
+@app.route("/units", methods=["GET", "POST"])
+def unit_page():
+    unit_list = Unit.query.order_by(Unit.oid)
+    last_oid = Unit.query.order_by(Unit.oid.desc()).first()
+    new_oid = last_oid.oid + 1
+    form = AddUnit()
+    if form.submit.data and form.validate_on_submit():
+        update = Unit(oid=new_oid, name=form.unit.data)
+        db.session.add(update)
+        db.session.commit()
+        unit_list = Unit.query.order_by(Unit.oid)
+    return render_template("/units/units.html", unit_list=unit_list, form=form)
+
+
+"""Delte Unit Conversion"""
+
+
+@app.route("/unit/delete/<int:id>", methods=["GET", "POST"])
+def unit_delete(id):
+    unit_to_update = Unit.query.get(id)
+    count = UnitIngredient.query.filter_by(uid=id).count()
+    unit_list_to_update = UnitIngredient.query.filter_by(uid=id).all()
+    if count == 0:
+        db.session.delete(unit_to_update)
+        for unit_list in unit_list_to_update:
+            db.session.delete(unit_list)
+        db.session.commit()
+        return redirect(url_for("unit_page"))
+    else:
+        flash(
+            "Cannot delete, unit is within Ingredent. Check default units and conversions. Remove there before deleting the unit."
+        )
+    return redirect(url_for("unit_page"))
+
+
+"""Move Unit Order Down"""
+
+
+@app.route("/unit/edit/down/<int:id>", methods=["GET", "POST"])
+def unit_order_move_down(id):
+    a = Unit.query.get_or_404(id)
+    b = Unit.query.order_by(Unit.oid).filter(Unit.oid > a.oid).first_or_404()
+
+    w = a.oid
+    a.oid = b.oid
+    b.oid = w
+
+    db.session.commit()
+    return redirect(url_for("unit_page"))
