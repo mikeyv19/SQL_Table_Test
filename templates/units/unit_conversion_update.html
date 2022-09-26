@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="{{ url_for('static', filename='css/select2.css') }}"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+
+    <title>Shopping List</title>
+
+    {% extends 'base.html' %} {% block content %}
+  </head>
+
+  <body>
+    <br />
+    <div class="container"></div>
+    <h1>Edit Unit Conversions</h1>
+    <form method="POST">
+      <div class="row">
+        <div class="col-3">
+          {{ form.hidden_tag() }} {{ form.unit2.label(class="form-label") }} {{
+          form.unit2(class="form-control w-100", value=unit_to_update.unit.name)
+          }}
+        </div>
+        <div class="col-2">
+          {{ form.multiplyer.label(class="form-label") }} {{
+          form.multiplyer(class="form-control w-100",
+          value=unit_to_update.multiplyer) }}
+        </div>
+        <div class="col-2">
+          <br />
+          {{ form.submit2(class="btn btn-secondary mt-2") }}
+        </div>
+      </div>
+    </form>
+    <script>
+      $(document).ready(function () {
+        $("#unit2").select2({
+          // init Select2 on form's name field
+          placeholder: "{{unit_to_update.unit.name}}",
+          allowClear: true,
+          width: "100%",
+        });
+        $("#unit2").val("{{unit_to_update.unit.name}}").trigger("change");
+      });
+    </script>
+  </body>
+  {% endblock %}
+</html>

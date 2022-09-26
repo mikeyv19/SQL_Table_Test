@@ -961,6 +961,7 @@ def ingredient_page():
 def ingredient_edit(id):
     """Ingredient Meta Edit"""
     editing_item = Ingredient.query.get(id)
+    units = UnitIngredient.query.filter_by(iid=id).all()
     form = CreateIngredient()
     x = db.session.query(Unit.name).order_by(Unit.id)
     x = [i[0] for i in x]
@@ -1003,7 +1004,7 @@ def ingredient_edit(id):
         ingredient_to_update=ingredient_to_update,
         form=form,
         editing_item=editing_item,
-        form2=form2,
+        form2=form2, units=units,
     )
 
 
@@ -1034,3 +1035,17 @@ def ingredient_delete(id):
     db.session.delete(ingredient)
     db.session.commit()
     return redirect(url_for("ingredient_page"))
+
+"""Unit Conversion Update"""
+
+@app.route("/unit_conversion_update/<int:id>", methods=["GET", "POST"])
+def unit_conversion_update(id):
+    unit_to_update = UnitIngredient.query.get(id)
+    form = AddUnitConversion()
+    x = db.session.query(Unit.name).order_by(Unit.id)
+    x = [i[0] for i in x]
+    form.unit.choices = [("")] + [(y) for y in x]
+    if form.submit2.data and form.validate_on_submit():
+        unit_to_update.uid = form.unit2.data
+        unit_to_update.multiplyer = form.multiplyer.data
+    return render_template("/units/unit_conversion_update.html", form=form, unit_to_update=unit_to_update)

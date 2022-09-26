@@ -81,19 +81,32 @@
   <form method="POST">
     <div class="row">
       <div class="col-3">
-    {{ form2.unit2.label(class="form-label") }}
-    {{ form2.unit2(class="form-control w-100") }}
-    </div>
-    <div class="col-2">
-    {{ form2.multiplyer.label(class="form-label") }}
-    {{ form2.multiplyer(class="form-control w-100") }}
-    </div>
-    <div class="col-2">
-      <br>
-      {{ form2.submit2(class="btn btn-secondary mt-2") }}
+        {{ form2.hidden_tag() }}
+        {{ form2.unit2.label(class="form-label") }}
+        {{ form2.unit2(class="form-control w-100") }}
       </div>
+      <div class="col-2">
+        {{ form2.multiplyer.label(class="form-label") }}
+        {{ form2.multiplyer(class="form-control w-100") }}
+      </div>
+      <div class="col-2">
+        <br>
+        {{ form2.submit2(class="btn btn-secondary mt-2") }}
+      </div>
+    </div>
   </form>
-</div>
+<br>
+<br>
+<br>
+<br>
+<h4>Current Conversions:</h4>
+  <table class="table table-hover table-bordered table-striped">
+    {% for unit in units %}
+    <tr>
+      <td>{{unit.unit.name}} -- {{unit.multiplyer}} x {{editing_item.default_ingredient_unit()}} - <a href="{{url_for('unit_conversion_update', id=unit.iid)}}">Edit</a></td>
+    </tr>
+    {% endfor %}
+  </table>
   <script>
     $(document).ready(function () {
       $("#unit").select2({
