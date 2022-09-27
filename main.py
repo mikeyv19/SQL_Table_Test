@@ -1,4 +1,5 @@
 from itertools import groupby
+from re import U
 from tkinter.tix import Select
 from unicodedata import name
 from flask import Flask, flash, render_template, request, redirect, url_for, jsonify
@@ -13,11 +14,13 @@ from models import (
     Unit,
     UnitIngredient,
     Weekly_Recipe,
+    RecipeMultiplyer,
     connect_db,
     db,
 )
 from forms import (
     ManualShoppingForm,
+    SelectColor,
     ShoppingForm,
     CreateIngredient,
     CreateRecipe,
@@ -32,6 +35,8 @@ from forms import (
     SelectRecipe7,
     AddUnitConversion,
     AddUnit,
+    RecipeMulti,
+    SelectField,
 )
 from sqlalchemy import func
 from decimal import Decimal
@@ -52,6 +57,30 @@ app.logger.setLevel(logging.DEBUG)  # Set the log level to debug
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.template_filter()
+def color_label(my_var):
+    td_class = ""
+    if my_var == "blue":
+        td_class = "table-blue"
+    elif my_var == "dark grey":
+        td_class = "table-dark-grey"
+    elif my_var == "green":
+        td_class = "table-green"
+    elif my_var == "light blue":
+        td_class = "table-light-blue"
+    elif my_var == "yellow":
+        td_class = "table-yellow"
+    elif my_var == "red":
+        td_class = "table-red"
+    elif my_var == "light grey":
+        td_class = "table-light-grey"
+    elif my_var == "purple":
+        td_class = "table-purple"
+    elif my_var == "orange":
+        td_class = "table-orange"
+    return td_class
 
 
 #################
@@ -508,6 +537,7 @@ def recipe_edit(id):
         db.session.add(update)
         db.session.commit()
         instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
+
     return render_template(
         "/recipes/recipe_edit.html",
         r=r,
@@ -534,26 +564,79 @@ def recipe_ingredient_move_down(rid, id):
     w = a.iid
     x = a.qty
     y = a.unit_suffix
+    z = a.ingredient_color_tag
 
     a.iid = b.iid
     a.qty = b.qty
     a.unit_suffix = b.unit_suffix
+    a.ingredient_color_tag = b.ingredient_color_tag
 
     b.iid = w
     b.qty = x
     b.unit_suffix = y
+    b.ingredient_color_tag = z
 
     db.session.commit()
     return redirect(url_for("recipe_edit", id=rid))
 
 
-"""Delete Ingredient From Recipe"""
+"""Edit Ingredient Recipe"""
 
 
-@app.route("/recipe/delete_ingredient/<int:id>", methods=["GET", "POST"])
+@app.route("/recipes/edit_recipe_ingredient/<int:id>", methods=["GET", "POST"])
+def recipe_edit_ingredient(id):
+    c = RecipeIngredient.query.get_or_404(id)
+    r = Recipe.query.filter_by(id=c.rid).first()
+    n = Ingredient.query.filter_by(id=c.iid).first()
+    rid = c.rid
+    """Add Ingredient Form"""
+    form = AddIngredient()
+    a = db.session.query(Ingredient.name).order_by(Ingredient.name)
+    a = [i[0] for i in a]
+    form.name.choices = [("")] + [(y) for y in a]
+    b = db.session.query(Unit.name).order_by(Unit.id)
+    b = [i[0] for i in b]
+    form.unit.choices = [("")] + [(y) for y in b]
+    """Color Tag"""
+    form2 = SelectColor()
+    """Add Ingredient Button Action"""
+    if form.submit.data and form.validate_on_submit():
+        u1 = Ingredient.query.filter_by(name=form.name.data).first()
+        u2 = Unit.query.filter_by(name=form.unit.data).first()
+        u3 = UnitIngredient.query.filter_by(iid=u1.id, uid=u2.id).first()
+        c.iid = u1.id
+        c.qty = form.qty.data * Decimal(u3.multiplyer)
+        c.unit_suffix = form.suffix.data
+        db.session.commit()
+        return render_template(
+            "/recipes/edit_recipe_ingredient.html",
+            id=rid,
+            r=r,
+            form=form,
+            c=c,
+            n=n,
+            form2=form2,
+        )
+    if form2.submit.data and form2.validate_on_submit():
+        c.ingredient_color_tag = form2.name.data
+        db.session.commit()
+    return render_template(
+        "/recipes/edit_recipe_ingredient.html",
+        id=rid,
+        r=r,
+        form=form,
+        c=c,
+        n=n,
+        form2=form2,
+    )
+
+
+"""Delete Recipe Ingredient"""
+
+
+@app.route("/recipes/delete_recipe_ingredient/<int:id>", methods=["GET", "POST"])
 def recipe_delete_ingredient(id):
     a = RecipeIngredient.query.get_or_404(id)
-    u1 = Ingredient.query.get_or_404(a.iid)
     rid = a.rid
     db.session.delete(a)
     db.session.commit()
@@ -572,10 +655,13 @@ def recipe_instruction_move_down(rid, id):
     ).first_or_404()
 
     x = a.instruction
+    y = a.instruction_color_tag
 
     a.instruction = b.instruction
+    a.instruction_color_tag = b.instruction_color_tag
 
     b.instruction = x
+    b.instruction_color_tag = y
 
     db.session.commit()
     return redirect(url_for("recipe_edit", id=rid))
@@ -594,19 +680,55 @@ def recipe_delete_instruction(id):
     return redirect(url_for("recipe_edit", id=rid))
 
 
+"""Edit Instruction From Recipe"""
+
+
+@app.route("/recipe/edit_instruction/<int:id>", methods=["GET", "POST"])
+def recipe_edit_instruction(id):
+    a = RecipeInstruction.query.get_or_404(id)
+    b = a.instruction
+    r = Recipe.query.filter_by(id=a.rid).first()
+    """Add Instruction Step Form"""
+    form = AddInstruction()
+    form2 = SelectColor()
+    form.instruction.data = b
+    if form.submit3.data and form.validate_on_submit():
+        a.instruction = form.instruction.data
+        db.session.commit()
+    if form2.submit.data and form2.validate_on_submit():
+        a.instruction_color_tag = form2.name.data
+        db.session.commit()
+    return render_template(
+        "/recipes/edit_recipe_instruction.html", a=a, form=form, form2=form2, r=r, b=b
+    )
+
+
 ############################
 ## INDIVIDUAL RECIPE PAGE ##
 ############################
 """View Specific Recipe"""
 
 
-@app.route("/recipe/<int:id>")
+@app.route("/recipe/<int:id>", methods=["GET", "POST"])
 def recipe(id):
     r = Recipe.query.get_or_404(id)
     title = r.name
-    x = 1
     iquery = RecipeIngredient.query.filter_by(rid=id).all()
-    return render_template("/recipes/recipe.html", r=r, title=title, x=x, iquery=iquery)
+    form = RecipeMulti()
+    m = RecipeMultiplyer.query.get_or_404(1)
+    instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
+    if form.submit.data and form.validate_on_submit():
+        m.amount = form.amount.data
+        db.session.commit()
+    return render_template(
+        "/recipes/recipe.html",
+        r=r,
+        title=title,
+        form=form,
+        m=m,
+        iquery=iquery,
+        instruct_query=instruct_query,
+    )
 
 
 ###################
@@ -940,7 +1062,7 @@ def delete_all_checked_items():
 """Add Ingredient"""
 
 
-@app.route("/ingredients", methods=["GET", "POST"])
+@app.route("/ingredients/ingredients", methods=["GET", "POST"])
 def ingredient_page():
     ingredient_list = Ingredient.query.order_by(func.lower(Ingredient.name))
     x = db.session.query(Unit.name).order_by(Unit.oid)
@@ -975,7 +1097,7 @@ def ingredient_page():
         db.session.add(update2)
         db.session.commit()
     return render_template(
-        "ingredients.html",
+        "/ingredients/ingredients.html",
         x=x,
         a=a,
         form=form,
@@ -986,7 +1108,7 @@ def ingredient_page():
 """Update Ingredient"""
 
 
-@app.route("/ingredients/<int:id>", methods=["GET", "POST"])
+@app.route("/ingredients/ingredients/<int:id>", methods=["GET", "POST"])
 def ingredient_edit(id):
     """Ingredient Meta Edit"""
     editing_item = Ingredient.query.get(id)
@@ -1023,14 +1145,16 @@ def ingredient_edit(id):
         db.session.commit()
     if form2.submit2.data and form2.validate_on_submit():
         uid = Unit.query.filter_by(name=form2.unit2.data).first()
-        update2 = UnitIngredient(iid=id, uid=uid.id, name=uid.name, multiplyer=form2.multiplyer.data)
+        update2 = UnitIngredient(
+            iid=id, uid=uid.id, name=uid.name, multiplyer=form2.multiplyer.data
+        )
         db.session.add(update2)
         db.session.commit()
         units = UnitIngredient.query.filter_by(iid=id).all()
     else:
         print("noo luck")
     return render_template(
-        "ingredient_update.html",
+        "/ingredients/ingredient_update.html",
         ingredient_to_update=ingredient_to_update,
         form=form,
         editing_item=editing_item,
@@ -1042,18 +1166,19 @@ def ingredient_edit(id):
 """Delete Ingredient From Database Confirmatioin Page"""
 
 
-@app.route("/ingredient/<int:id>/delete_confirmation")
+@app.route("/ingredients/ingredient/<int:id>/delete_confirmation")
 def delete_ingredient_confirmation(id):
     r = Ingredient.query.get_or_404(id)
     title = r.name
-    return render_template("ingredient_recipe_conf.html", r=r, title=title)
+    return render_template("/ingredients/ingredient_recipe_conf.html", r=r, title=title)
 
 
 """"Delete Ingredient From Database Function"""
 
 
 @app.route(
-    "/ingredient/<int:id>/delete_confirmation/delete_forever", methods=["GET", "POST"]
+    "/ingredients/ingredient/<int:id>/delete_confirmation/delete_forever",
+    methods=["GET", "POST"],
 )
 def ingredient_delete(id):
     ingredient = Ingredient.query.get_or_404(id)

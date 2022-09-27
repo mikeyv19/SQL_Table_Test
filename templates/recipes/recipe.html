@@ -1,39 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Recipe List</title>
 
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="{{ url_for('static', filename='css/select2.css') }}"
-      rel="stylesheet"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <title>Recipe List</title>
 
-    {% extends 'base.html' %} {% block content %}
-  </head>
-  <body>
-    <div class="container">
-      <h1>{{title}}</h1>
-      <a href="{{ url_for('recipe_edit', id=r.id) }}"><h5>Edit</h5></a>
- 
-      <table class="table table-hover table-bordered table-striped">
-        {% for i in iquery %}
-        <tr>
-          <td>
-            <b>{{i.qty}}</b>-{{i.ingredient.default_ingredient_unit()}}
-            <b>{{i.ingredient.name}}</b>
-            {{i.unit_suffix}}
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+<style>    #multi {
+  margin-top: 2px;
+  text-align: right;
+  font-size: 20px;
+}
+table {   
+counter-reset: rowNumber;
+}
+table tr {
+ counter-increment: rowNumber;
+}
+table tr td:first-child::before {   
+content: counter(rowNumber)")";
+font-weight: bolder;   
+min-width: .5em;   
+margin-right: 0.5em;
+}
+
+@media print {
+  * { margin: 1 !important; padding: 1 !important; }
+  #controls, .footer, .footerarea{ display: none; }
+  html, body {
+    /*changing width to 100% causes huge overflow and wrap*/
+    height:100%; 
+    width: 100%;
+    overflow: hidden;
+    background: #FFF; 
+    font-size: 12pt;
+  }
+
+}
+</style>
+  {% extends 'base.html' %} {% block content %}
+</head>
+
+<body>
+  <div class="container">
+    <h1>{{title}}</h1>
+    <a href="{{ url_for('recipe_edit', id=r.id) }}">
+      <h5>Edit</h5>
+    </a>
+
+    <div class="row">
+      <div class="col-4">
+        <h5>Recipe Info:</h5>
+      </div>
+      <div class="col-4">
+        <h5>Per Serving Macros:</h5>
+      </div>
     </div>
-  </body>
-  {% endblock %}
+    <div class="row">
+      <div class="col-4">
+        <b>Course: </b> {{r.course}} <br>
+        <b>Servings: </b> {{r.servings * m.amount}} <br>
+        <b>Serving Size: </b> {{r.serving_size}} <br>
+        <b>Cost to Make: </b>{{'$%0.2f'|format(r.get_total_cost() * m.amount)}}
+      </div>
+      <div class="col-2">
+        <b>Protein:</b> {{'%0.0fg'|format((r.get_total_protein())/r.servings)}} <br>
+        <b>Carbs:</b> {{'%0.0fg'|format((r.get_total_carbs())/r.servings)}} <br>
+        <b>Fat:</b> {{'%0.0fg'|format((r.get_total_fat())/r.servings)}} <br>
+      </div>
+      <div class="col-2">
+        <b>Calories:</b> {{'%0.0f'|format((r.get_total_calories())/r.servings)}} <br>
+        <b>Fiber:</b> {{'%0.0fg'|format((r.get_total_fiber())/r.servings)}} <br>
+        <b>Sugar:</b> {{'%0.0fg'|format((r.get_total_sugar())/r.servings)}} <br>
+      </div>
+    </div>
+    <br>
+    <form method="POST">
+      <div class="row">
+        <div class="col-1">
+          <div id="multi"><b>Multiplyer</b>:</div>
+          </div>
+        <div class="col-1">
+          {{ form.hidden_tag() }} {{ form.amount(class="form-control", value=m.amount) }}         </div>
+
+          <div class="col-1">
+            {{ form.submit(class="btn btn-secondary") }}
+        </div>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="row">
+      <div class="col-5">
+        <h2>Ingredients:</h2>
+        <table class="table table-hover table-bordered">
+          {% for i in iquery %}
+          <tr>
+            <td class="{{i.ingredient_color_tag|color_label()}}">
+              <b>{{(' %0.0f
+                '|format(i.qty * m.amount)) if (i.qty%1==0) else (' %0.2f
+                '|format(i.qty * m.amount))}}</b>{{i.ingredient.default_ingredient_unit()}}
+              <b>{{i.ingredient.name}}</b>
+              {{i.unit_suffix}}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="col-6">
+        <h2>Instructions:</h2>
+        <table class="table table-hover table-bordered">
+          {% for in in instruct_query %}
+          <tr>
+            <td class="{{in.instruction_color_tag|color_label()}}">
+              {{in.instruction}}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+{% endblock %}
+
 </html>

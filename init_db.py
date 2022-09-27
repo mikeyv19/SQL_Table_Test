@@ -7,7 +7,7 @@ from models import (
     RecipeIngredient,
     RecipeInstruction,
     connect_db,
-    Weekly_Recipe,
+    Weekly_Recipe, RecipeMultiplyer,
     db,
 )
 from main import app
@@ -133,6 +133,7 @@ w4 = Weekly_Recipe(id=4, rname="Recipe")
 w5 = Weekly_Recipe(id=5, rname="Recipe")
 w6 = Weekly_Recipe(id=6, rname="Recipe")
 w7 = Weekly_Recipe(id=7, rname="Recipe")
+x = RecipeMultiplyer(id=1, amount=1)
 
-db.session.add_all([w1, w2, w3, w4, w5, w6, w7])
+db.session.add_all([w1, w2, w3, w4, w5, w6, w7, x])
 db.session.commit()

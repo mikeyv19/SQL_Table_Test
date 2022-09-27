@@ -78,7 +78,7 @@ class Unit(db.Model):
 
     def count_unit(self):
         count = UnitIngredient.query.filter_by(uid=self.id).count()
-        return (count)
+        return count
 
 
 class UnitIngredient(db.Model):
@@ -202,7 +202,7 @@ class RecipeIngredient(db.Model):
     iid = db.Column(db.Integer, db.ForeignKey("ingredient.id"))
     qty = db.Column(db.Float)
     unit_suffix = db.Column(db.String(50))
-    ingredient_color_tag = db.String(20)
+    ingredient_color_tag = db.Column(db.String(20))
 
     def __repr__(self):
         return "<RecipeIngredient %r>" % self.rid
@@ -212,7 +212,7 @@ class RecipeInstruction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rid = db.Column(db.Integer, db.ForeignKey("recipe.id"))
     instruction = db.Column(db.Text)
-    instruction_color_tag = db.String(20)
+    instruction_color_tag = db.Column(db.String(20))
 
     def __repr__(self):
         return "<RecipeIngredient %r>" % self.rid
@@ -224,6 +224,19 @@ class Weekly_Recipe(db.Model):
 
     def __repr__(self):
         return "<WeeklyRec %r>" % self.rid
+
+
+def connect_db(app):
+    db.app = app
+    db.init_app(app)
+
+
+class RecipeMultiplyer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Float)
+
+    def __repr__(self):
+        return "<RecipeMultiplyer %r>" % self.id
 
 
 def connect_db(app):

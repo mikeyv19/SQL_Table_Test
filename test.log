@@ -2,3 +2,11 @@ SELECT ingredient.id AS ingredient_id, ingredient.name AS ingredient_name, ingre
 FROM ingredient 
 WHERE ingredient.name IS NULL
 Andes Mint
+Andes Mint
+None
+light grey
+default
+default
+red
+red
+yellow

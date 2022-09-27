@@ -110,6 +110,38 @@ class AddInstruction(FlaskForm):
     )
     submit3 = SubmitField("Submit")
 
+
+class SelectColor(FlaskForm):
+    name = SelectField(
+        "Color Tag:",
+        choices=[
+            ("default"),
+            ("blue"),
+            ("green"),
+            ("light blue"),
+            ("red"),
+            ("yellow"),
+            ("purple"),
+            ("orange"),
+            ("dark grey"),
+            ("light grey"),
+        ],
+        validate_choice=False,
+    )
+    submit = SubmitField("Submit")
+
+
+####################
+# RECIPE VIEW PAGE #
+####################
+class RecipeMulti(FlaskForm):
+
+    amount = DecimalField(
+        "Recipe Multiplyer x:", validators=[validators.InputRequired()]
+    )
+    submit = SubmitField("Submit")
+
+
 #####################
 # UNIT EDITING PAGE #
 #####################
@@ -119,6 +151,7 @@ class AddUnit(FlaskForm):
         validators=[validators.InputRequired()],
     )
     submit = SubmitField("Submit")
+
 
 ###########################
 # WEEKLY DINNER PLAN PAGE #

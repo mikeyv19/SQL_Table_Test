@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Shopping List</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+    {% extends 'base.html' %} {% block content %}
+    <style>
+        #dynamic {
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body><b></b>
+
+    <!------------>
+    <!-- RECIPE -->
+    <!------------>
+    <div class="container">
+        <h1>{{title}} (Edit Mode)</h1>
+        <a href="{{url_for('recipe_edit', id=r.id)}}">
+            <h6>Return</h6>
+            <a href="{{url_for('delete_recipe_confirmation', id=r.id)}}"></a>
+            <h6>Delete Recipe</h6>
+        </a>
+        </a>
+
+        <br>
+
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col-5">
+                        <h2>Add Ingredients:</h2>
+                        <form method="POST">
+                            <div class="col">
+                                {{ form.hidden_tag() }} {{ form.name(class="form-control",
+                                id="selector") }}
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    {{ form.qty(class="form-control", value=c.qty) }}
+                                </div>
+                                <div class="col-4">
+                                    {{form.unit(class="form-control", id="unit")}}
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{ form.suffix(class="form-control", value=c.unit_suffix)}}
+                            </div>
+                            <div class="col">{{ form.submit(class="btn btn-secondary mt-2") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col-5">
+                        <h2>Add Color Tag:</h2>
+                        <form method="POST">
+                            <div class="col">
+                                {{ form.hidden_tag() }} {{ form2.name(class="form-control") }}
+                            </div>
+                            <div class="col">{{ form2.submit(class="btn btn-secondary") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <script>
+            $(document).ready(function () {
+                $("#selector").select2({
+                    placeholder: "{{ n.name }}",
+                    allowClear: true,
+                    width: "100%",
+                });
+                $(document).ready(function () {
+                    $("#unit").select2({
+                        placeholder: "Unit",
+                        allowClear: true,
+                        width: "100%",
+                    });
+                })
+                $('#selector').change(function () {
+
+                    $.getJSON('/url_to_flask_view_function', {
+                        selected_class: $('#selector').val()
+
+                    }).done(function (data) {
+                        $('#unit').html(data.html_string_selected);
+                    })
+                });
+            });
+        </script>
+</body>
+{% endblock %}
+
+</html>
