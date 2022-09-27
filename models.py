@@ -2,6 +2,7 @@ from time import process_time_ns
 from flask_sqlalchemy import SQLAlchemy
 
 
+
 db = SQLAlchemy()
 
 
@@ -98,6 +99,7 @@ class Recipe(db.Model):
     course = db.Column(db.String(30))
     servings = db.Column(db.Float)
     serving_size = db.Column(db.String(30))
+    tags = db.Column(db.Text)
 
     def __repr__(self):
         return "<Recipe %r>" % self.name

@@ -41,13 +41,17 @@ from forms import (
 from sqlalchemy import func
 from decimal import Decimal
 import logging
+from flask_migrate import Migrate
+
 
 app = Flask(__name__)
+
 
 app.config["SECRET_KEY"] = "sk"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///food.db"
 
 connect_db(app)
+migrate = Migrate(app, db)
 
 handler = logging.FileHandler("test.log")  # Create the file logger
 app.logger.addHandler(handler)  # Add it to the built-in logger
