@@ -85,6 +85,7 @@ class UnitIngredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     iid = db.Column(db.Integer, db.ForeignKey("ingredient.id"))
     uid = db.Column(db.Integer, db.ForeignKey("unit.id"))
+    name = db.Column(db.String(30))
     multiplyer = db.Column(db.Float)
 
     def __repr__(self):

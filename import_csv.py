@@ -89,7 +89,7 @@ file = open("unitingredient.csv")
 contents = csv.reader(file)
 
 insert_records = (
-    "INSERT INTO unit_ingredient (id, iid, uid, multiplyer) VALUES(?, ?, ?, ?)"
+    "INSERT INTO unit_ingredient (id, iid, uid, name, multiplyer) VALUES(?, ?, ?, ?, ?)"
 )
 
 cursor.executemany(insert_records, contents)

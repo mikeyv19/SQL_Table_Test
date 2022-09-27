@@ -399,9 +399,11 @@ def form_processing():
     # the value of the first dropdown (selected by the user)
     selected_class = request.args.get("selected_class", type=str)
     # Get Ingredient by Name
-
+    iid = Ingredient.query.filter_by(name=selected_class).first()
+    uids = db.session.query(UnitIngredient.name).filter(UnitIngredient.iid == iid.id)
+    updated_values = uids
     # get values for the second dropdown
-    updated_values = db.session.query(Ingredient.name).order_by(Ingredient.name)
+    # updated_values = db.session.query(Ingredient.name).order_by(Ingredient.name)
     updated_values = [i[0] for i in updated_values]
     # create the value sin the dropdown as a html string
     html_string_selected = ""
@@ -461,21 +463,27 @@ def recipe_edit(id):
     a = db.session.query(Ingredient.name).order_by(Ingredient.name)
     a = [i[0] for i in a]
     form.name.choices = [("")] + [(y) for y in a]
+    b = db.session.query(Unit.name).order_by(Unit.id)
+    b = [i[0] for i in b]
+    form.unit.choices = [("")] + [(y) for y in b]
     """Add Instruction Step Form"""
     form3 = AddInstruction()
     instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
     """Add Ingredient Button Action"""
     if form.submit.data and form.validate_on_submit():
         u1 = Ingredient.query.filter_by(name=form.name.data).first()
+        u2 = Unit.query.filter_by(name=form.unit.data).first()
+        u3 = UnitIngredient.query.filter_by(iid=u1.id, uid=u2.id).first()
         update = RecipeIngredient(
             rid=id,
             iid=u1.id,
-            qty=form.qty.data,
+            qty=form.qty.data * Decimal(u3.multiplyer),
             unit_suffix=form.suffix.data,
         )
         db.session.add(update)
         db.session.commit()
         iquery = RecipeIngredient.query.filter_by(rid=id).all()
+        form.name.data = ""
         return render_template(
             "/recipes/recipe_edit.html",
             r=r,
@@ -963,7 +971,7 @@ def ingredient_page():
         db.session.add(update)
         db.session.commit()
         iid = Ingredient.query.order_by(Ingredient.id.desc()).first()
-        update2 = UnitIngredient(uid=uid.id, iid=iid.id, multiplyer=1)
+        update2 = UnitIngredient(uid=uid.id, iid=iid.id, name=uid.name, multiplyer=1)
         db.session.add(update2)
         db.session.commit()
     return render_template(
@@ -1015,7 +1023,7 @@ def ingredient_edit(id):
         db.session.commit()
     if form2.submit2.data and form2.validate_on_submit():
         uid = Unit.query.filter_by(name=form2.unit2.data).first()
-        update2 = UnitIngredient(iid=id, uid=uid.id, multiplyer=form2.multiplyer.data)
+        update2 = UnitIngredient(iid=id, uid=uid.id, name=uid.name, multiplyer=form2.multiplyer.data)
         db.session.add(update2)
         db.session.commit()
         units = UnitIngredient.query.filter_by(iid=id).all()
@@ -1074,6 +1082,7 @@ def unit_conversion_update(id):
     if form.submit2.data and form.validate_on_submit():
         uid = Unit.query.filter_by(name=form.unit2.data).first()
         unit_to_update.uid = uid.id
+        unit_to_update.name = uid.name
         unit_to_update.multiplyer = form.multiplyer.data
         db.session.commit()
         return redirect(url_for("ingredient_edit", id=unit_to_update.iid))
@@ -1085,7 +1094,7 @@ def unit_conversion_update(id):
     )
 
 
-"""Delte Unit Conversion"""
+"""Delete Unit Conversion"""
 
 
 @app.route("/unit_conversion_delete/<int:id>", methods=["GET", "POST"])
@@ -1117,7 +1126,7 @@ def unit_page():
     return render_template("/units/units.html", unit_list=unit_list, form=form)
 
 
-"""Delte Unit Conversion"""
+"""Delete Unit"""
 
 
 @app.route("/unit/delete/<int:id>", methods=["GET", "POST"])

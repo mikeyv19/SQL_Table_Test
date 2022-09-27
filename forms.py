@@ -98,7 +98,6 @@ class AddIngredient(FlaskForm):
     unit = SelectField(
         "Unit Conversion Option:",
         validators=[validators.InputRequired()],
-        validate_choice=False,
     )
     qty = DecimalField("Qty:", validators=[validators.InputRequired()])
     suffix = StringField("Notes")
