@@ -691,8 +691,10 @@ def recipe_edit_instruction(id):
     """Add Instruction Step Form"""
     form = AddInstruction()
     form2 = SelectColor()
-    form.instruction.data = b
+    if request.method == "GET":
+        form.instruction.data = b
     if form.submit3.data and form.validate_on_submit():
+        form.instruction.data = form.instruction.data
         a.instruction = form.instruction.data
         db.session.commit()
     if form2.submit.data and form2.validate_on_submit():
@@ -754,9 +756,12 @@ def delete_recipe_confirmation(id):
 def recipe_delete_all_ingredient(id):
     recipe = Recipe.query.get_or_404(id)
     ingredients_delete = RecipeIngredient.query.filter_by(rid=id).all()
+    instructions_delete = RecipeInstruction.query.filter_by(rid=id).all()
     db.session.delete(recipe)
     for ingredient in ingredients_delete:
         db.session.delete(ingredient)
+    for instruction in instructions_delete:
+        db.session.delete(instruction)
     db.session.commit()
     return redirect(url_for("recipe_list"))
 

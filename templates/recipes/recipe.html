@@ -35,7 +35,6 @@ margin-right: 0.5em;
     height:100%; 
     width: 100%;
     overflow: hidden;
-    background: #FFF; 
     font-size: 12pt;
   }
 
@@ -62,7 +61,7 @@ margin-right: 0.5em;
     <div class="row">
       <div class="col-4">
         <b>Course: </b> {{r.course}} <br>
-        <b>Servings: </b> {{r.servings * m.amount}} <br>
+        <b>Servings: </b> {{(' %0.0f'|format(r.servings*m.amount)) if ((r.servings*m.amount)%1==0) else (' %0.2f'|format(r.servings*m.amount))}} <br>
         <b>Serving Size: </b> {{r.serving_size}} <br>
         <b>Cost to Make: </b>{{'$%0.2f'|format(r.get_total_cost() * m.amount)}}
       </div>

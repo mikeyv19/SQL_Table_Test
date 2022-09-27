@@ -55,7 +55,7 @@
                   <h2>Add Color Tag:</h2>
                   <form method="POST">
                       <div class="col">
-                          {{ form.hidden_tag() }} {{ form2.name(class="form-control") }}
+                          {{ form2.hidden_tag() }} {{ form2.name(class="form-control", data="testtt") }}
                       </div>
                       <div class="col">{{ form2.submit(class="btn btn-secondary") }}
                       </div>

@@ -13,6 +13,7 @@
       href="{{ url_for('static', filename='css/select2.css') }}"
       rel="stylesheet"
     />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
 
     {% extends 'base.html' %} {% block content %}
@@ -24,15 +25,34 @@
     <div class="container">
       <h1>Recipe List:</h1>
       <a href="{{url_for('add_recipe')}}"><h6>Add New</h6></a>
-      <table class="table table-hover table-bordered table-striped">
+      <table id="data" class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+          <th>Name</th>
+          <th>Course</th>
+          <th>Servings</th>
+          <th>Calories Per Serving</th>
+          <th>Cost To Make</th>
+          <th>View</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for recipe_table in recipe_list %}
         <tr>
-          <td>{{recipe_table.name}} -- {{recipe_table.course}} -- {{recipe_table.servings}} {{'$%0.2f'|format(recipe_table.get_total_cost())}} <a href="{{url_for('recipe', id=recipe_table.id)}}">
+          <td>{{recipe_table.name}}</td> <td>{{recipe_table.course}}</td><td>{{(' %0.0f'|format(recipe_table.servings)) if (recipe_table.servings%1==0) else (' %0.2f'|format(recipe_table.servings))}}</td><td>{{'%0.0f'|format((recipe_table.get_total_calories())/recipe_table.servings)}}</td> <td>{{'$%0.2f'|format(recipe_table.get_total_cost())}}</td> <td><a href="{{url_for('recipe', id=recipe_table.id)}}">
           View</td>
         </tr>
         {% endfor %}
+      </tbody>
       </table>
     </div>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('#data').DataTable();
+      });
+    </script>
   </body>
   {% endblock %}
 </html>
