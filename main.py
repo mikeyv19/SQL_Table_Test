@@ -773,7 +773,7 @@ def recipe_delete_all_ingredient(id):
 #################
 # SHOPPING LIST #
 #################
-@app.route("/list", methods=["GET", "POST"])
+@app.route("/shopping/list", methods=["GET", "POST"])
 def list():
     deleted_items = (
         Dshopping.query.with_entities(
@@ -848,7 +848,7 @@ def list():
             .all()
         )
         return render_template(
-            "list.html",
+            "shopping/list.html",
             form=form,
             form2=form2,
             name=name,
@@ -894,7 +894,7 @@ def list():
             .all()
         )
         return render_template(
-            "list.html",
+            "shopping/list.html",
             form=form,
             form2=form2,
             name=name,
@@ -903,7 +903,7 @@ def list():
         )
     else:
         return render_template(
-            "list.html",
+            "shopping/list.html",
             form=form,
             form2=form2,
             name=name,
@@ -912,7 +912,7 @@ def list():
         )
 
 
-@app.route("/list/delete/<int:id>")
+@app.route("/shopping/list/delete/<int:id>")
 def delete_shopping_item(id):
     get_name = Shopping.query.get_or_404(id)
     q = Shopping.query.filter_by(ingredient_name=get_name.ingredient_name).first()
@@ -989,15 +989,15 @@ def delete_shopping_item(id):
             )
         else:
             return render_template(
-                "list_delete.html", our_add=our_add, deleted_items=deleted_items
+                "shopping/list_delete.html", our_add=our_add, deleted_items=deleted_items
             )
     except:
         return render_template(
-            "list_delete.html", our_add=our_add, deleted_items=deleted_items
+            "shopping/list_delete.html", our_add=our_add, deleted_items=deleted_items
         )
 
 
-@app.route("/list/delete_all")
+@app.route("/shopping/list/delete_all")
 def delete_all_checked_items():
     our_add = (
         Shopping.query.with_entities(
@@ -1057,11 +1057,11 @@ def delete_all_checked_items():
             .all()
         )
         return render_template(
-            "list_delete.html", our_add=our_add, deleted_items=deleted_items
+            "shopping/list_delete.html", our_add=our_add, deleted_items=deleted_items
         )
     except:
         return render_template(
-            "list_delete.html", our_add=our_add, deleted_items=deleted_items
+            "shopping/list_delete.html", our_add=our_add, deleted_items=deleted_items
         )
 
 
