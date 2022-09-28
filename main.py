@@ -1206,6 +1206,7 @@ def ingredient_edit(id):
         ingredient_to_update.u_price = u_price
         ingredient_to_update.aisle_id = aid.id
         unit_to_update.uid = uid.id
+        unit_to_update.name = uid.name
         db.session.commit()
     if form2.submit2.data and form2.validate_on_submit():
         uid = Unit.query.filter_by(name=form2.unit2.data).first()

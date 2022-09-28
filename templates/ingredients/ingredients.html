@@ -4,12 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>Shopping List</title>
-
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
   <style>
+    
     h5 {
       text-align: center;
     }
@@ -113,7 +114,7 @@
     <br />
     <br />
     <h1>Ingredients:</h1>
-    <table class="table table-hover table-bordered table-striped">
+    <table id="data" class="table table-hover table-bordered table-striped">
 
       <thead>
         <tr>
@@ -152,6 +153,13 @@
     </table>
 
   </div>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable();
+    });
+  </script>
 </body>
 {% endblock %}
 
