@@ -223,6 +223,7 @@ class RecipeInstruction(db.Model):
 class Weekly_Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rname = db.Column(db.String(100))
+    day = db.Column(db.String(100))
 
     def __repr__(self):
         return "<WeeklyRec %r>" % self.rid

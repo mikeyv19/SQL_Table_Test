@@ -10,6 +10,7 @@
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
   <link href="{{ url_for('static', filename='css/weekly_style_new.css') }}" rel="stylesheet" />
+  
 </head>
 <body>
       {% include 'navbar-no-response.html' %}
@@ -21,7 +22,7 @@
         <form method="POST">
           {{ monday_form.hidden_tag() }}{{
           monday_form.rqty(class="half-box-form") }}x
-          {{ monday_form.hidden_tag() }}{{
+{{
           monday_form.name(class="full-box-form", id="monday") }} 
           <br>{{ monday_form.submit(class="btn btn-secondary")}}
         </form>
@@ -29,11 +30,11 @@
       <div class="column">
         <h3>Tuesday</h3>
         <form method="POST">
-          {{ tuesday_form.hidden_tag() }}{{
-          tuesday_form.rqty2(class="half-box-form") }}x
-          {{ tuesday_form.hidden_tag() }}{{
-          tuesday_form.name2(class="full-box-form", id="tuesday") }}
-          <br>{{ tuesday_form.submit2(class="btn btn-secondary")}}
+          {{
+          tuesday_form.rqty(class="half-box-form") }}x
+{{
+          tuesday_form.name(class="full-box-form", id="tuesday") }}
+          <br>{{ tuesday_form.submit(class="btn btn-secondary")}}
         </form>
       </div>
       <div class="column">
@@ -96,8 +97,9 @@
         allowClear: true,
         width: "150px",
       });
+      $("#monday").val("{recipe.name}}").trigger("change");
       $("#tuesday").select2({
-        placeholder: "{{ tuesday_form.name2.label.text }}",
+        placeholder: "{{ tuesday_form.name.label.text }}",
         allowClear: true,
         width: "150px",
       });

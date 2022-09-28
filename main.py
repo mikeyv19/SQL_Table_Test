@@ -86,6 +86,117 @@ def color_label(my_var):
         td_class = "table-orange"
     return td_class
 
+#################
+## Weekly VIEW ##
+#################
+@app.route("/weekly_view", methods=["GET", "POST"])
+def weekly_view():
+    monday_ingredients = (
+                Shopping.query.filter_by(day_label = "monday").with_entities(
+                    Shopping.id,
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    Shopping.day_label,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.aisle_id)
+                .all()
+            )
+    tuesday_ingredients = (
+                Shopping.query.filter_by(day_label = "tuesday").with_entities(
+                    Shopping.id,
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    Shopping.day_label,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.aisle_id)
+                .all()
+            )
+    wednesday_ingredients = (
+                Shopping.query.filter_by(day_label = "wednesday").with_entities(
+                    Shopping.id,
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    Shopping.day_label,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.aisle_id)
+                .all()
+            )
+    thrusday_ingredients = (
+                Shopping.query.filter_by(day_label = "thursday").with_entities(
+                    Shopping.id,
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    Shopping.day_label,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.aisle_id)
+                .all()
+            )
+    firday_ingredients = (
+                Shopping.query.filter_by(day_label = "friday").with_entities(
+                    Shopping.id,
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    Shopping.day_label,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.aisle_id)
+                .all()
+            )
+    saturday_ingredients = (
+                Shopping.query.filter_by(day_label = "saturday").with_entities(
+                    Shopping.id,
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    Shopping.day_label,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.aisle_id)
+                .all()
+            )
+    sunday_ingredients = (
+                Shopping.query.filter_by(day_label = "sunday").with_entities(
+                    Shopping.id,
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    Shopping.day_label,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.aisle_id)
+                .all()
+            )
+    return render_template("/weekly_view.html", monday_ingredients=monday_ingredients, tuesday_ingredients=tuesday_ingredients, wednesday_ingredients=wednesday_ingredients, thrusday_ingredients=thrusday_ingredients, firday_ingredients=firday_ingredients, saturday_ingredients=saturday_ingredients, sunday_ingredients=sunday_ingredients)
 
 #################
 ## Weekly Plan ##
@@ -93,27 +204,20 @@ def color_label(my_var):
 @app.route("/weekly_plan", methods=["GET", "POST"])
 def weekly_plan():
     monday_form = SelectRecipe()
-    monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
     a = db.session.query(Recipe.name).order_by(Recipe.name)
     a = [i[0] for i in a]
     monday_form.name.choices = [("")] + [(x) for x in a]
-    tuesday_form = SelectRecipe2()
-    tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
-    tuesday_form.name2.choices = [("")] + [(x) for x in a]
+    tuesday_form = SelectRecipe()
+    tuesday_form.name.choices = [("")] + [(x) for x in a]
     wednesday_form = SelectRecipe3()
-    wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
     wednesday_form.name3.choices = [("")] + [(x) for x in a]
     thursday_form = SelectRecipe4()
-    thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
     thursday_form.name4.choices = [("")] + [(x) for x in a]
     friday_form = SelectRecipe5()
-    friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
     friday_form.name5.choices = [("")] + [(x) for x in a]
     saturday_form = SelectRecipe6()
-    saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
     saturday_form.name6.choices = [("")] + [(x) for x in a]
     sunday_form = SelectRecipe7()
-    sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
     sunday_form.name7.choices = [("")] + [(x) for x in a]
     if monday_form.submit.data and monday_form.validate_on_submit():
         u_mon1 = Recipe.query.filter_by(name=monday_form.name.data).first()
@@ -137,13 +241,6 @@ def weekly_plan():
             weekly = Weekly_Recipe.query.get_or_404(1)
             weekly.rname = monday_form.name.data
             db.session.commit()
-            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
-            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
-            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
-            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
-            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
-            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
-            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
@@ -156,8 +253,8 @@ def weekly_plan():
             a=a,
             x=x,
         )
-    if tuesday_form.submit2.data and tuesday_form.validate_on_submit():
-        u_tue1 = Recipe.query.filter_by(name=tuesday_form.name2.data).first()
+    if tuesday_form.submit.data and tuesday_form.validate_on_submit():
+        u_tue1 = Recipe.query.filter_by(name=tuesday_form.name.data).first()
         u_tue2 = (
             RecipeIngredient.query.filter_by(rid=u_tue1.id)
             .order_by(RecipeIngredient.rid)
@@ -166,7 +263,7 @@ def weekly_plan():
         for x in u_tue2:
             u_tue4 = Shopping(
                 ingredient_name=x.ingredient.name,
-                qty=tuesday_form.rqty2.data * Decimal(x.qty),
+                qty=tuesday_form.rqty.data * Decimal(x.qty),
                 unit_name=x.ingredient.default_ingredient_unit(),
                 aisle_name=x.ingredient.aisle.name,
                 aisle_id=x.ingredient.aisle_id,
@@ -176,15 +273,8 @@ def weekly_plan():
             db.session.commit()
         else:
             weekly = Weekly_Recipe.query.get_or_404(2)
-            weekly.rname = tuesday_form.name2.data
+            weekly.rname = tuesday_form.name.data
             db.session.commit()
-            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
-            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
-            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
-            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
-            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
-            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
-            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
@@ -219,13 +309,6 @@ def weekly_plan():
             weekly = Weekly_Recipe.query.get_or_404(3)
             weekly.rname = wednesday_form.name3.data
             db.session.commit()
-            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
-            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
-            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
-            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
-            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
-            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
-            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
@@ -260,13 +343,6 @@ def weekly_plan():
             weekly = Weekly_Recipe.query.get_or_404(4)
             weekly.rname = thursday_form.name4.data
             db.session.commit()
-            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
-            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
-            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
-            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
-            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
-            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
-            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
@@ -301,13 +377,6 @@ def weekly_plan():
             weekly = Weekly_Recipe.query.get_or_404(5)
             weekly.rname = friday_form.name5.data
             db.session.commit()
-            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
-            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
-            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
-            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
-            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
-            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
-            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
@@ -342,13 +411,6 @@ def weekly_plan():
             weekly = Weekly_Recipe.query.get_or_404(6)
             weekly.rname = saturday_form.name6.data
             db.session.commit()
-            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
-            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
-            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
-            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
-            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
-            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
-            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,
@@ -383,13 +445,6 @@ def weekly_plan():
             weekly = Weekly_Recipe.query.get_or_404(7)
             weekly.rname = sunday_form.name7.data
             db.session.commit()
-            monday_form.name.label.text = Weekly_Recipe.query.get(1).rname
-            tuesday_form.name2.label.text = Weekly_Recipe.query.get(2).rname
-            wednesday_form.name3.label.text = Weekly_Recipe.query.get(3).rname
-            thursday_form.name4.label.text = Weekly_Recipe.query.get(4).rname
-            friday_form.name5.label.text = Weekly_Recipe.query.get(5).rname
-            saturday_form.name6.label.text = Weekly_Recipe.query.get(6).rname
-            sunday_form.name7.label.text = Weekly_Recipe.query.get(7).rname
         return render_template(
             "weekly_planner.html",
             monday_form=monday_form,

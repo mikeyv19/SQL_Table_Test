@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=2000px" />
+    <title>Weekly Plan</title>
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+    <link
+      href="{{ url_for('static', filename='css/weekly_style_new.css') }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='css/bs-non-responsive.css') }}"
+      rel="stylesheet"
+    />
+    <link
+      href="{{ url_for('static', filename='css/non-responsive.css') }}"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    {% include 'navbar-no-response.html' %}
+    <br />
+    <div class="container-table">
+      <div class="row">
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Monday</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {% for mi in monday_ingredients %}
+                <td>
+                  {{'%0.01f'|format(mi.total|float)}} {{mi.unit_name}} x
+                  {{mi.ingredient_name}}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Tuesday</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {% for tui in tuesday_ingredients %}
+                <td>{{tui.qty}}{{tui.unit_name}} x {{tui.ingredient_name}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Wednesday</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {% for wi in wednesday_ingredients %}
+                <td>
+                  {{'%0.01f'|format(wi.total|float)}} {{wi.unit_name}} x
+                  {{wi.ingredient_name}}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Thursday</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {% for thi in thursday_ingredients %}
+                <td>
+                  {{'%0.01f'|format(thi.total|float)}} {{thi.unit_name}} x
+                  {{thi.ingredient_name}}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Friday</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {% for fi in friday_ingredients %}
+                <td>
+                  {{'%0.01f'|format(fi.total|float)}} {{fi.unit_name}} x
+                  {{fi.ingredient_name}}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Saturday</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {% for sai in saturday_ingredients %}
+                <td>
+                  {{'%0.01f'|format(sai.total|float)}} {{sai.unit_name}} x
+                  {{sai.ingredient_name}}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Sunday</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {% for sui in sunday_ingredients %}
+                <td>
+                  {{'%0.01f'|format(sui.total|float)}} {{sui.unit_name}} x
+                  {{sui.ingredient_name}}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
