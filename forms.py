@@ -157,6 +157,29 @@ class AddUnit(FlaskForm):
 # WEEKLY DINNER PLAN PAGE #
 ###########################
 
+class WeeklySelect(FlaskForm):
+    rqty = DecimalField("Multiplyer", validators=[validators.InputRequired()])
+    name = SelectField(
+        "Recipe",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
+    day = SelectField(
+        "Color Tag:",
+        choices=[
+            ("Sunday"),
+            ("Monday"),
+            ("Tuesday"),
+            ("Wednesday"),
+            ("Thursday"),
+            ("Friday"),
+            ("Saturday"),
+            ("Extra"),
+        ],
+        validate_choice=False,
+    )
+    submit = SubmitField("Submit")
+
 
 class SelectRecipe(FlaskForm):
     rqty = DecimalField("Multiplyer", validators=[validators.InputRequired()])

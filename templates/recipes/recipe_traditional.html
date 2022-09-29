@@ -103,7 +103,7 @@ margin-right: 0.5em;
           {% for i in iquery %}
           <tr>
             <td class="{{i.ingredient_color_tag|color_label()}}">
-          <b>              {{(' %0.1f
+          <b>              {{(' %0.2f
                 '|format((i.qty / i.traditional_ingredient_multi1()) * m.amount)) if (i.qty%1==0) else (' %0.2f
                 '|format((i.qty / i.traditional_ingredient_multi1()) * m.amount))}} </b>{{i.traditional_ingredient_unit1()}}
               <b>{{i.ingredient.name}}</b>

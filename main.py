@@ -3,6 +3,7 @@ from re import U
 from tkinter.tix import Select
 from unicodedata import name
 from flask import Flask, flash, render_template, request, redirect, url_for, jsonify
+from requests import delete
 from models import (
     Ingredient,
     Aisle,
@@ -16,6 +17,7 @@ from models import (
     Weekly_Recipe,
     RecipeMultiplyer,
     connect_db,
+    WeeklyIngredientList,
     db,
 )
 from forms import (
@@ -36,7 +38,7 @@ from forms import (
     AddUnitConversion,
     AddUnit,
     RecipeMulti,
-    SelectField,
+    WeeklySelect,
 )
 from sqlalchemy import func
 from decimal import Decimal
@@ -86,117 +88,324 @@ def color_label(my_var):
         td_class = "table-orange"
     return td_class
 
+
 #################
 ## Weekly VIEW ##
 #################
 @app.route("/weekly_view", methods=["GET", "POST"])
 def weekly_view():
     monday_ingredients = (
-                Shopping.query.filter_by(day_label = "monday").with_entities(
-                    Shopping.id,
-                    Shopping.ingredient_name,
-                    Shopping.qty,
-                    Shopping.unit_name,
-                    Shopping.aisle_name,
-                    Shopping.aisle_id,
-                    Shopping.day_label,
-                    func.sum(Shopping.qty).label("total"),
-                )
-                .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.aisle_id)
-                .all()
-            )
+        WeeklyIngredientList.query.filter_by(day_label="Monday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
     tuesday_ingredients = (
-                Shopping.query.filter_by(day_label = "tuesday").with_entities(
-                    Shopping.id,
-                    Shopping.ingredient_name,
-                    Shopping.qty,
-                    Shopping.unit_name,
-                    Shopping.aisle_name,
-                    Shopping.aisle_id,
-                    Shopping.day_label,
-                    func.sum(Shopping.qty).label("total"),
-                )
-                .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.aisle_id)
-                .all()
-            )
+        WeeklyIngredientList.query.filter_by(day_label="Tuesday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
     wednesday_ingredients = (
-                Shopping.query.filter_by(day_label = "wednesday").with_entities(
-                    Shopping.id,
-                    Shopping.ingredient_name,
-                    Shopping.qty,
-                    Shopping.unit_name,
-                    Shopping.aisle_name,
-                    Shopping.aisle_id,
-                    Shopping.day_label,
-                    func.sum(Shopping.qty).label("total"),
-                )
-                .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.aisle_id)
-                .all()
-            )
+        WeeklyIngredientList.query.filter_by(day_label="Wednesday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
     thrusday_ingredients = (
-                Shopping.query.filter_by(day_label = "thursday").with_entities(
-                    Shopping.id,
-                    Shopping.ingredient_name,
-                    Shopping.qty,
-                    Shopping.unit_name,
-                    Shopping.aisle_name,
-                    Shopping.aisle_id,
-                    Shopping.day_label,
-                    func.sum(Shopping.qty).label("total"),
-                )
-                .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.aisle_id)
-                .all()
-            )
+        WeeklyIngredientList.query.filter_by(day_label="Thursday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
     firday_ingredients = (
-                Shopping.query.filter_by(day_label = "friday").with_entities(
-                    Shopping.id,
-                    Shopping.ingredient_name,
-                    Shopping.qty,
-                    Shopping.unit_name,
-                    Shopping.aisle_name,
-                    Shopping.aisle_id,
-                    Shopping.day_label,
-                    func.sum(Shopping.qty).label("total"),
-                )
-                .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.aisle_id)
-                .all()
-            )
+        WeeklyIngredientList.query.filter_by(day_label="Friday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
     saturday_ingredients = (
-                Shopping.query.filter_by(day_label = "saturday").with_entities(
-                    Shopping.id,
-                    Shopping.ingredient_name,
-                    Shopping.qty,
-                    Shopping.unit_name,
-                    Shopping.aisle_name,
-                    Shopping.aisle_id,
-                    Shopping.day_label,
-                    func.sum(Shopping.qty).label("total"),
-                )
-                .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.aisle_id)
-                .all()
-            )
+        WeeklyIngredientList.query.filter_by(day_label="Saturday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
     sunday_ingredients = (
-                Shopping.query.filter_by(day_label = "sunday").with_entities(
-                    Shopping.id,
-                    Shopping.ingredient_name,
-                    Shopping.qty,
-                    Shopping.unit_name,
-                    Shopping.aisle_name,
-                    Shopping.aisle_id,
-                    Shopping.day_label,
-                    func.sum(Shopping.qty).label("total"),
-                )
-                .group_by(Shopping.ingredient_name)
-                .order_by(Shopping.aisle_id)
-                .all()
+        WeeklyIngredientList.query.filter_by(day_label="Sunday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+    extra_ingredients = (
+        WeeklyIngredientList.query.filter_by(day_label="Extra")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+    monday_meals = Weekly_Recipe.query.filter_by(day="Monday")
+    tuesday_meals = Weekly_Recipe.query.filter_by(day="Tuesday")
+    wednesday_meals = Weekly_Recipe.query.filter_by(day="Wednesday")
+    thursday_meals = Weekly_Recipe.query.filter_by(day="Thursday")
+    friday_meals = Weekly_Recipe.query.filter_by(day="Friday")
+    saturday_meals = Weekly_Recipe.query.filter_by(day="Saturday")
+    sunday_meals = Weekly_Recipe.query.filter_by(day="Sunday")
+    extra_meals = Weekly_Recipe.query.filter_by(day="Extra")
+    form = WeeklySelect()
+    a = db.session.query(Recipe.name).order_by(Recipe.name)
+    a = [i[0] for i in a]
+    form.name.choices = [("")] + [(x) for x in a]
+    if form.submit.data and form.validate_on_submit():
+        recipe = Recipe.query.filter_by(name=form.name.data).first()
+        ingredients = (
+            RecipeIngredient.query.filter_by(rid=recipe.id)
+            .order_by(RecipeIngredient.rid)
+            .all()
+        )
+        for x in ingredients:
+            update1 = Shopping(
+                ingredient_name=x.ingredient.name,
+                qty=form.rqty.data * Decimal(x.qty),
+                unit_name=x.ingredient.default_ingredient_unit(),
+                aisle_name=x.ingredient.aisle.name,
+                aisle_id=x.ingredient.aisle_id,
+                day_label=form.day.data,
+                for_recipe=form.name.data,
             )
-    return render_template("/weekly_view.html", monday_ingredients=monday_ingredients, tuesday_ingredients=tuesday_ingredients, wednesday_ingredients=wednesday_ingredients, thrusday_ingredients=thrusday_ingredients, firday_ingredients=firday_ingredients, saturday_ingredients=saturday_ingredients, sunday_ingredients=sunday_ingredients)
+            db.session.add(update1)
+            db.session.commit()
+        for y in ingredients:
+            update2 = WeeklyIngredientList(
+                ingredient_name=y.ingredient.name,
+                qty=form.rqty.data * Decimal(y.qty),
+                unit_name=y.ingredient.default_ingredient_unit(),
+                day_label=form.day.data,
+                for_recipe=form.name.data,
+            )
+            db.session.add(update2)
+            db.session.commit()
+        update3 = Weekly_Recipe(
+            rname=form.name.data,
+            qty=form.rqty.data,
+            day=form.day.data,
+            servings=form.rqty.data * Decimal(recipe.servings),
+        )
+        db.session.add(update3)
+        db.session.commit()
+
+        monday_ingredients = (
+            WeeklyIngredientList.query.filter_by(day_label="Monday")
+            .with_entities(
+                WeeklyIngredientList.id,
+                WeeklyIngredientList.ingredient_name,
+                WeeklyIngredientList.qty,
+                WeeklyIngredientList.unit_name,
+                WeeklyIngredientList.day_label,
+                func.sum(WeeklyIngredientList.qty).label("total"),
+            )
+            .group_by(WeeklyIngredientList.ingredient_name)
+            .order_by(WeeklyIngredientList.ingredient_name)
+            .all()
+        )
+    tuesday_ingredients = (
+        WeeklyIngredientList.query.filter_by(day_label="Tuesday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+    wednesday_ingredients = (
+        WeeklyIngredientList.query.filter_by(day_label="Wednesday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+    thrusday_ingredients = (
+        WeeklyIngredientList.query.filter_by(day_label="Thursday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+    firday_ingredients = (
+        WeeklyIngredientList.query.filter_by(day_label="Friday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+    saturday_ingredients = (
+        WeeklyIngredientList.query.filter_by(day_label="Saturday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+    sunday_ingredients = (
+        WeeklyIngredientList.query.filter_by(day_label="Sunday")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+    extra_ingredients = (
+        WeeklyIngredientList.query.filter_by(day_label="Extra")
+        .with_entities(
+            WeeklyIngredientList.id,
+            WeeklyIngredientList.ingredient_name,
+            WeeklyIngredientList.qty,
+            WeeklyIngredientList.unit_name,
+            WeeklyIngredientList.day_label,
+            func.sum(WeeklyIngredientList.qty).label("total"),
+        )
+        .group_by(WeeklyIngredientList.ingredient_name)
+        .order_by(WeeklyIngredientList.ingredient_name)
+        .all()
+    )
+
+    return render_template(
+        "/weekly_view.html",
+        monday_ingredients=monday_ingredients,
+        tuesday_ingredients=tuesday_ingredients,
+        wednesday_ingredients=wednesday_ingredients,
+        thrusday_ingredients=thrusday_ingredients,
+        firday_ingredients=firday_ingredients,
+        saturday_ingredients=saturday_ingredients,
+        sunday_ingredients=sunday_ingredients,
+        form=form,
+        monday_meals=monday_meals,
+        tuesday_meals=tuesday_meals,
+        wednesday_meals=wednesday_meals,
+        thursday_meals=thursday_meals,
+        friday_meals=friday_meals,
+        saturday_meals=saturday_meals,
+        sunday_meals=sunday_meals,
+        extra_meals=extra_meals,
+        extra_ingredients=extra_ingredients,
+    )
+
+
+@app.route("/delete_weekly_item/<int:id>", methods=["GET", "POST"])
+def delete_weekly_item(id):
+    r = Weekly_Recipe.query.get_or_404(id)
+    shopping = Shopping.query.filter_by(day_label=r.day, for_recipe=r.rname).all()
+    weekly_list = WeeklyIngredientList.query.filter_by(
+        day_label=r.day, for_recipe=r.rname
+    ).all()
+    for item in shopping:
+        db.session.delete(item)
+    for weekly in weekly_list:
+        db.session.delete(weekly)
+    db.session.delete(r)
+    db.session.commit()
+    return redirect(url_for("weekly_view"))
+
 
 #################
 ## Weekly Plan ##
@@ -474,12 +683,12 @@ def weekly_plan():
 ####################
 ## RECIPE ADD NEW ##
 ####################
-@app.route("/unit_label_update", methods=["GET", "POST"])
-def unit_label_update():
+@app.route("/serving_label_update", methods=["GET", "POST"])
+def serving_label_update():
     if request.method == "POST":
         y = request.json
-        x = Ingredient.query.filter_by(name=y).first()
-        return jsonify(x.default_ingredient_unit())
+        x = Recipe.query.filter_by(name=y).first()
+        return jsonify(x.servings)
 
 
 @app.route("/url_to_flask_view_function", methods=["GET", "POST"])
@@ -791,6 +1000,7 @@ def recipe(id):
         instruct_query=instruct_query,
     )
 
+
 """View Traditional Specific Recipe"""
 
 
@@ -814,6 +1024,7 @@ def recipe_traditional(id):
         iquery=iquery,
         instruct_query=instruct_query,
     )
+
 
 ###################
 ## RECIPE DELETE ##
@@ -1067,7 +1278,9 @@ def delete_shopping_item(id):
             )
         else:
             return render_template(
-                "shopping/list_delete.html", our_add=our_add, deleted_items=deleted_items
+                "shopping/list_delete.html",
+                our_add=our_add,
+                deleted_items=deleted_items,
             )
     except:
         return render_template(
@@ -1134,9 +1347,7 @@ def delete_all_checked_items():
             .limit(100)
             .all()
         )
-        return render_template(
-            "shopping/list_delete.html", our_add=our_add, deleted_items=deleted_items
-        )
+        return redirect(url_for("list"))
     except:
         return render_template(
             "shopping/list_delete.html", our_add=our_add, deleted_items=deleted_items

@@ -13,6 +13,7 @@ class Shopping(db.Model):
     aisle_name = db.Column(db.String(30))
     aisle_id = db.Column(db.Integer)
     day_label = db.Column(db.String(10))
+    for_recipe = db.Column(db.String(120))
 
     def __repr__(self):
         return "<Shopping %r>" % self.ingredient_name
@@ -316,10 +317,23 @@ class RecipeInstruction(db.Model):
 class Weekly_Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rname = db.Column(db.String(100))
+    qty = db.Column(db.Float)
     day = db.Column(db.String(100))
+    servings = db.Column(db.Float)
 
     def __repr__(self):
         return "<WeeklyRec %r>" % self.rid
+
+class WeeklyIngredientList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    qty = db.Column(db.Float)
+    unit_name = db.Column(db.String(30))
+    ingredient_name = db.Column(db.String(120))
+    day_label = db.Column(db.String(10))
+    for_recipe = db.Column(db.String(120))
+
+    def __repr__(self):
+        return "<Shopping %r>" % self.ingredient_name
 
 
 def connect_db(app):

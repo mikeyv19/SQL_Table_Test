@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=2000px" />
+    <meta name="viewport" content="width=3000px" />
     <title>Weekly Plan</title>
 
     <script
@@ -29,15 +29,170 @@
     {% include 'navbar-no-response.html' %}
     <br />
     <div class="container-table">
+      <form method="POST">
+        {{ form.hidden_tag() }}{{ form.rqty(class="half-box-form") }}x
+        {{form.name(class="full-box-form", id="recipe") }}
+        <br> Servings (for 1x): <span id="dynamic"></span>
+        <br />{{form.day(class="full-box-form") }} <br />{{
+        form.submit(class="btn btn-secondary")}} 
+        <div id="dynamic"></div>
+        <br>
+      </form>
       <div class="row">
         <div class="column">
           <table class="table table-hover table-bordered table-striped">
             <thead>
               <tr>
-                <th>Monday</th>
+                <th>Monday Meals:</th>
               </tr>
             </thead>
-
+            <tbody>
+              <tr>
+                {% for mm in monday_meals %}
+                <td>
+                  {{'%0.01f'|format(mm.qty|float)}}x {{mm.rname}} ({{mm.servings}}) Servings <a href="{{url_for('delete_weekly_item', id =mm.id)}}">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Tuesday Meals:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% for tm in tuesday_meals %}
+                <td>
+                  {{'%0.01f'|format(tm.qty|float)}}x {{tm.rname}} <a href="{{url_for('delete_weekly_item', id =tm.id)}}">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Wednesday Meals:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% for wm in wednesday_meals %}
+                <td>
+                  {{'%0.01f'|format(wm.qty|float)}}x {{wm.rname}} <a href="{{url_for('delete_weekly_item', id =wm.id)}}">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Thursday Meals:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% for thm in thursday_meals %}
+                <td>
+                  {{'%0.01f'|format(thm.qty|float)}}x {{thm.rname}} <a href="{{url_for('delete_weekly_item', id =thm.id)}}">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Friday Meals:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% for fm in friday_meals %}
+                <td>
+                  {{'%0.01f'|format(fm.qty|float)}}x {{fm.rname}} <a href="{{url_for('delete_weekly_item', id =fm.id)}}">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Saturday Meals:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% for sam in saturday_meals %}
+                <td>
+                  {{'%0.01f'|format(sam.qty|float)}}x {{sam.rname}} <a href="{{url_for('delete_weekly_item', id =sam.id)}}">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Sunday Meals:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% for sum in sunday_meals %}
+                <td>
+                  {{'%0.01f'|format(sum.qty|float)}}x {{sum.rname}} <a href="{{url_for('delete_weekly_item', id =sum.id)}}">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Extra Meals:</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {% for em in extra_meals %}
+                <td>
+                  {{'%0.01f'|format(em.qty|float)}}x {{em.rname}} <a href="{{url_for('delete_weekly_item', id =em.id)}}">Delete</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Monday Ingredients:</th>
+              </tr>
+            </thead>
             <tbody>
               <tr>
                 {% for mi in monday_ingredients %}
@@ -54,14 +209,14 @@
           <table class="table table-hover table-bordered table-striped">
             <thead>
               <tr>
-                <th>Tuesday</th>
+                <th>Tuesday Ingredients:</th>
               </tr>
             </thead>
 
             <tbody>
               <tr>
                 {% for tui in tuesday_ingredients %}
-                <td>{{tui.qty}}{{tui.unit_name}} x {{tui.ingredient_name}}</td>
+                <td>{{tui.qty}} {{tui.unit_name}} x {{tui.ingredient_name}}</td>
               </tr>
               {% endfor %}
             </tbody>
@@ -71,7 +226,7 @@
           <table class="table table-hover table-bordered table-striped">
             <thead>
               <tr>
-                <th>Wednesday</th>
+                <th>Wednesday Ingredients:</th>
               </tr>
             </thead>
 
@@ -91,7 +246,7 @@
           <table class="table table-hover table-bordered table-striped">
             <thead>
               <tr>
-                <th>Thursday</th>
+                <th>Thursday Ingredients:</th>
               </tr>
             </thead>
 
@@ -111,7 +266,7 @@
           <table class="table table-hover table-bordered table-striped">
             <thead>
               <tr>
-                <th>Friday</th>
+                <th>Friday Ingredients:</th>
               </tr>
             </thead>
 
@@ -131,7 +286,7 @@
           <table class="table table-hover table-bordered table-striped">
             <thead>
               <tr>
-                <th>Saturday</th>
+                <th>Saturday Ingredients:</th>
               </tr>
             </thead>
 
@@ -151,7 +306,7 @@
           <table class="table table-hover table-bordered table-striped">
             <thead>
               <tr>
-                <th>Sunday</th>
+                <th>Sunday Ingredients:</th>
               </tr>
             </thead>
 
@@ -167,7 +322,50 @@
             </tbody>
           </table>
         </div>
+        <div class="column">
+          <table class="table table-hover table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Extra Ingredients:</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                {% for ei in extra_ingredients %}
+                <td>
+                  {{'%0.01f'|format(ei.total|float)}} {{ei.unit_name}} x
+                  {{ei.ingredient_name}}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
+    <script>
+      $(document).ready(function () {
+        $("#recipe").select2({
+          placeholder: "{{ form.name.label.text }}",
+          allowClear: true,
+          width: "150px",
+        });
+        $("#recipe").change(function () {
+        $.ajax({
+          type: "POST",
+          url: "/serving_label_update",
+          dataType: "json",
+          data: JSON.stringify(
+            $("#select2-recipe-container").attr("title")
+          ),
+          contentType: "application/json;charset=UTF-8",
+          success: function (data) {
+            document.getElementById("dynamic").innerHTML = data;
+          },
+        });
+      });
+      });
+    </script>
   </body>
 </html>
