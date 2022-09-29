@@ -46,8 +46,8 @@ margin-right: 0.5em;
 <body>
   <div class="container">
     <h1>{{title}}</h1>
-    <a href="{{ url_for('recipe_traditional', id=r.id) }}">
-      <h5>View With Traditional Measurements</h5>
+    <a href="{{ url_for('recipe', id=r.id) }}">
+      <h5>View With Metric Measurements</h5>
     </a>
     <a href="{{ url_for('recipe_edit', id=r.id) }}">
       <h5>Edit</h5>
@@ -103,9 +103,9 @@ margin-right: 0.5em;
           {% for i in iquery %}
           <tr>
             <td class="{{i.ingredient_color_tag|color_label()}}">
-              <b>{{(' %0.0f
-                '|format(i.qty * m.amount)) if (i.qty%1==0) else (' %0.2f
-                '|format(i.qty * m.amount))}}</b>{{i.ingredient.default_ingredient_unit()}}
+          <b>              {{(' %0.1f
+                '|format((i.qty / i.traditional_ingredient_multi1()) * m.amount)) if (i.qty%1==0) else (' %0.2f
+                '|format((i.qty / i.traditional_ingredient_multi1()) * m.amount))}} </b>{{i.traditional_ingredient_unit1()}}
               <b>{{i.ingredient.name}}</b>
               {{i.unit_suffix}}
             </td>

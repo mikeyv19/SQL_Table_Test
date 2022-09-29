@@ -2,7 +2,6 @@ from time import process_time_ns
 from flask_sqlalchemy import SQLAlchemy
 
 
-
 db = SQLAlchemy()
 
 
@@ -57,6 +56,36 @@ class Ingredient(db.Model):
             return x.unit.name
         except:
             return "Unknown"
+
+    def traditional_ingredient_unit(self):
+        try:
+            x = (
+                UnitIngredient.query.filter_by(iid=self.id)
+                .order_by(UnitIngredient.multiplyer.desc())
+                .all()
+            )
+            y = UnitIngredient.query.filter_by(iid=self.id).first()
+            if x[0].unit.name not in ("ml", "g"):
+                return x[0].unit.name
+            else:
+                return y.unit.name
+        except:
+            return "Unknown"
+
+    def traditional_ingredient_multi(self):
+        try:
+            x = (
+                UnitIngredient.query.filter_by(iid=self.id)
+                .order_by(UnitIngredient.multiplyer.desc())
+                .all()
+            )
+            y = UnitIngredient.query.filter_by(iid=self.id).first()
+            if x[0].unit.name not in ("ml", "g"):
+                return x[0].multiplyer
+            else:
+                return y.multiplyer
+        except:
+            return 1
 
 
 class Aisle(db.Model):
@@ -208,6 +237,70 @@ class RecipeIngredient(db.Model):
 
     def __repr__(self):
         return "<RecipeIngredient %r>" % self.rid
+
+    def traditional_ingredient_multi1(self):
+        x = (
+            UnitIngredient.query.filter_by(iid=self.ingredient.id)
+            .order_by(UnitIngredient.multiplyer.desc())
+            .all()
+        )
+        y = UnitIngredient.query.filter_by(iid=self.ingredient.id).first()
+        z = RecipeIngredient.query.filter_by(id=self.id).first()
+        try:
+            if x[0].unit.name not in ("ml", "g"):
+                if x[0].unit.name in ("Cup(s)"):
+                    if z.qty / x[0].multiplyer >= 0.25:
+                        return x[0].multiplyer
+                    elif x[1].unit.name in ("TBS"):
+                        if z.qty / x[1].multiplyer >= 0.334:
+                            return x[1].multiplyer
+                    elif x[2].unit.name in ("tsp"):
+                        return x[2].multiplyer
+                elif x[0].unit.name in ("TBS"):
+                    if z.qty / x[0].multiplyer >= 0.334:
+                        return x[0].multiplyer
+                    elif x[1].unit.name in ("tsp"):
+                        return x[1].multiplyer
+                elif x[1].unit.name in ("tsp"):
+                    return x[1].multiplyer
+                else:
+                    return x[0].multiplyer
+            else:
+                return y.multiplyer
+        except:
+            return y.multiplyer
+
+    def traditional_ingredient_unit1(self):
+        x = (
+            UnitIngredient.query.filter_by(iid=self.ingredient.id)
+            .order_by(UnitIngredient.multiplyer.desc())
+            .all()
+        )
+        y = UnitIngredient.query.filter_by(iid=self.ingredient.id).first()
+        z = RecipeIngredient.query.filter_by(id=self.id).first()
+        try:
+            if x[0].unit.name not in ("ml", "g"):
+                if x[0].unit.name in ("Cup(s)"):
+                    if z.qty / x[0].multiplyer >= 0.25:
+                        return x[0].unit.name
+                    elif x[1].unit.name in ("TBS"):
+                        if z.qty / x[1].multiplyer >= 0.334:
+                            return x[1].unit.name
+                    elif x[2].unit.name in ("tsp"):
+                        return x[2].unit.name
+                elif x[0].unit.name in ("TBS"):
+                    if z.qty / x[0].multiplyer >= 0.334:
+                        return x[0].unit.name
+                    elif x[1].unit.name in ("tsp"):
+                        return x[1].unit.name
+                elif x[1].unit.name in ("tsp"):
+                    return x[1].unit.name
+                else:
+                    return x[0].unit.name
+            else:
+                return y.unit.name
+        except:
+            return y.unit.name
 
 
 class RecipeInstruction(db.Model):

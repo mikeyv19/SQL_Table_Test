@@ -791,6 +791,29 @@ def recipe(id):
         instruct_query=instruct_query,
     )
 
+"""View Traditional Specific Recipe"""
+
+
+@app.route("/recipe_traditional/<int:id>", methods=["GET", "POST"])
+def recipe_traditional(id):
+    r = Recipe.query.get_or_404(id)
+    title = r.name
+    iquery = RecipeIngredient.query.filter_by(rid=id).all()
+    form = RecipeMulti()
+    m = RecipeMultiplyer.query.get_or_404(1)
+    instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
+    if form.submit.data and form.validate_on_submit():
+        m.amount = form.amount.data
+        db.session.commit()
+    return render_template(
+        "/recipes/recipe_traditional.html",
+        r=r,
+        title=title,
+        form=form,
+        m=m,
+        iquery=iquery,
+        instruct_query=instruct_query,
+    )
 
 ###################
 ## RECIPE DELETE ##
