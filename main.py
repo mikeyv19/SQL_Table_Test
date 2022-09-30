@@ -3,7 +3,6 @@ from re import U
 from tkinter.tix import Select
 from unicodedata import name
 from flask import Flask, flash, render_template, request, redirect, url_for, jsonify
-from requests import delete
 from models import (
     Ingredient,
     Aisle,
