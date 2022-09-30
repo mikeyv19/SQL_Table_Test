@@ -718,6 +718,7 @@ def add_recipe():
             course=form.course.data,
             servings=form.servings.data,
             serving_size=form.serving_size.data,
+            tags = form.tags.data,
         )
         db.session.add(update)
         db.session.commit()
@@ -797,6 +798,7 @@ def recipe_edit(id):
         r.course = form2.course.data
         r.servings = form2.servings.data
         r.serving_size = form2.serving_size.data
+        r.tags = form2.tags.data
         db.session.commit()
     """Add Instruction Step Button Action"""
     if form3.submit3.data and form3.validate_on_submit():

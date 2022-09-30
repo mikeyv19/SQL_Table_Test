@@ -86,6 +86,7 @@ class CreateRecipe(FlaskForm):
     )
     servings = DecimalField("Servings:", validators=[validators.InputRequired()])
     serving_size = StringField("Serving Size", validators=[validators.DataRequired()])
+    tags = StringField("Tags:")
     submit2 = SubmitField("Submit")
 
 
@@ -157,6 +158,7 @@ class AddUnit(FlaskForm):
 # WEEKLY DINNER PLAN PAGE #
 ###########################
 
+
 class WeeklySelect(FlaskForm):
     rqty = DecimalField("Multiplyer", validators=[validators.InputRequired()])
     name = SelectField(
@@ -167,13 +169,13 @@ class WeeklySelect(FlaskForm):
     day = SelectField(
         "Color Tag:",
         choices=[
-            ("Sunday"),
             ("Monday"),
             ("Tuesday"),
             ("Wednesday"),
             ("Thursday"),
             ("Friday"),
             ("Saturday"),
+            ("Sunday"),
             ("Extra"),
         ],
         validate_choice=False,

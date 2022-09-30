@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=3000px" />
     <title>Weekly Plan</title>
-
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -197,8 +196,8 @@
               <tr>
                 {% for mi in monday_ingredients %}
                 <td>
-                  {{'%0.01f'|format(mi.total|float)}} {{mi.unit_name}} x
-                  {{mi.ingredient_name}}
+                  <b>{{'%0.01f'|format(mi.total|float)}}</b> {{mi.unit_name}} x
+                  <b>{{mi.ingredient_name}}</b>
                 </td>
               </tr>
               {% endfor %}
@@ -216,7 +215,7 @@
             <tbody>
               <tr>
                 {% for tui in tuesday_ingredients %}
-                <td>{{tui.qty}} {{tui.unit_name}} x {{tui.ingredient_name}}</td>
+                <td><b>{{'%0.01f'|format(tui.total|float)}}</b> {{tui.unit_name}} x <b>{{tui.ingredient_name}}</b></td>
               </tr>
               {% endfor %}
             </tbody>
@@ -234,8 +233,8 @@
               <tr>
                 {% for wi in wednesday_ingredients %}
                 <td>
-                  {{'%0.01f'|format(wi.total|float)}} {{wi.unit_name}} x
-                  {{wi.ingredient_name}}
+                  <b>{{'%0.01f'|format(wi.total|float)}}</b> {{wi.unit_name}} x
+                  <b>{{wi.ingredient_name}}</b>
                 </td>
               </tr>
               {% endfor %}
@@ -254,8 +253,8 @@
               <tr>
                 {% for thi in thursday_ingredients %}
                 <td>
-                  {{'%0.01f'|format(thi.total|float)}} {{thi.unit_name}} x
-                  {{thi.ingredient_name}}
+                  <b>{{'%0.01f'|format(thi.total|float)}}</b> {{thi.unit_name}} x
+                  <b>{{thi.ingredient_name}}</b>
                 </td>
               </tr>
               {% endfor %}
@@ -274,8 +273,8 @@
               <tr>
                 {% for fi in friday_ingredients %}
                 <td>
-                  {{'%0.01f'|format(fi.total|float)}} {{fi.unit_name}} x
-                  {{fi.ingredient_name}}
+                  <b>{{'%0.01f'|format(fi.total|float)}} </b>{{fi.unit_name}} x
+                  <b>{{fi.ingredient_name}}</b>
                 </td>
               </tr>
               {% endfor %}
@@ -294,8 +293,8 @@
               <tr>
                 {% for sai in saturday_ingredients %}
                 <td>
-                  {{'%0.01f'|format(sai.total|float)}} {{sai.unit_name}} x
-                  {{sai.ingredient_name}}
+                  <b>{{'%0.01f'|format(sai.total|float)}}</b> {{sai.unit_name}} x
+                  <b>{{sai.ingredient_name}}</b>
                 </td>
               </tr>
               {% endfor %}
@@ -314,8 +313,8 @@
               <tr>
                 {% for sui in sunday_ingredients %}
                 <td>
-                  {{'%0.01f'|format(sui.total|float)}} {{sui.unit_name}} x
-                  {{sui.ingredient_name}}
+                  <b>{{'%0.01f'|format(sui.total|float)}}</b> {{sui.unit_name}} x
+                  <b>{{sui.ingredient_name}}</b>
                 </td>
               </tr>
               {% endfor %}
@@ -334,8 +333,8 @@
               <tr>
                 {% for ei in extra_ingredients %}
                 <td>
-                  {{'%0.01f'|format(ei.total|float)}} {{ei.unit_name}} x
-                  {{ei.ingredient_name}}
+                  <b>{{'%0.01f'|format(ei.total|float)}} </b>{{ei.unit_name}} x
+                  <b>{{ei.ingredient_name}}</b>
                 </td>
               </tr>
               {% endfor %}

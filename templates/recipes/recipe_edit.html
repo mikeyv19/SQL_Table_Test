@@ -72,6 +72,12 @@
         <div class="col-3">
           {{ form2.serving_size(class="form-control", value=r.serving_size)}}
         </div>
+        <div class="col-1">
+          Tags:
+        </div>
+        <div class="col-3">
+          {{ form2.tags(class="form-control w-75", value=r.tags)}}
+        </div>
         <div class="col">{{ form2.submit2(class="btn btn-secondary") }}</div>
       </div>
     </form>
