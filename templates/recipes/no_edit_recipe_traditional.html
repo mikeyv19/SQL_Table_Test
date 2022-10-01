@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>{{title}}</title>
+  <title>Recipe List</title>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -40,17 +40,17 @@ margin-right: 0.5em;
 
 }
 </style>
-  {% extends 'base.html' %} {% block content %}
+  {% extends 'base_no_edit.html' %} {% block content %}
 </head>
 
 <body>
   <div class="container">
     <h1>{{title}}</h1>
-    <a href="{{ url_for('recipe_traditional', id=r.id) }}">
-      <h5>View With Traditional Measurements</h5>
+    <a href="{{ url_for('no_edit_view_recipe', id=r.id) }}">
+      <h5>View With Metric Measurements</h5>
     </a>
-    <a href="{{ url_for('recipe_edit', id=r.id) }}">
-      <h5>Edit</h5>
+    <a href="{{ url_for('no_edit_recipe_list')}}">
+      <h5>Back</h5>
     </a>
 
     <div class="row">
@@ -103,9 +103,9 @@ margin-right: 0.5em;
           {% for i in iquery %}
           <tr>
             <td class="{{i.ingredient_color_tag|color_label()}}">
-              <b>{{(' %0.0f
-                '|format(i.qty * m.amount)) if (i.qty%1==0) else (' %0.2f
-                '|format(i.qty * m.amount))}}</b>{{i.ingredient.default_ingredient_unit()}}
+          <b>              {{(' %0.2f
+                '|format((i.qty / i.traditional_ingredient_multi1()) * m.amount)) if (i.qty%1==0) else (' %0.2f
+                '|format((i.qty / i.traditional_ingredient_multi1()) * m.amount))}} </b>{{i.traditional_ingredient_unit1()}}
               <b>{{i.ingredient.name}}</b>
               {{i.unit_suffix}}
             </td>

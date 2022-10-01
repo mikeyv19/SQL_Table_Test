@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
 
-    {% extends 'base.html' %} {% block content %}
+    {% extends 'base_no_edit.html' %} {% block content %}
   </head>
   <body>
     <!------------------------->
@@ -24,7 +24,6 @@
     <!------------------------->
     <div class="container">
       <h1>Recipe List:</h1>
-      <a href="{{url_for('add_recipe')}}"><h6>Add New</h6></a>
       <table id="data" class="table table-hover table-bordered table-striped">
         <thead>
           <tr>
@@ -40,7 +39,7 @@
         <tbody>
         {% for recipe_table in recipe_list %}
         <tr>
-          <td>{{recipe_table.name}}</td> <td>{{recipe_table.course}}</td><td>{{(' %0.0f'|format(recipe_table.servings)) if (recipe_table.servings%1==0) else (' %0.2f'|format(recipe_table.servings))}}</td><td>{{'%0.0f'|format((recipe_table.get_total_calories())/recipe_table.servings)}}</td> <td>{{'$%0.2f'|format(recipe_table.get_total_cost())}}</td> <td>{{recipe_table.tags}} </td><td><a href="{{url_for('recipe', id=recipe_table.id)}}">
+          <td>{{recipe_table.name}}</td> <td>{{recipe_table.course}}</td><td>{{(' %0.0f'|format(recipe_table.servings)) if (recipe_table.servings%1==0) else (' %0.2f'|format(recipe_table.servings))}}</td><td>{{'%0.0f'|format((recipe_table.get_total_calories())/recipe_table.servings)}}</td> <td>{{'$%0.2f'|format(recipe_table.get_total_cost())}}</td> <td>{{recipe_table.tags}} </td><td><a href="{{url_for('no_edit_view_recipe', id=recipe_table.id)}}">
           View</td>
         </tr>
         {% endfor %}

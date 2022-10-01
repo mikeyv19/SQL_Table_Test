@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Shopping List</title>
+  <title>{{title}}: Edit</title>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -60,23 +60,30 @@
     <h2>Update Recipe Info</h2>
     <form method="POST">
       <div class="row">
-        <div class="col">
+        <div class="col-3">
           {{ form.hidden_tag() }} {{ form2.recipe_name(class="form-control", value=r.name) }}
         </div>
         <div class="col-2">
-          {{ form2.course(class="form-control", valuse=r.course) }}
+          {{ form2.course(class="form-control", value=r.course) }}
         </div>
         <div class="col-1">
           {{ form2.servings(class="form-control", value=r.servings)}}
         </div>
-        <div class="col-3">
+        <div class="col-2">
           {{ form2.serving_size(class="form-control", value=r.serving_size)}}
         </div>
-        <div class="col-1">
+        <!-- <div class="col-1">
           Tags:
-        </div>
+        </div> -->
         <div class="col-3">
-          {{ form2.tags(class="form-control w-75", value=r.tags)}}
+          <div class="row">
+            <div class="col-2">
+<span class="align-middle"><b>Tags</b>:</span>
+</div>
+<div class="col-10">
+{{ form2.tags(class="form-control", value=r.tags)}}
+</div>
+</div>
         </div>
         <div class="col">{{ form2.submit2(class="btn btn-secondary") }}</div>
       </div>
@@ -101,6 +108,7 @@
               </div>
               <div class="col">
                 {{ form.suffix(class="form-control", placeholder='Eg. room temp')}}
+                {{ form.color1(class="form-control") }}
               </div>
               <div class="col">{{ form.submit(class="btn btn-secondary mt-2") }}
               </div>
@@ -111,6 +119,7 @@
             <form method="POST">
               <div class="col">
                 {{ form3.hidden_tag() }} {{ form3.instruction(class="form-control") }}
+                {{ form3.color2(class="form-control") }}
               </div>
               <div class="col">{{ form3.submit3(class="btn btn-secondary mt-2") }}</div>
             </form>

@@ -59,7 +59,7 @@ app.logger.addHandler(handler)  # Add it to the built-in logger
 app.logger.setLevel(logging.DEBUG)  # Set the log level to debug
 
 
-@app.route("/")
+@app.route("/home")
 def index():
     return render_template("index.html")
 
@@ -718,7 +718,7 @@ def add_recipe():
             course=form.course.data,
             servings=form.servings.data,
             serving_size=form.serving_size.data,
-            tags = form.tags.data,
+            tags=form.tags.data,
         )
         db.session.add(update)
         db.session.commit()
@@ -738,6 +738,14 @@ def recipe_list():
     recipe_list = Recipe.query.order_by(Recipe.name)
     return render_template("/recipes/recipe_list.html", recipe_list=recipe_list)
 
+"""View Specific Recipe (no edit mode)"""
+
+
+@app.route("/view_recipes")
+def no_edit_recipe_list():
+    recipe_list = Recipe.query.order_by(Recipe.name)
+    return render_template("/recipes/no_edit_recipe_list.html", recipe_list=recipe_list)
+
 
 #################
 ## RECIPE EDIT ##
@@ -755,6 +763,8 @@ def recipe_edit(id):
     iquery = RecipeIngredient.query.filter_by(rid=id).all()
     """Update Meta Data Form"""
     form2 = CreateRecipe()
+    if request.method == "GET":
+        form2.course.data = r.course
     """Add Ingredient Form"""
     form = AddIngredient()
     a = db.session.query(Ingredient.name).order_by(Ingredient.name)
@@ -776,11 +786,13 @@ def recipe_edit(id):
             iid=u1.id,
             qty=form.qty.data * Decimal(u3.multiplyer),
             unit_suffix=form.suffix.data,
+            ingredient_color_tag=form.color1.data,
         )
         db.session.add(update)
         db.session.commit()
         iquery = RecipeIngredient.query.filter_by(rid=id).all()
         form.name.data = ""
+        form2.course.data = r.course
         return render_template(
             "/recipes/recipe_edit.html",
             r=r,
@@ -802,11 +814,15 @@ def recipe_edit(id):
         db.session.commit()
     """Add Instruction Step Button Action"""
     if form3.submit3.data and form3.validate_on_submit():
-        update = RecipeInstruction(rid=id, instruction=form3.instruction.data)
+        update = RecipeInstruction(
+            rid=id,
+            instruction=form3.instruction.data,
+            instruction_color_tag=form3.color2.data,
+        )
         db.session.add(update)
         db.session.commit()
         instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
-
+        form2.course.data = r.course
     return render_template(
         "/recipes/recipe_edit.html",
         r=r,
@@ -1001,6 +1017,30 @@ def recipe(id):
         instruct_query=instruct_query,
     )
 
+"""View Specific Recipe (no_edit)"""
+
+
+@app.route("/view_recipe/<int:id>", methods=["GET", "POST"])
+def no_edit_view_recipe(id):
+    r = Recipe.query.get_or_404(id)
+    title = r.name
+    iquery = RecipeIngredient.query.filter_by(rid=id).all()
+    form = RecipeMulti()
+    m = RecipeMultiplyer.query.get_or_404(1)
+    instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
+    if form.submit.data and form.validate_on_submit():
+        m.amount = form.amount.data
+        db.session.commit()
+    return render_template(
+        "/recipes/no_edit_recipe.html",
+        r=r,
+        title=title,
+        form=form,
+        m=m,
+        iquery=iquery,
+        instruct_query=instruct_query,
+    )
+
 
 """View Traditional Specific Recipe"""
 
@@ -1018,6 +1058,31 @@ def recipe_traditional(id):
         db.session.commit()
     return render_template(
         "/recipes/recipe_traditional.html",
+        r=r,
+        title=title,
+        form=form,
+        m=m,
+        iquery=iquery,
+        instruct_query=instruct_query,
+    )
+
+
+"""View Traditional Specific Recipe (no edit)"""
+
+
+@app.route("/view_recipe/<int:id>/traditional", methods=["GET", "POST"])
+def no_edit_view_recipe_traditional(id):
+    r = Recipe.query.get_or_404(id)
+    title = r.name
+    iquery = RecipeIngredient.query.filter_by(rid=id).all()
+    form = RecipeMulti()
+    m = RecipeMultiplyer.query.get_or_404(1)
+    instruct_query = RecipeInstruction.query.filter_by(rid=id).all()
+    if form.submit.data and form.validate_on_submit():
+        m.amount = form.amount.data
+        db.session.commit()
+    return render_template(
+        "/recipes/no_edit_recipe_traditional.html",
         r=r,
         title=title,
         form=form,

@@ -40,17 +40,17 @@ margin-right: 0.5em;
 
 }
 </style>
-  {% extends 'base.html' %} {% block content %}
+  {% extends 'base_no_edit.html' %} {% block content %}
 </head>
 
 <body>
   <div class="container">
     <h1>{{title}}</h1>
-    <a href="{{ url_for('recipe_traditional', id=r.id) }}">
+    <a href="{{ url_for('no_edit_view_recipe_traditional', id=r.id) }}">
       <h5>View With Traditional Measurements</h5>
     </a>
-    <a href="{{ url_for('recipe_edit', id=r.id) }}">
-      <h5>Edit</h5>
+    <a href="{{ url_for('no_edit_recipe_list')}}">
+      <h5>Back</h5>
     </a>
 
     <div class="row">

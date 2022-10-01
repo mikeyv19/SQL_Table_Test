@@ -102,12 +102,44 @@ class AddIngredient(FlaskForm):
     )
     qty = DecimalField("Qty:", validators=[validators.InputRequired()])
     suffix = StringField("Notes")
+    color1 = SelectField(
+        "Color Tag:",
+        choices=[
+            ("default"),
+            ("blue"),
+            ("green"),
+            ("light blue"),
+            ("red"),
+            ("yellow"),
+            ("purple"),
+            ("orange"),
+            ("dark grey"),
+            ("light grey"),
+        ],
+        validate_choice=False,
+    )
     submit = SubmitField("Submit")
 
 
 class AddInstruction(FlaskForm):
     instruction = TextAreaField(
         "Add Instruction Step:", validators=[validators.InputRequired()]
+    )
+    color2 = SelectField(
+        "Color Tag:",
+        choices=[
+            ("default"),
+            ("blue"),
+            ("green"),
+            ("light blue"),
+            ("red"),
+            ("yellow"),
+            ("purple"),
+            ("orange"),
+            ("dark grey"),
+            ("light grey"),
+        ],
+        validate_choice=False,
     )
     submit3 = SubmitField("Submit")
 
