@@ -135,7 +135,7 @@ def weekly_view():
         .order_by(WeeklyIngredientList.ingredient_name)
         .all()
     )
-    thrusday_ingredients = (
+    thursday_ingredients = (
         WeeklyIngredientList.query.filter_by(day_label="Thursday")
         .with_entities(
             WeeklyIngredientList.id,
@@ -149,7 +149,7 @@ def weekly_view():
         .order_by(WeeklyIngredientList.ingredient_name)
         .all()
     )
-    firday_ingredients = (
+    friday_ingredients = (
         WeeklyIngredientList.query.filter_by(day_label="Friday")
         .with_entities(
             WeeklyIngredientList.id,
@@ -297,7 +297,7 @@ def weekly_view():
         .order_by(WeeklyIngredientList.ingredient_name)
         .all()
     )
-    thrusday_ingredients = (
+    thursday_ingredients = (
         WeeklyIngredientList.query.filter_by(day_label="Thursday")
         .with_entities(
             WeeklyIngredientList.id,
@@ -311,7 +311,7 @@ def weekly_view():
         .order_by(WeeklyIngredientList.ingredient_name)
         .all()
     )
-    firday_ingredients = (
+    friday_ingredients = (
         WeeklyIngredientList.query.filter_by(day_label="Friday")
         .with_entities(
             WeeklyIngredientList.id,
@@ -373,8 +373,8 @@ def weekly_view():
         monday_ingredients=monday_ingredients,
         tuesday_ingredients=tuesday_ingredients,
         wednesday_ingredients=wednesday_ingredients,
-        thrusday_ingredients=thrusday_ingredients,
-        firday_ingredients=firday_ingredients,
+        thursday_ingredients=thursday_ingredients,
+        friday_ingredients=friday_ingredients,
         saturday_ingredients=saturday_ingredients,
         sunday_ingredients=sunday_ingredients,
         form=form,
@@ -738,6 +738,7 @@ def recipe_list():
     recipe_list = Recipe.query.order_by(Recipe.name)
     return render_template("/recipes/recipe_list.html", recipe_list=recipe_list)
 
+
 """View Specific Recipe (no edit mode)"""
 
 
@@ -1016,6 +1017,7 @@ def recipe(id):
         iquery=iquery,
         instruct_query=instruct_query,
     )
+
 
 """View Specific Recipe (no_edit)"""
 
