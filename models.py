@@ -1,6 +1,7 @@
+import fractions
 from time import process_time_ns
 from flask_sqlalchemy import SQLAlchemy
-
+from fractions import Fraction
 
 db = SQLAlchemy()
 
@@ -247,29 +248,72 @@ class RecipeIngredient(db.Model):
         )
         y = UnitIngredient.query.filter_by(iid=self.ingredient.id).first()
         z = RecipeIngredient.query.filter_by(id=self.id).first()
+        m = RecipeMultiplyer.query.get(1)
+
+        def mixed(fraction):
+            floor, rest = divmod(fraction.numerator, fraction.denominator)
+            if floor == 0 and Fraction(rest, fraction.denominator) > 0:
+                return Fraction(rest, fraction.denominator)
+            elif floor > 0 and Fraction(rest, fraction.denominator) == 0:
+                return floor
+            else:
+                return f"{floor} {Fraction(rest, fraction.denominator)}"
+
         try:
             if x[0].unit.name not in ("ml", "g"):
                 if x[0].unit.name in ("Cup(s)"):
                     if z.qty / x[0].multiplyer >= 0.25:
-                        return x[0].multiplyer
+                        return mixed(
+                            Fraction(
+                                (z.qty / x[0].multiplyer) * m.amount
+                            ).limit_denominator(8)
+                        )
                     elif x[1].unit.name in ("TBS"):
-                        if z.qty / x[1].multiplyer >= 0.334:
-                            return x[1].multiplyer
+                        if z.qty / x[1].multiplyer >= 0.74:
+                            return mixed(
+                                Fraction(
+                                    (z.qty / x[1].multiplyer) * m.amount
+                                ).limit_denominator(8)
+                            )
                     elif x[2].unit.name in ("tsp"):
-                        return x[2].multiplyer
+                        return mixed(
+                            Fraction(
+                                (z.qty / x[2].multiplyer) * m.amount
+                            ).limit_denominator(8)
+                        )
                 elif x[0].unit.name in ("TBS"):
-                    if z.qty / x[0].multiplyer >= 0.334:
-                        return x[0].multiplyer
+                    if z.qty / x[0].multiplyer >= 0.74:
+                        return mixed(
+                            Fraction(
+                                (z.qty / x[0].multiplyer) * m.amount
+                            ).limit_denominator(8)
+                        )
                     elif x[1].unit.name in ("tsp"):
-                        return x[1].multiplyer
+                        return mixed(
+                            Fraction(
+                                (z.qty / x[1].multiplyer) * m.amount
+                            ).limit_denominator(8)
+                        )
                 elif x[1].unit.name in ("tsp"):
-                    return x[1].multiplyer
+                    return mixed(
+                        Fraction(
+                            (z.qty / x[1].multiplyer) * m.amount
+                        ).limit_denominator(8)
+                    )
                 else:
-                    return x[0].multiplyer
+                    return mixed(
+                        Fraction(
+                            (z.qty / x[0].multiplyer) * m.amount
+                        ).limit_denominator(8)
+                    )
             else:
-                return y.multiplyer
+                return mixed(
+                    Fraction((z.qty / y.multiplyer) * m.amount).limit_denominator(8)
+                )
         except:
-            return y.multiplyer
+            return mixed(
+                Fraction((z.qty / y.multiplyer) * m.amount).limit_denominator(8)
+            )
 
     def traditional_ingredient_unit1(self):
         x = (
@@ -285,12 +329,12 @@ class RecipeIngredient(db.Model):
                     if z.qty / x[0].multiplyer >= 0.25:
                         return x[0].unit.name
                     elif x[1].unit.name in ("TBS"):
-                        if z.qty / x[1].multiplyer >= 0.334:
+                        if z.qty / x[1].multiplyer >= 0.74:
                             return x[1].unit.name
                     elif x[2].unit.name in ("tsp"):
                         return x[2].unit.name
                 elif x[0].unit.name in ("TBS"):
-                    if z.qty / x[0].multiplyer >= 0.334:
+                    if z.qty / x[0].multiplyer >= 0.74:
                         return x[0].unit.name
                     elif x[1].unit.name in ("tsp"):
                         return x[1].unit.name
@@ -323,6 +367,7 @@ class Weekly_Recipe(db.Model):
 
     def __repr__(self):
         return "<WeeklyRec %r>" % self.rid
+
 
 class WeeklyIngredientList(db.Model):
     id = db.Column(db.Integer, primary_key=True)
