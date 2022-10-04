@@ -10,7 +10,21 @@ h3 {
 .column {
   float: left;
   width: 320px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+}
+
+.column-heading {
+  float: left;
+  width: 320px;
+  padding-top: 1%;
+  height: 100px;
+}
+
+.column-double {
+  float: left;
+  width: 640px;
+  padding-top: 1%;
+  height: 100px;
 }
 
 /* Clear floats after the columns */
