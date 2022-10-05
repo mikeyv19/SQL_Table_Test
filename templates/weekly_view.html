@@ -40,6 +40,17 @@
             <div id="dynamic"></div>
           </div>
       </div>
+      <div class="column-day">
+        <b>Monday</b> - {% for m in monday_meals %} {{m.rname}}, {% endfor %} <br>
+        <b>Tuesday</b> - {% for m in tuesday_meals %} {{m.rname}}, {% endfor %} <br>
+        <b>Wednesday</b> - {% for m in wednesday_meals %} {{m.rname}}, {% endfor %} <br>
+        <b>Thursday</b> - {% for m in thursday_meals %} {{m.rname}}, {% endfor %} <br>
+        </div>
+      <div class="column-day">
+        <b>Friday</b> - {% for m in friday_meals %} {{m.rname}}, {% endfor %} <br>
+        <b>Saturday</b> - {% for m in saturday_meals %} {{m.rname}}, {% endfor %} <br>
+        <b>Sunday</b> - {% for m in sunday_meals %} {{m.rname}}, {% endfor %} <br>
+      </div>
     </div>
     <br>
     </form>
