@@ -1,102 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Shopping List</title>
 
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="{{ url_for('static', filename='css/select2.css') }}"
-      rel="stylesheet"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
-    
-    {% extends 'base.html' %} {% block content %}
-  </head>
-  <body>
-    <br />
+<head>
+  <meta charset="UTF-8" />
+  <title>Shopping List</title>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <link href="{{ url_for('static', filename='css/select2.css') }}" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.js"></script>
+
+  {% extends 'base.html' %} {% block content %}
+</head>
+
+<body>
+  <br />
   <div class="container">
-      <!--------------------->
-      <!--- Auto ADD FORM --->
-      <!--------------------->
-      <h2>Add Items:</h2>
+    <!--------------------->
+    <!--- Auto ADD FORM --->
+    <!--------------------->
+    <h2>Add Items:</h2>
     <div class="row">
       <div class="col-sm">
         <form method="POST">
-            {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br>{{ form.name }}
-            <br />
-            <br />
-            {{ form.hidden_tag() }}{{ form.aqty.label(class="form-label") }} {{
-            form.aqty(class="form-control w-25", value=1) }}
-            <br />
-            {{ form.submit(class="btn btn-secondary") }}
+          {{ form.hidden_tag() }} {{ form.name.label(class="form-label") }} <br>{{ form.name }}
+          <br />
+          <br />
+          {{ form.hidden_tag() }}{{ form.aqty.label(class="form-label") }} {{
+          form.aqty(class="form-control w-25", value=1) }}
+          <br />
+          {{ form.submit(class="btn btn-secondary") }}
         </form>
         <script>
-            $(document).ready(function () {
-              $("#name").select2({
-                // init Select2 on form's name field
-                placeholder: "{{ form.name.label.text }}",
-                allowClear: true,
-                width: "50%",
-              });
+          $(document).ready(function () {
+            $("#name").select2({
+              // init Select2 on form's name field
+              placeholder: "{{ form.name.label.text }}",
+              allowClear: true,
+              width: "50%",
             });
+          });
         </script>
       </div>
       <br />
       <!--------------------->
       <!-- MANUAL ADD FORM -->
       <!--------------------->
-        <div class="col-sm">
-          <form method="POST">
-            {{ form2.hidden_tag() }} {{ form2.item.label(class="form-label") }}
-            <br />
-            {{ form2.item(class="form-control w-50") }} <br> {{ form2.hidden_tag()}}
-            {{ form2.bqty.label(class="form-label") }} {{
-            form2.bqty(class="form-control w-25", value=1) }}
-            <br />
-            {{ form2.submit1(class="btn btn-secondary") }}
-          </form>
-        </div>
+      <div class="col-sm">
+        <form method="POST">
+          {{ form2.hidden_tag() }} {{ form2.item.label(class="form-label") }}
+          <br />
+          {{ form2.item(class="form-control w-50") }} <br> {{ form2.hidden_tag()}}
+          {{ form2.bqty.label(class="form-label") }} {{
+          form2.bqty(class="form-control w-25", value=1) }}
+          <br />
+          {{ form2.submit1(class="btn btn-secondary") }}
+        </form>
       </div>
     </div>
   </div>
-    <br />
-    <!------------------------->
-    <!-- SHOPPING LIST TABLE -->
-    <!------------------------->
-    <div class="container">
-      <h1>Shopping List:</h1>
-      <table class="table table-hover table-bordered table-striped">
-        {% for shopping_list in our_add %}
-        <tr>
-          <td>
-            <b><a href="{{url_for('delete_shopping_item', id=shopping_list.id)}}"><img
-              src="{{ url_for('static', filename='images/red-x.png') }}" width="16" /></a>{{' %0.0f'|format(shopping_list.total|round(0, 'ceil')) }}</b> {{shopping_list.unit_name }} - <b>{{
-            shopping_list.ingredient_name }}</b> - ({{ shopping_list.aisle_name }})
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-    <div class="container">
-      <h2>Previously Deleted:</h2>
-      <a href="{{url_for('delete_all_checked_items') }}">
-        Delete ALL Crossed Off Items (Cannot Undo!)</a>
-      <table class="table table-hover table-bordered table-striped" style="text-decoration: line-through">
-        {% for dshopping_list in deleted_items %}
-        <tr>
-          <td>
-            <b>{{'%0.0f'|format(dshopping_list.dtotal|round(0, 'ceil')) }}</b> {{dshopping_list.unit_name }} - <b>{{
-            dshopping_list.ingredient_name }}</b> - ({{ dshopping_list.aisle_name }})
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-  </body>
-  {% endblock %}
+  </div>
+  <br />
+  <!------------------------->
+  <!-- SHOPPING LIST TABLE -->
+  <!------------------------->
+  <div id="dynamic" class="container">
+    {% include 'shopping/shopping_list_table.html' %}
+  </div>
+  <script>
+    $('#dynamic').on('click', '.aj', function () {
+      idd = $(this).attr("id")
+      $.ajax({
+        type: "GET",
+        url: "/delete_test",
+        contentType: "application/json",
+        data: {
+          del_id: $(this).attr("id")
+        },
+        success: function (response) {
+          document.getElementById("dynamic").innerHTML = response;
+        },
+      });
+    });
+  </script>
+</body>
+{% endblock %}
+
 </html>

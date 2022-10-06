@@ -88,6 +88,96 @@ def color_label(my_var):
     return td_class
 
 
+@app.route("/delete_test", methods=["GET", "POST"])
+def delete_test():
+    text = request.args.get("del_id")
+    get_entry = Shopping.query.get_or_404(text)
+    q = Shopping.query.filter_by(ingredient_name=get_entry.ingredient_name).first()
+    our_add = (
+        Shopping.query.with_entities(
+            Shopping.id,
+            Shopping.ingredient_name,
+            Shopping.qty,
+            Shopping.unit_name,
+            Shopping.aisle_name,
+            Shopping.aisle_id,
+            func.sum(Shopping.qty).label("total"),
+        )
+        .group_by(Shopping.ingredient_name)
+        .order_by(Shopping.aisle_id)
+        .all()
+    )
+    deleted_items = (
+        Dshopping.query.with_entities(
+            Dshopping.ingredient_name,
+            Dshopping.qty,
+            Dshopping.unit_name,
+            Dshopping.aisle_name,
+            Dshopping.aisle_id,
+            func.sum(Dshopping.qty).label("dtotal"),
+        )
+        .group_by(Dshopping.ingredient_name)
+        .order_by(Dshopping.id.desc())
+        .limit(100)
+        .all()
+    )
+    try:
+        while q.id > 0:
+            update = Dshopping(
+                ingredient_name=q.ingredient_name,
+                qty=q.qty,
+                unit_name=q.unit_name,
+                aisle_name=q.aisle_name,
+                aisle_id=q.aisle_id,
+            )
+            db.session.add(update)
+            db.session.delete(q)
+            db.session.commit()
+            q = Shopping.query.filter_by(
+                ingredient_name=get_entry.ingredient_name
+            ).first()
+            our_add = (
+                Shopping.query.with_entities(
+                    Shopping.id,
+                    Shopping.ingredient_name,
+                    Shopping.qty,
+                    Shopping.unit_name,
+                    Shopping.aisle_name,
+                    Shopping.aisle_id,
+                    func.sum(Shopping.qty).label("total"),
+                )
+                .group_by(Shopping.ingredient_name)
+                .order_by(Shopping.aisle_id)
+                .all()
+            )
+            deleted_items = (
+                Dshopping.query.with_entities(
+                    Dshopping.ingredient_name,
+                    Dshopping.qty,
+                    Dshopping.unit_name,
+                    Dshopping.aisle_name,
+                    Dshopping.aisle_id,
+                    func.sum(Dshopping.qty).label("dtotal"),
+                )
+                .group_by(Dshopping.ingredient_name)
+                .order_by(Dshopping.id.desc())
+                .limit(100)
+                .all()
+            )
+        else:
+            return render_template(
+                "shopping/shopping_list_table.html",
+                our_add=our_add,
+                deleted_items=deleted_items,
+            )
+    except:
+        return render_template(
+            "shopping/shopping_list_table.html",
+            our_add=our_add,
+            deleted_items=deleted_items,
+        )
+
+
 #################
 ## Weekly VIEW ##
 #################
