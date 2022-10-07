@@ -932,29 +932,32 @@ def recipe_edit(id):
 
 @app.route("/recipe/<int:rid>/edit/down/<int:id>", methods=["GET", "POST"])
 def recipe_ingredient_move_down(rid, id):
-    a = RecipeIngredient.query.get_or_404(id)
-    b = RecipeIngredient.query.filter(
-        RecipeIngredient.rid == rid, RecipeIngredient.id > a.id
-    ).first_or_404()
+    try:
+        a = RecipeIngredient.query.get_or_404(id)
+        b = RecipeIngredient.query.filter(
+            RecipeIngredient.rid == rid, RecipeIngredient.id > a.id
+        ).first_or_404()
 
-    w = a.iid
-    x = a.qty
-    y = a.unit_suffix
-    z = a.ingredient_color_tag
+        w = a.iid
+        x = a.qty
+        y = a.unit_suffix
+        z = a.ingredient_color_tag
 
-    a.iid = b.iid
-    a.qty = b.qty
-    a.unit_suffix = b.unit_suffix
-    a.ingredient_color_tag = b.ingredient_color_tag
+        a.iid = b.iid
+        a.qty = b.qty
+        a.unit_suffix = b.unit_suffix
+        a.ingredient_color_tag = b.ingredient_color_tag
 
-    b.iid = w
-    b.qty = x
-    b.unit_suffix = y
-    b.ingredient_color_tag = z
+        b.iid = w
+        b.qty = x
+        b.unit_suffix = y
+        b.ingredient_color_tag = z
 
-    db.session.commit()
+        db.session.commit()
+        return redirect(url_for("recipe_edit", id=rid))
+    except:
+        flash("Error, this unit is already at the bottom!")
     return redirect(url_for("recipe_edit", id=rid))
-
 
 """Edit Ingredient Recipe"""
 
@@ -1025,23 +1028,26 @@ def recipe_delete_ingredient(id):
 
 @app.route("/recipe/<int:rid>/edit_instruction/down/<int:id>", methods=["GET", "POST"])
 def recipe_instruction_move_down(rid, id):
-    a = RecipeInstruction.query.get_or_404(id)
-    b = RecipeInstruction.query.filter(
-        RecipeInstruction.rid == rid, RecipeInstruction.id > a.id
-    ).first_or_404()
+    try:
+        a = RecipeInstruction.query.get_or_404(id)
+        b = RecipeInstruction.query.filter(
+            RecipeInstruction.rid == rid, RecipeInstruction.id > a.id
+        ).first_or_404()
 
-    x = a.instruction
-    y = a.instruction_color_tag
+        x = a.instruction
+        y = a.instruction_color_tag
 
-    a.instruction = b.instruction
-    a.instruction_color_tag = b.instruction_color_tag
+        a.instruction = b.instruction
+        a.instruction_color_tag = b.instruction_color_tag
 
-    b.instruction = x
-    b.instruction_color_tag = y
+        b.instruction = x
+        b.instruction_color_tag = y
 
-    db.session.commit()
+        db.session.commit()
+        return redirect(url_for("recipe_edit", id=rid))
+    except:
+        flash("Error, this unit is already at the bottom!")
     return redirect(url_for("recipe_edit", id=rid))
-
 
 """Delete Instruction From Recipe"""
 
