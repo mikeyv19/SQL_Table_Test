@@ -1,27 +1,38 @@
 <div class="container">
-    <h1>Shopping List:</h1>
-    <table class="table table-hover table-bordered table-striped">
-      {% for shopping_list in our_add %}
-      <tr>
-        <td id="{{shopping_list.id}}">
-          <b><button class="aj" id="{{shopping_list.id}}" onclick="">Delete
-          </button>{{'
-            %0.0f'|format(shopping_list.total|round(0, 'ceil')) }}</b> {{shopping_list.unit_name }} - <b>{{
-            shopping_list.ingredient_name }}</b> - ({{ shopping_list.aisle_name }})
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-      <h2>Previously Deleted:</h2>
-      <a href="{{url_for('delete_all_checked_items') }}">
-        Delete ALL Crossed Off Items (Cannot Undo!)</a>
-      <table class="table table-hover table-bordered table-striped" style="text-decoration: line-through">
-        {% for dshopping_list in deleted_items %}
-        <tr>
-          <td>
-            <b>{{'%0.0f'|format(dshopping_list.dtotal|round(0, 'ceil')) }}</b> {{dshopping_list.unit_name }} - <b>{{
-              dshopping_list.ingredient_name }}</b> - ({{ dshopping_list.aisle_name }})
-          </td>
-        </tr>
-        {% endfor %}
-      </table>
+  <h1>Shopping List:</h1>
+  <table class="table table-hover table-bordered table-striped">
+    {% for shopping_list in our_add %}
+    <tr>
+      <td id="{{shopping_list.id}}">
+        <b
+          ><button class="aj" id="{{shopping_list.id}}" onclick="">
+            Delete</button
+          >{{' %0.0f'|format(shopping_list.total|round(0, 'ceil')) }}</b
+        >
+        {{shopping_list.unit_name }} -
+        <b>{{ shopping_list.ingredient_name }}</b> - ({{
+        shopping_list.aisle_name }})
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <h2>Previously Deleted:</h2>
+  <a href="{{url_for('delete_all_checked_items') }}">
+    Delete ALL Crossed Off Items (Cannot Undo!)</a
+  >
+  <table
+    class="table table-hover table-bordered table-striped"
+    style="text-decoration: line-through"
+  >
+    {% for dshopping_list in deleted_items %}
+    <tr>
+      <td>
+        <b>{{'%0.0f'|format(dshopping_list.dtotal|round(0, 'ceil')) }}</b>
+        {{dshopping_list.unit_name }} -
+        <b>{{ dshopping_list.ingredient_name }}</b> - ({{
+        dshopping_list.aisle_name }})
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>

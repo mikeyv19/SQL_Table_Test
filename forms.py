@@ -23,6 +23,11 @@ class ShoppingForm(FlaskForm):
 class ManualShoppingForm(FlaskForm):
     bqty = DecimalField("Qty:", validators=[validators.InputRequired()])
     item = StringField("Manually Add Item:", validators=[validators.DataRequired()])
+    aisle = SelectField(
+        "Shopping Aisle:",
+        validators=[validators.InputRequired()],
+        validate_choice=False,
+    )
     submit1 = SubmitField("Submit Manual Item")
 
 

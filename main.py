@@ -1254,7 +1254,10 @@ def list():
     names = [i[0] for i in names]
     form = ShoppingForm()
     form.name.choices = [("")] + [(name) for name in names]
+    a = db.session.query(Aisle.name).order_by(Aisle.id)
     form2 = ManualShoppingForm()
+    a = [i[0] for i in a]
+    form2.aisle.choices = [("")] + [(b) for b in a]
     if form.validate_on_submit():
         u1 = Ingredient.query.filter_by(name=form.name.data).first()
         update = Shopping(
@@ -1307,7 +1310,7 @@ def list():
             ingredient_name=form2.item.data,
             qty=form2.bqty.data,
             unit_name="",
-            aisle_name="Unknown",
+            aisle_name=form2.aisle.data,
             aisle_id=0,
         )
         db.session.add(update)

@@ -66,8 +66,8 @@
             <tr>
               {% for mm in monday_meals %}
               <td>
-                {{'%0.01f'|format(mm.qty|float)}}x <b>{{mm.rname}}</b> ({{mm.servings}}) Servings <a
-                  href="{{url_for('delete_weekly_item', id =mm.id)}}">Delete</a>
+                {{'%0.01f'|format(mm.qty|float)}}x <b>{{mm.rname}}</b> ({{mm.servings}}) <a
+                  href="{{url_for('delete_weekly_item', id =mm.id)}}"><button>Delete</button></a>
               </td>
             </tr>
             {% endfor %}
@@ -85,8 +85,8 @@
             <tr>
               {% for tm in tuesday_meals %}
               <td>
-                {{'%0.01f'|format(tm.qty|float)}}x <b>{{tm.rname}}</b> ({{tm.servings}})<a
-                  href="{{url_for('delete_weekly_item', id =tm.id)}}">Delete</a>
+                {{'%0.01f'|format(tm.qty|float)}}x <b>{{tm.rname}}</b> ({{tm.servings}}) <a
+                  href="{{url_for('delete_weekly_item', id =tm.id)}}"><button>Delete</button></a>
               </td>
             </tr>
             {% endfor %}
@@ -104,8 +104,8 @@
             <tr>
               {% for wm in wednesday_meals %}
               <td>
-                {{'%0.01f'|format(wm.qty|float)}}x <b>{{wm.rname}}</b> ({{wm.servings}})<a
-                  href="{{url_for('delete_weekly_item', id =wm.id)}}">Delete</a>
+                {{'%0.01f'|format(wm.qty|float)}}x <b>{{wm.rname}}</b> ({{wm.servings}}) <a
+                  href="{{url_for('delete_weekly_item', id =wm.id)}}"><button>Delete</button></a>
               </td>
             </tr>
             {% endfor %}
@@ -124,7 +124,7 @@
               {% for thm in thursday_meals %}
               <td>
                 {{'%0.01f'|format(thm.qty|float)}}x <b>{{thm.rname}}</b> ({{thm.servings}}) <a
-                  href="{{url_for('delete_weekly_item', id =thm.id)}}">Delete</a>
+                  href="{{url_for('delete_weekly_item', id =thm.id)}}"><button>Delete</button></a>
               </td>
             </tr>
             {% endfor %}
@@ -142,8 +142,8 @@
             <tr>
               {% for fm in friday_meals %}
               <td>
-                {{'%0.01f'|format(fm.qty|float)}}x <b>{{fm.rname}}</b> ({{fm.servings}})<a
-                  href="{{url_for('delete_weekly_item', id =fm.id)}}">Delete</a>
+                {{'%0.01f'|format(fm.qty|float)}}x <b>{{fm.rname}}</b> ({{fm.servings}}) <a
+                  href="{{url_for('delete_weekly_item', id =fm.id)}}"><button>Delete</button></a>
               </td>
             </tr>
             {% endfor %}
@@ -161,8 +161,8 @@
             <tr>
               {% for sam in saturday_meals %}
               <td>
-                {{'%0.01f'|format(sam.qty|float)}}x <b>{{sam.rname}}</b> ({{sam.servings}})<a
-                  href="{{url_for('delete_weekly_item', id =sam.id)}}">Delete</a>
+                {{'%0.01f'|format(sam.qty|float)}}x <b>{{sam.rname}}</b> ({{sam.servings}}) <a
+                  href="{{url_for('delete_weekly_item', id =sam.id)}}"><button>Delete</button></a>
               </td>
             </tr>
             {% endfor %}
@@ -180,8 +180,8 @@
             <tr>
               {% for sum in sunday_meals %}
               <td>
-                {{'%0.01f'|format(sum.qty|float)}}x <b>{{sum.rname}}</b> ({{sum.servings}})<a
-                  href="{{url_for('delete_weekly_item', id =sum.id)}}">Delete</a>
+                {{'%0.01f'|format(sum.qty|float)}}x <b>{{sum.rname}}</b> ({{sum.servings}}) <a
+                  href="{{url_for('delete_weekly_item', id =sum.id)}}"><button>Delete</button></a>
               </td>
             </tr>
             {% endfor %}
@@ -199,8 +199,8 @@
             <tr>
               {% for em in extra_meals %}
               <td>
-                {{'%0.01f'|format(em.qty|float)}}x <b>{{em.rname}}</b> ({{em.servings}})<a
-                  href="{{url_for('delete_weekly_item', id =em.id)}}">Delete</a>
+                {{'%0.01f'|format(em.qty|float)}}x <b>{{em.rname}}</b> ({{em.servings}}) <a
+                  href="{{url_for('delete_weekly_item', id =em.id)}}"><button>Delete</button></a>
               </td>
             </tr>
             {% endfor %}
