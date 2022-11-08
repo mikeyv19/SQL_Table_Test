@@ -364,10 +364,24 @@ class Weekly_Recipe(db.Model):
     qty = db.Column(db.Float)
     day = db.Column(db.String(100))
     servings = db.Column(db.Float)
+    calories = db.Column(db.Float)
 
     def __repr__(self):
         return "<WeeklyRec %r>" % self.rid
 
+    def daily_total_cal(self, day_text):
+        price = []
+        x = [x.calories for x in Weekly_Recipe.query.filter_by(day=day_text).all()]
+        for num1 in x:
+            price.append(num1)
+        return sum(price)
+
+    # def daily_total_cal(self, day_text):
+    #     cals = Weekly_Recipe.query.filter_by(day=day_text).all()
+    #     y=0
+    #     for x in cals:
+    #         y = y + x.calories
+    #     return y
 
 class WeeklyIngredientList(db.Model):
     id = db.Column(db.Integer, primary_key=True)

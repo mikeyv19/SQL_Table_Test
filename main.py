@@ -44,7 +44,7 @@ from decimal import Decimal
 import logging
 from flask_migrate import Migrate
 
-
+# flask --app main --debug run
 app = Flask(__name__)
 
 
@@ -303,6 +303,55 @@ def weekly_view():
     saturday_meals = Weekly_Recipe.query.filter_by(day="Saturday")
     sunday_meals = Weekly_Recipe.query.filter_by(day="Sunday")
     extra_meals = Weekly_Recipe.query.filter_by(day="Extra")
+    mcal = 0
+    try:
+        for cal in monday_meals:
+            mcal = mcal + cal.calories
+    except:
+        print()
+
+    tcal = 0
+    try:
+        for cal in tuesday_meals:
+            tcal = tcal + cal.calories
+    except:
+        print()
+
+    wcal = 0
+    try:
+        for cal in wednesday_meals:
+            wcal = wcal + cal.calories
+    except:
+        print()
+
+    thcal = 0
+    try:
+        for cal in thursday_meals:
+            thcal = thcal + cal.calories
+    except:
+        print()
+
+    fcal = 0
+    # try:
+    for cal in friday_meals:
+        fcal = fcal + cal.calories
+    # except:
+    #     print()
+
+    sacal = 0
+    try:
+        for cal in saturday_meals:
+            sacal = sacal + cal.calories
+    except:
+        print()
+
+    suncal = 0
+    try:
+        for cal in sunday_meals:
+            suncal = suncal + cal.calories
+    except:
+        print()
+
     form = WeeklySelect()
     a = db.session.query(Recipe.name).order_by(Recipe.name)
     a = [i[0] for i in a]
@@ -341,6 +390,7 @@ def weekly_view():
             qty=form.rqty.data,
             day=form.day.data,
             servings=form.rqty.data * Decimal(recipe.servings),
+            calories=(Decimal(recipe.get_total_calories()) / Decimal(recipe.servings)),
         )
         db.session.add(update3)
         db.session.commit()
@@ -457,7 +507,54 @@ def weekly_view():
         .order_by(WeeklyIngredientList.ingredient_name)
         .all()
     )
+    mcal = 0
+    try:
+        for cal in monday_meals:
+            mcal = mcal + cal.calories
+    except:
+        print()
 
+    tcal = 0
+    try:
+        for cal in tuesday_meals:
+            tcal = tcal + cal.calories
+    except:
+        print()
+
+    wcal = 0
+    try:
+        for cal in wednesday_meals:
+            wcal = wcal + cal.calories
+    except:
+        print()
+
+    thcal = 0
+    try:
+        for cal in thursday_meals:
+            thcal = thcal + cal.calories
+    except:
+        print()
+
+    fcal = 0
+    try:
+        for cal in friday_meals:
+            fcal = fcal + cal.calories
+    except:
+        print()
+
+    sacal = 0
+    try:
+        for cal in saturday_meals:
+            sacal = sacal + cal.calories
+    except:
+        print()
+
+    suncal = 0
+    try:
+        for cal in sunday_meals:
+            suncal = suncal + cal.calories
+    except:
+        print()
     return render_template(
         "/weekly_view.html",
         monday_ingredients=monday_ingredients,
@@ -477,6 +574,13 @@ def weekly_view():
         sunday_meals=sunday_meals,
         extra_meals=extra_meals,
         extra_ingredients=extra_ingredients,
+        mcal=mcal,
+        tcal=tcal,
+        wcal=wcal,
+        thcal=thcal,
+        fcal=fcal,
+        sacal=sacal,
+        suncal=suncal,
     )
 
 
@@ -959,6 +1063,7 @@ def recipe_ingredient_move_down(rid, id):
         flash("Error, this unit is already at the bottom!")
     return redirect(url_for("recipe_edit", id=rid))
 
+
 """Edit Ingredient Recipe"""
 
 
@@ -1048,6 +1153,7 @@ def recipe_instruction_move_down(rid, id):
     except:
         flash("Error, this unit is already at the bottom!")
     return redirect(url_for("recipe_edit", id=rid))
+
 
 """Delete Instruction From Recipe"""
 
@@ -1312,12 +1418,13 @@ def list():
             deleted_items=deleted_items,
         )
     if form2.validate_on_submit():
+        u2 = Aisle.query.filter_by(name=form2.aisle.data).first()
         update = Shopping(
             ingredient_name=form2.item.data,
             qty=form2.bqty.data,
             unit_name="",
             aisle_name=form2.aisle.data,
-            aisle_id=0,
+            aisle_id=u2.id,
         )
         db.session.add(update)
         db.session.commit()

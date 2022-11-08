@@ -59,14 +59,14 @@
         <table class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th>Monday Meals:</th>
+              <th>Monday Meals ({{'%0.00fc'|format(mcal|float)}}):</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               {% for mm in monday_meals %}
               <td>
-                {{'%0.01f'|format(mm.qty|float)}}x <b>{{mm.rname}}</b> ({{mm.servings}}) <a
+                {{'%0.01f'|format(mm.qty|float)}}x <b>{{mm.rname}}</b> ({{mm.servings}})<a
                   href="{{url_for('delete_weekly_item', id =mm.id)}}"><button>Delete</button></a>
               </td>
             </tr>
@@ -78,7 +78,7 @@
         <table class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th>Tuesday Meals:</th>
+              <th>Tuesday Meals ({{'%0.00fc'|format(tcal|float)}}):</th>
             </tr>
           </thead>
           <tbody>
@@ -97,7 +97,7 @@
         <table class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th>Wednesday Meals:</th>
+              <th>Wednesday Meals ({{'%0.00fc'|format(wcal|float)}}):</th>
             </tr>
           </thead>
           <tbody>
@@ -116,7 +116,7 @@
         <table class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th>Thursday Meals:</th>
+              <th>Thursday Meals ({{'%0.00fc'|format(thcal|float)}}):</th>
             </tr>
           </thead>
           <tbody>
@@ -135,7 +135,7 @@
         <table class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th>Friday Meals:</th>
+              <th>Friday Meals ({{'%0.00fc'|format(fcal|float)}}):</th>
             </tr>
           </thead>
           <tbody>
@@ -154,7 +154,7 @@
         <table class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th>Saturday Meals:</th>
+              <th>Saturday Meals ({{'%0.00fc'|format(sacal|float)}}):</th>
             </tr>
           </thead>
           <tbody>
@@ -173,7 +173,7 @@
         <table class="table table-hover table-bordered table-striped">
           <thead>
             <tr>
-              <th>Sunday Meals:</th>
+              <th>Sunday Meals ({{'%0.00fc'|format(suncal|float)}}):</th>
             </tr>
           </thead>
           <tbody>
